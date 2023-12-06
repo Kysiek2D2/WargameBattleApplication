@@ -1,0 +1,29 @@
+{
+  "name": "wargamebattleapplication",
+  "version": "1.0.0",
+  "description": "Application to simulate wargames and battles.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kysiek2D2/WargameBattleApplication.git"
+  },
+  "keywords": [
+    "game",
+    "wargame",
+    "board"
+  ],
+  "author": "Kysiek2D2",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kysiek2D2/WargameBattleApplication/issues"
+  },
+  "homepage": "https://github.com/Kysiek2D2/WargameBattleApplication#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.2"
+  }
+}
