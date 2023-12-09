@@ -23,6 +23,7 @@ var sidePanel;
 function preload() {
 
     this.load.image({key: 'universalGrassBattleground', url: 'assets/battlegrounds72x48/universalGrass.jpg'});
+    this.load.image({key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png'});
 }
 
 function create() {
@@ -31,6 +32,10 @@ function create() {
     battleground.setPosition(config.width/2, config.height/2);
     battleground.width = config.width*BATTLEGROUND_SCREEN_WIDTH_PRC;
     battleground.height = config.height*BATTLEGROUND_SCREEN_HEIGHT_PRC;
+
+    unit = this.add.image(1100, 110, 'basicInfantryUnitSizeL')
+    .setOrigin(0.5, 0.5)
+    .setScale(0.1, 0.1);
 }
 
 function update() {
