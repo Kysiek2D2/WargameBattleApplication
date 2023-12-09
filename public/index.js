@@ -13,6 +13,10 @@ var config = {
     scale: {
         mode: Phaser.Scale.CENTER_BOTH,
         autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
+    input: {
+        mouse: true,
+        touch: true
     }
 };
 
@@ -35,7 +39,13 @@ function create() {
 
     unit = this.add.image(1100, 110, 'basicInfantryUnitSizeL')
     .setOrigin(0.5, 0.5)
-    .setScale(0.1, 0.1);
+    .setScale(0.1, 0.1)
+    .setInteractive({draggable: true});
+    this.input.setDraggable(unit);
+    this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
+        gameObject.x = dragX;
+        gameObject.y = dragY;
+    })
 }
 
 function update() {
