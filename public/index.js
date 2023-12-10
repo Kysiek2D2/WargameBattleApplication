@@ -1,3 +1,6 @@
+/// <reference lib="es2015" />
+/// <reference path="phaser.min.js" />
+
 var BATTLEGROUND_SCREEN_WIDTH_PRC = 0.8;
 var BATTLEGROUND_SCREEN_HEIGHT_PRC = 0.53;
 
@@ -17,12 +20,12 @@ var config = {
     input: {
         mouse: true,
         touch: true
-    }
+    },
+    backgroundColor: '0xffffff'
 };
 
 var game = new Phaser.Game(config);
 var battleground;
-var sidePanel;
 var unit;
 
 function preload() {
