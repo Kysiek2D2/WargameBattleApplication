@@ -1,6 +1,10 @@
 var zoomLevel = 1; // Initial zoom level
 var zoomStep = 0.1; // Amount to change zoom on each spacebar press
 var mainCamera;
+var zoomCooldown;
+var zoomCooldownDuration; // Adjust this value as needed
+var cursorX;
+var cursorY;
 
 class FireAndSwordScene extends Phaser.Scene {
 
@@ -39,53 +43,39 @@ class FireAndSwordScene extends Phaser.Scene {
 
         //Set up main camera for zooming
         mainCamera = this.cameras.main;
+
+        // Set up a cooldown for handling the wheel event
+        this.zoomCooldown = 0;
+        this.zoomCooldownDuration = 200; // Adjust this value as needed
     }
-
-
 
     update() {
         // Check cursor position for zooming
-        var cursorX = this.input.x;
-        var cursorY = this.input.y;
+        cursorX = this.input.x;
+        cursorY = this.input.y;
         console.log(`Cursor X: ${this.input.x} and Y: ${this.input.y}`)
+        if (this.zoomCooldown <= 0) {
+            this.input.on('wheel', function (pointer, gameObjects, deltaX, deltaY, deltaZ) {
+                if (deltaY > 0) {
+                    console.log(`Cursor 222 X: ${cursorX} and Y: ${cursorY}`)
 
-        // Check if the cursor is inside the canvas boundaries
-        // var isCursorInside = isCursorInsideCanvas(cursorX, cursorY);
-
-        // Check if 'Z' or 'X' was pressed and perform zooming accordingly
-        if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('Z'))) {
-            // Cursor is inside canvas, handle zooming in
-            handleZooming(cursorX, cursorY, zoomStep);
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('X'))) {
-            // if (isCursorInside) {
-            // Cursor is inside canvas, handle zooming out
-            handleZooming(cursorX, cursorY, -zoomStep);
-            // }
+                    handleZooming(cursorX, cursorY, -zoomStep);
+                } else if (deltaY < 0) {
+                    handleZooming(cursorX, cursorY, zoomStep);
+                }
+            }, this);
+            // Apply cooldown to prevent rapid zooming
+            this.zoomCooldown = this.zoomCooldownDuration;
+        } else {
+            // Decrease the cooldown on each update
+            this.zoomCooldown -= this.time.deltaMS;
         }
     }
 }
 
-
-// function isCursorInsideCanvas(cursorX, cursorY) {
-//     let check = (cursorX >= 0 && cursorX <= game.config.width) &&
-//         (cursorY >= 0 && cursorY <= game.config.height)
-//     console.log(`isCursorInsideCanvas: Is CURSOR inside CANVAS: ${check}. CursorX: ${cursorX}, CursorY: ${cursorY}, game.width: ${game.config.width}, game height: ${game.config.height}`)
-//     return check;
-// }
-
 function handleZooming(cursorX, cursorY, zoomChange) {
-    console.log('handleZooming()')
+    console.log(`handleZooming: \n zoomChange: ${zoomChange} \n center on X: ${cursorX} and Y: ${cursorY}`)
     zoomLevel += zoomChange;
     mainCamera.setZoom(zoomLevel);
     mainCamera.centerOn(cursorX, cursorY);
-}
-
-function zoomIn() {
-    handleZooming(this, this.input.x, this.input.y, zoomStep);
-}
-
-function zoomOut() {
-    handleZooming(this, this.input.x, this.input.y, -zoomStep);
 }
