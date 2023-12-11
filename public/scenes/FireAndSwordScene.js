@@ -11,6 +11,9 @@ var isDragging = false;
 var dragStartX;
 var dragStartY;
 
+var unit;
+var isUnitSelected;
+
 class FireAndSwordScene extends Phaser.Scene {
 
 
@@ -36,15 +39,7 @@ class FireAndSwordScene extends Phaser.Scene {
         battleground.width = config.width * BATTLEGROUND_SCREEN_WIDTH_PRC;
         battleground.height = config.height * BATTLEGROUND_SCREEN_HEIGHT_PRC;
 
-        var unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
-            .setOrigin(0.5, 0.5)
-            .setScale(0.1, 0.1)
-            .setInteractive({ draggable: true });
-        this.input.setDraggable(unit);
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        })
+        isUnitSelected = false;
 
         //Set up main camera for zooming
         mainCamera = this.cameras.main;
@@ -55,11 +50,32 @@ class FireAndSwordScene extends Phaser.Scene {
 
         // Set up event listeners for camera movement
         this.input.on("pointermove", function (p) {
-            if (!p.isDown) return;
+            if (!p.isDown || isMouseClickOnUnit(p)) return;
             mainCamera.scrollX -= (p.x - p.prevPosition.x) / mainCamera.zoom;
             mainCamera.scrollY -= (p.y - p.prevPosition.y) / mainCamera.zoom;
         });
 
+        // Check for mouse click on 'unit'
+        this.input.on('pointerdown', function (pointer) {
+            if (isMouseClickOnUnit(pointer)) {
+                console.log('Mouse click on unit!');
+                isUnitSelected = true;
+                // Add your logic for handling the click on the 'unit' here
+            } else {
+                console.log('Mouse click OUTSIDE OF unit!');
+                isUnitSelected = false;
+            }
+        }, this);
+
+        unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
+            .setOrigin(0.5, 0.5)
+            .setScale(0.1, 0.1)
+            .setInteractive({ draggable: true });
+        this.input.setDraggable(unit);
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        })
     }
 
     update() {
@@ -71,7 +87,6 @@ class FireAndSwordScene extends Phaser.Scene {
             this.input.on('wheel', function (pointer, gameObjects, deltaX, deltaY, deltaZ) {
                 if (deltaY > 0) {
                     console.log(`Cursor 222 X: ${cursorX} and Y: ${cursorY}`)
-
                     handleZooming(cursorX, cursorY, -zoomStep);
                 } else if (deltaY < 0) {
                     handleZooming(cursorX, cursorY, zoomStep);
@@ -91,4 +106,14 @@ function handleZooming(cursorX, cursorY, zoomChange) {
     zoomLevel += zoomChange;
     mainCamera.setZoom(zoomLevel);
     mainCamera.centerOn(cursorX, cursorY);
+}
+
+function isMouseClickOnUnit(pointer) {
+    // Convert screen coordinates to world coordinates
+    var worldX = mainCamera.getWorldPoint(pointer.x, pointer.y).x;
+    var worldY = mainCamera.getWorldPoint(pointer.x, pointer.y).y;
+    // Check if the converted coordinates are within the bounds of the 'unit'
+    var isMouseOnUnit = unit.getBounds().contains(worldX, worldY);
+    console.log(`Is mouse click on unit: ${isMouseOnUnit}`);
+    return isMouseOnUnit;
 }
