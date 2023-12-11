@@ -6,6 +6,11 @@ var zoomCooldownDuration; // Adjust this value as needed
 var cursorX;
 var cursorY;
 
+// Variables for camera movement
+var isDragging = false;
+var dragStartX;
+var dragStartY;
+
 class FireAndSwordScene extends Phaser.Scene {
 
 
@@ -47,6 +52,14 @@ class FireAndSwordScene extends Phaser.Scene {
         // Set up a cooldown for handling the wheel event
         this.zoomCooldown = 0;
         this.zoomCooldownDuration = 200; // Adjust this value as needed
+
+        // Set up event listeners for camera movement
+        this.input.on("pointermove", function (p) {
+            if (!p.isDown) return;
+            mainCamera.scrollX -= (p.x - p.prevPosition.x) / mainCamera.zoom;
+            mainCamera.scrollY -= (p.y - p.prevPosition.y) / mainCamera.zoom;
+        });
+
     }
 
     update() {
