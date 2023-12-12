@@ -6,7 +6,7 @@ class MainMenu extends Phaser.Scene {
 
     create() {
         console.log(`MainMenu create...`);
-        this.scene.start('FireAndSwordScene');
+        this.scene.start('FireAndSwordScene', { mapWidthInGameDistanceUnits: 72, mapHeightInGameDistanceUnits: 48 });
     }
 
     update() { }
