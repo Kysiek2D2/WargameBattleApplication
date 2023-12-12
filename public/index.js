@@ -1,3 +1,4 @@
+import FireAndSwordScene from "./scenes/FireAndSwordScene.js";
 
 var config = {
     type: Phaser.AUTO,

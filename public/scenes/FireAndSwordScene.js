@@ -1,3 +1,5 @@
+import UtilityMain from "../UtilityClasses/UtilityMain.js";
+
 var zoomLevel = 1; // Initial zoom level
 var zoomStep = 0.1; // Amount to change zoom on each spacebar press
 var mainCamera;
@@ -27,8 +29,9 @@ class FireAndSwordScene extends Phaser.Scene {
 
     create() {
         const gameConfig = this.game.config;
+        UtilityMain.loadBattleground();
+        console.log(`Canvas width: ${gameConfig.width}, height: ${gameConfig.height}`);
 
-        console.log(`Size of canvas, WIDTH: ${gameConfig.width}, HEIGHT: ${gameConfig.height}`)
         const BATTLEGROUND_WIDTH_DISTANCE_UNITS = 72;
         const BATTLEGROUND_HEIGHT_DISTANCE_UNITS = 48;
         var SINGLE_DISTANCE_UNIT_IN_PIXELS = 100;
@@ -39,9 +42,9 @@ class FireAndSwordScene extends Phaser.Scene {
             SINGLE_DISTANCE_UNIT_IN_PIXELS = gameConfig.height / BATTLEGROUND_HEIGHT_DISTANCE_UNITS;
         }
 
-        var battleground = this.add.sprite(config.width / 2, config.height / 2, 'universalGrassBattleground');
+        var battleground = this.add.sprite(gameConfig.width / 2, gameConfig.height / 2, 'universalGrassBattleground');
         battleground.setOrigin(0.5, 0.5);
-        battleground.setPosition(config.width / 2, config.height / 2);
+        battleground.setPosition(gameConfig.width / 2, gameConfig.height / 2);
         battleground.displayWidth = BATTLEGROUND_WIDTH_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
         battleground.displayHeight = BATTLEGROUND_HEIGHT_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
 
@@ -127,3 +130,5 @@ function isMouseClickOnUnit(pointer) {
     console.log(`Is mouse click on unit: ${isMouseOnUnit}`);
     return isMouseOnUnit;
 }
+
+export default FireAndSwordScene;

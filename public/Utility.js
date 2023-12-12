@@ -1,5 +1,0 @@
-class Utility {
-
-    constructor() { }
-
-}
