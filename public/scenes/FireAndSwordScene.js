@@ -16,7 +16,6 @@ var isUnitSelected;
 
 class FireAndSwordScene extends Phaser.Scene {
 
-
     constructor() {
         super("FireAndSwordScene");
     }
@@ -30,14 +29,24 @@ class FireAndSwordScene extends Phaser.Scene {
         const gameConfig = this.game.config;
 
         console.log(`Size of canvas, WIDTH: ${gameConfig.width}, HEIGHT: ${gameConfig.height}`)
-        const BATTLEGROUND_SCREEN_WIDTH_PRC = 0.8;
-        const BATTLEGROUND_SCREEN_HEIGHT_PRC = 0.53;
+        const BATTLEGROUND_WIDTH_DISTANCE_UNITS = 72;
+        const BATTLEGROUND_HEIGHT_DISTANCE_UNITS = 48;
+        var SINGLE_DISTANCE_UNIT_IN_PIXELS = 100;
+
+        if (gameConfig.width < gameConfig.height) {
+            SINGLE_DISTANCE_UNIT_IN_PIXELS = gameConfig.width / BATTLEGROUND_WIDTH_DISTANCE_UNITS;
+        } else {
+            SINGLE_DISTANCE_UNIT_IN_PIXELS = gameConfig.height / BATTLEGROUND_HEIGHT_DISTANCE_UNITS;
+        }
 
         var battleground = this.add.sprite(config.width / 2, config.height / 2, 'universalGrassBattleground');
         battleground.setOrigin(0.5, 0.5);
         battleground.setPosition(config.width / 2, config.height / 2);
-        battleground.width = config.width * BATTLEGROUND_SCREEN_WIDTH_PRC;
-        battleground.height = config.height * BATTLEGROUND_SCREEN_HEIGHT_PRC;
+        battleground.displayWidth = BATTLEGROUND_WIDTH_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
+        battleground.displayHeight = BATTLEGROUND_HEIGHT_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
+
+        console.log(`Size of battleground, WIDTH: ${battleground.width}, HEIGHT: ${battleground.height}`);
+
 
         isUnitSelected = false;
 
@@ -69,8 +78,9 @@ class FireAndSwordScene extends Phaser.Scene {
 
         unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
             .setOrigin(0.5, 0.5)
-            .setScale(0.1, 0.1)
             .setInteractive({ draggable: true });
+        unit.displayWidth = 6.3 * SINGLE_DISTANCE_UNIT_IN_PIXELS;
+        unit.displayHeight = 2.5 * SINGLE_DISTANCE_UNIT_IN_PIXELS;
         this.input.setDraggable(unit);
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;

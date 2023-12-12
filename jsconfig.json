@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "checkJs": true
+    },
+    "include": [
+        "public/phaser.min.js" // Include the path to Phaser 3
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
