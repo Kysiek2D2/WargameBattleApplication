@@ -1,4 +1,4 @@
-import UtilityMain from "../UtilityClasses/UtilityMain.js";
+import { loadBattleground, calculateDistanceUnitPixels } from "../UtilityClasses/UtilityMain.js";
 
 var zoomLevel = 1; // Initial zoom level
 var zoomStep = 0.1; // Amount to change zoom on each spacebar press
@@ -22,31 +22,30 @@ class FireAndSwordScene extends Phaser.Scene {
         super("FireAndSwordScene");
     }
 
+    init(data) {
+
+    }
+
     preload() {
+        console.log('preload...');
         this.load.image({ key: 'universalGrassBattleground', url: 'assets/battlegrounds72x48/universalGrass.jpg' });
         this.load.image({ key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png' });
     }
 
     create() {
+        console.log('FireAndSwordScene create...')
         const gameConfig = this.game.config;
-        UtilityMain.loadBattleground();
         console.log(`Canvas width: ${gameConfig.width}, height: ${gameConfig.height}`);
-
         const BATTLEGROUND_WIDTH_DISTANCE_UNITS = 72;
         const BATTLEGROUND_HEIGHT_DISTANCE_UNITS = 48;
-        var SINGLE_DISTANCE_UNIT_IN_PIXELS = 100;
-
-        if (gameConfig.width < gameConfig.height) {
-            SINGLE_DISTANCE_UNIT_IN_PIXELS = gameConfig.width / BATTLEGROUND_WIDTH_DISTANCE_UNITS;
-        } else {
-            SINGLE_DISTANCE_UNIT_IN_PIXELS = gameConfig.height / BATTLEGROUND_HEIGHT_DISTANCE_UNITS;
-        }
+        const DISTANCE_UNIT_PIXELS = calculateDistanceUnitPixels(gameConfig, BATTLEGROUND_WIDTH_DISTANCE_UNITS, BATTLEGROUND_HEIGHT_DISTANCE_UNITS);
+        loadBattleground();
 
         var battleground = this.add.sprite(gameConfig.width / 2, gameConfig.height / 2, 'universalGrassBattleground');
         battleground.setOrigin(0.5, 0.5);
         battleground.setPosition(gameConfig.width / 2, gameConfig.height / 2);
-        battleground.displayWidth = BATTLEGROUND_WIDTH_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
-        battleground.displayHeight = BATTLEGROUND_HEIGHT_DISTANCE_UNITS * SINGLE_DISTANCE_UNIT_IN_PIXELS;
+        battleground.displayWidth = BATTLEGROUND_WIDTH_DISTANCE_UNITS * DISTANCE_UNIT_PIXELS;
+        battleground.displayHeight = BATTLEGROUND_HEIGHT_DISTANCE_UNITS * DISTANCE_UNIT_PIXELS;
 
         console.log(`Size of battleground, WIDTH: ${battleground.width}, HEIGHT: ${battleground.height}`);
 
@@ -82,8 +81,8 @@ class FireAndSwordScene extends Phaser.Scene {
         unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
             .setOrigin(0.5, 0.5)
             .setInteractive({ draggable: true });
-        unit.displayWidth = 6.3 * SINGLE_DISTANCE_UNIT_IN_PIXELS;
-        unit.displayHeight = 2.5 * SINGLE_DISTANCE_UNIT_IN_PIXELS;
+        unit.displayWidth = 6.3 * DISTANCE_UNIT_PIXELS;
+        unit.displayHeight = 2.5 * DISTANCE_UNIT_PIXELS;
         this.input.setDraggable(unit);
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
