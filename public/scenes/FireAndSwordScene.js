@@ -1,17 +1,20 @@
-import { loadBattleground, calculateDistanceUnitPixels } from "../UtilityClasses/UtilityMain.js";
+import { loadMap, calculateGameDistanceUnitPixels } from "../UtilityClasses/UtilityMain.js";
 
 class FireAndSwordScene extends Phaser.Scene {
 
     constructor() {
         super("FireAndSwordScene");
+        this.gameConfig;
+
         this.camera;
         this.zoomLevel = 1; // Initial zoom level
         this.zoomStep = 0.1; // Amount to change zoom on each spacebar press
-        this.zoomCooldown;
-        this.zoomCooldownDuration; // Adjust this value as needed
+        this.zoomCooldown = 0; // Set up a cooldown for handling the wheel event
+        this.zoomCooldownDuration = 200; // Adjust this value as needed
 
         this.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits;
+        this.gameDistanceUnitPixels;
 
         this.cursorX;
         this.cursorY;
@@ -20,35 +23,21 @@ class FireAndSwordScene extends Phaser.Scene {
     }
 
     init(data) {
+        this.gameConfig = this.game.config;
+        this.camera = this.cameras.main;
         this.mapWidthInGameDistanceUnits = data.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits = data.mapHeightInGameDistanceUnits;
     }
 
     preload() {
-        this.load.image({ key: 'universalGrassBattleground', url: 'assets/battlegrounds72x48/universalGrass.jpg' });
+        this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/universalGrass.jpg' });
         this.load.image({ key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png' });
     }
 
     create() {
         console.log('FireAndSwordScene create...')
-        const gameConfig = this.game.config;
-        const gameDistanceUnitsPixels = calculateDistanceUnitPixels(gameConfig, this.mapWidthInGameDistanceUnits, this.mapHeightInGameDistanceUnits);
-        loadBattleground();
-
-        var battleground = this.add.sprite(gameConfig.width / 2, gameConfig.height / 2, 'universalGrassBattleground');
-        battleground.setOrigin(0.5, 0.5);
-        battleground.setPosition(gameConfig.width / 2, gameConfig.height / 2);
-        battleground.displayWidth = this.mapWidthInGameDistanceUnits * gameDistanceUnitsPixels;
-        battleground.displayHeight = this.mapHeightInGameDistanceUnits * gameDistanceUnitsPixels;
-
-        console.log(`Size of battleground, WIDTH: ${battleground.width}, HEIGHT: ${battleground.height}`);
-
-        //Set up main camera for zooming
-        this.camera = this.cameras.main;
-
-        // Set up a cooldown for handling the wheel event
-        this.zoomCooldown = 0;
-        this.zoomCooldownDuration = 200; // Adjust this value as needed
+        this.gameDistanceUnitPixels = calculateGameDistanceUnitPixels(this);
+        loadMap('universalGrassBattleground', this);
 
         // Set up event listeners for camera movement
         this.input.on("pointermove", (p) => {
@@ -70,8 +59,8 @@ class FireAndSwordScene extends Phaser.Scene {
         this.unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
             .setOrigin(0.5, 0.5)
             .setInteractive({ draggable: true });
-        this.unit.displayWidth = 6.3 * gameDistanceUnitsPixels;
-        this.unit.displayHeight = 2.5 * gameDistanceUnitsPixels;
+        this.unit.displayWidth = 6.3 * this.gameDistanceUnitPixels;
+        this.unit.displayHeight = 2.5 * this.gameDistanceUnitPixels;
         this.input.setDraggable(this.unit);
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
