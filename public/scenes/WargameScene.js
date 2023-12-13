@@ -14,9 +14,6 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits;
         this.gameDistanceUnitPixels;
 
-        this.cursorX;
-        this.cursorY;
-
         this.unit;
     }
 
@@ -50,7 +47,6 @@ class WargameScene extends Phaser.Scene {
     }
 
     setListenerForCameraMovement() {
-        // Set up event listeners for camera movement
         this.input.on("pointermove", (pointer) => {
             if (!pointer.isDown || this.isMouseClickOnUnit(pointer, this.camera, this.unit)) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
@@ -58,7 +54,7 @@ class WargameScene extends Phaser.Scene {
         });
     }
 
-    handleZooming(cursorX, cursorY, zoomChange) {
+    zoomScene(cursorX, cursorY, zoomChange) {
         this.zoomLevel += zoomChange;
         this.camera.setZoom(this.zoomLevel);
         this.camera.centerOn(cursorX, cursorY);
@@ -73,6 +69,34 @@ class WargameScene extends Phaser.Scene {
         var isMouseOnUnit = this.unit.getBounds().contains(worldX, worldY);
         console.log(`Is mouse click on unit: ${isMouseOnUnit}`);
         return isMouseOnUnit;
+    }
+
+    handleZooming() {
+        console.log(`Cursor X: ${this.input.x} and Y: ${this.input.y}`)
+        if (this.zoomCooldown <= 0) {
+            this.input.on('wheel', function (pointer, gameObjects, deltaX, deltaY, deltaZ) {
+                if (deltaY > 0) {
+                    this.zoomScene(this.input.x, this.input.y, -this.zoomStep, this);
+                } else if (deltaY < 0) {
+                    this.zoomScene(this.input.x, this.input.y, this.zoomStep, this);
+                }
+            }, this);
+            // Apply cooldown to prevent rapid zooming
+            this.zoomCooldown = this.zoomCooldownDuration;
+        } else {
+            // Decrease the cooldown on each update
+            this.zoomCooldown -= this.time.deltaMS;
+        }
+    }
+
+    setListenerForPointerDown() { //This is not used, but might be useful as reference
+        this.input.on('pointerdown', (pointer) => {
+            if (this.isMouseClickOnUnit(pointer, this.camera, this.unit)) {
+                console.log('Mouse click on unit!');
+            } else {
+                console.log('Mouse click OUTSIDE OF unit!');
+            }
+        }, this);
     }
 }
 
