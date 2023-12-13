@@ -1,3 +1,5 @@
+import GamePiece from "../pieces/GamePiece.js";
+
 class WargameScene extends Phaser.Scene {
 
     constructor(sceneName) {
@@ -12,7 +14,7 @@ class WargameScene extends Phaser.Scene {
 
         this.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits;
-        this.gameDistanceUnitPixels;
+        this.sceneDistanceUnitPixels;
 
         this.unit;
     }
@@ -24,7 +26,7 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits = data.mapHeightInGameDistanceUnits;
     }
 
-    calculateGameDistanceUnitPixels() {
+    calculatesceneDistanceUnitPixels() {
         var distanceUnitPixels;
         if (this.gameConfig.width < this.gameConfig.height) {
             distanceUnitPixels = this.gameConfig.width / this.mapWidthInGameDistanceUnits;
@@ -40,15 +42,15 @@ class WargameScene extends Phaser.Scene {
         var map = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, mapName);
         map.setOrigin(0.5, 0.5);
         map.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
-        map.displayWidth = this.mapWidthInGameDistanceUnits * this.gameDistanceUnitPixels;
-        map.displayHeight = this.mapHeightInGameDistanceUnits * this.gameDistanceUnitPixels;
+        map.displayWidth = this.mapWidthInGameDistanceUnits * this.sceneDistanceUnitPixels;
+        map.displayHeight = this.mapHeightInGameDistanceUnits * this.sceneDistanceUnitPixels;
 
         console.log(`Map size: \n width: ${map.width} px, \n height: ${map.height} px.`);
     }
 
     setListenerForCameraMovement() {
         this.input.on("pointermove", (pointer) => {
-            if (!pointer.isDown || this.isMouseClickOnUnit(pointer, this.camera, this.unit)) return;
+            if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this)) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
         });
@@ -59,16 +61,6 @@ class WargameScene extends Phaser.Scene {
         this.camera.setZoom(this.zoomLevel);
         this.camera.centerOn(cursorX, cursorY);
         console.log(`handleZooming: \n zoomChange: ${zoomChange} \n zoomLevel: ${this.zoomLevel} \n center on X: ${cursorX} and Y: ${cursorY}`)
-    }
-
-    isMouseClickOnUnit(pointer) {
-        // Convert screen coordinates to world coordinates
-        var worldX = this.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = this.camera.getWorldPoint(pointer.x, pointer.y).y;
-        // Check if the converted coordinates are within the bounds of the 'unit'
-        var isMouseOnUnit = this.unit.getBounds().contains(worldX, worldY);
-        console.log(`Is mouse click on unit: ${isMouseOnUnit}`);
-        return isMouseOnUnit;
     }
 
     handleZooming() {
@@ -91,7 +83,7 @@ class WargameScene extends Phaser.Scene {
 
     setListenerForPointerDown() { //This is not used, but might be useful as reference
         this.input.on('pointerdown', (pointer) => {
-            if (this.isMouseClickOnUnit(pointer, this.camera, this.unit)) {
+            if (GamePiece.isMouseClickOnGamePiece(pointer, this)) {
                 console.log('Mouse click on unit!');
             } else {
                 console.log('Mouse click OUTSIDE OF unit!');

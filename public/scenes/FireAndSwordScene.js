@@ -1,4 +1,5 @@
 import WargameScene from "./WargameScene.js";
+import GamePiece from "../pieces/GamePiece.js";
 import { someFunction } from "../UtilityClasses/UtilityMain.js";
 
 class FireAndSwordScene extends WargameScene {
@@ -15,20 +16,12 @@ class FireAndSwordScene extends WargameScene {
 
     create() {
         console.log('FireAndSwordScene create...')
-        this.gameDistanceUnitPixels = this.calculateGameDistanceUnitPixels();
+        this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadMap('universalGrassBattleground');
         this.setListenerForCameraMovement();
 
-        this.unit = this.add.sprite(1100, 110, 'basicInfantryUnitSizeL')
-            .setOrigin(0.5, 0.5)
-            .setInteractive({ draggable: true });
-        this.unit.displayWidth = 6.3 * this.gameDistanceUnitPixels;
-        this.unit.displayHeight = 2.5 * this.gameDistanceUnitPixels;
-        this.input.setDraggable(this.unit);
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        })
+        var testUnit = new GamePiece(this, 1100, 110, 6.3, 2.5, 'basicInfantryUnitSizeL');
+        var testUnit2 = new GamePiece(this, 1300, 310, 6.3, 2.5, 'basicInfantryUnitSizeL');
     }
 
     update() {
