@@ -1,3 +1,6 @@
+import { CONSTANTS } from "../Constants.js";
+
+
 class GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
     static instances = [];

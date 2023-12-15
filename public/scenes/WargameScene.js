@@ -1,4 +1,6 @@
 import GamePiece from "../pieces/GamePiece.js";
+import SidePanelScene from "./SidePanelScene.js";
+import { CONSTANTS } from "../Constants.js";
 
 class WargameScene extends Phaser.Scene {
 
@@ -16,7 +18,6 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits;
         this.sceneDistanceUnitPixels;
 
-        this.unit;
     }
 
     init(data) {
@@ -24,6 +25,28 @@ class WargameScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.mapWidthInGameDistanceUnits = data.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits = data.mapHeightInGameDistanceUnits;
+    }
+
+    create() {
+        console.log('WargameScene create...');
+        this.scene.add(CONSTANTS.SCENES.SIDE_PANEL_SCENE, SidePanelScene, true);
+        this.setListenerForCameraMovement();
+        // Set up communication between scenes
+        // this.sidePanelScene.events.on('setHealth', this.setHealth, this);
+        // this.sidePanelScene.events.on('setVisible', this.setSidePanelVisibility, this);
+    }
+
+    // Add these methods for communication with SidePanelScene
+    setHealth(health) {
+        if (this.sidePanelScene) {
+            this.sidePanelScene.setHealth(health);
+        }
+    }
+
+    setSidePanelVisibility(isVisible) {
+        if (this.sidePanelScene) {
+            this.sidePanelScene.setVisible(isVisible);
+        }
     }
 
     calculatesceneDistanceUnitPixels() {
@@ -49,8 +72,9 @@ class WargameScene extends Phaser.Scene {
     }
 
     setListenerForCameraMovement() {
+        console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
-            if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this)) return;
+            if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this) || this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE).isMouseClickOnSidePanel(pointer)) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
         });
@@ -60,11 +84,11 @@ class WargameScene extends Phaser.Scene {
         this.zoomLevel += zoomChange;
         this.camera.setZoom(this.zoomLevel);
         this.camera.centerOn(cursorX, cursorY);
-        console.log(`handleZooming: \n zoomChange: ${zoomChange} \n zoomLevel: ${this.zoomLevel} \n center on X: ${cursorX} and Y: ${cursorY}`)
+        console.log(`handleZooming: \n zoomChange: ${zoomChange} \n zoomLevel: ${this.zoomLevel} \n center on X: ${cursorX} and Y: ${cursorY}`);
     }
 
     handleZooming() {
-        console.log(`Cursor X: ${this.input.x} and Y: ${this.input.y}`)
+        //console.log(`Cursor X: ${this.input.x} and Y: ${this.input.y}`)
         if (this.zoomCooldown <= 0) {
             this.input.on('wheel', function (pointer, gameObjects, deltaX, deltaY, deltaZ) {
                 if (deltaY > 0) {
@@ -83,7 +107,7 @@ class WargameScene extends Phaser.Scene {
 
     setListenerForPointerDown() { //This is not used, but might be useful as reference
         this.input.on('pointerdown', (pointer) => {
-            if (GamePiece.isMouseClickOnGamePiece(pointer, this)) {
+            if (GamePiece.isMouseClickOnGamePiece(pointer, this) && !this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE).isMouseClickOnSidePanel(pointer)) {
                 console.log('Mouse click on unit!');
             } else {
                 console.log('Mouse click OUTSIDE OF unit!');

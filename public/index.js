@@ -1,11 +1,12 @@
 import FireAndSwordScene from "./scenes/FireAndSwordScene.js";
-import MainMenu from "./scenes/MainMenu.js";
+import MainMenuScene from "./scenes/MainMenuScene.js";
+import SidePanelScene from "./scenes/SidePanelScene.js";
 
 var config = {
     type: Phaser.AUTO,
     width: window.innerWidth * 0.95,
-    height: window.innerHeight * 0.8,
-    scene: [MainMenu, FireAndSwordScene],
+    height: window.innerHeight * 0.90,
+    scene: [MainMenuScene, FireAndSwordScene],
     scale: {
         mode: Phaser.Scale.CENTER_BOTH,
         autoCenter: Phaser.Scale.CENTER_BOTH,
