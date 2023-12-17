@@ -9,11 +9,12 @@ class GamePiece {
     constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed' }) {
         console.log(`GamePiece constructor...`);
         this.scene = scene;
-        this.sprite = scene.add.sprite(x, y, spriteKey)
-            .setOrigin(0.5, 0.5) //origin in the middle ?
-            .setInteractive({ draggable: true });
-        this.sprite.displayWidth = displayWidth * scene.sceneDistanceUnitPixels;
-        this.sprite.displayHeight = displayHeight * scene.sceneDistanceUnitPixels;
+
+        this.sprite = scene.add.image(x, y, spriteKey)
+            .setOrigin(0.5, 0.5) //origin in the middle?
+            .setInteractive({ draggable: true })
+            .setDisplaySize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels)
+
         this.spriteKey = spriteKey;
 
         //Usable properties
@@ -42,9 +43,9 @@ class GamePiece {
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
             this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName });
+            GamePiece.activeGamePiece?.sprite.clearTint();
             GamePiece.activeGamePiece = this;
-            this.sprite.setStroke(0xff0000, 2); // Red color, 2px width
-
+            GamePiece.activeGamePiece.sprite.setTint(185273);
             //Hey ChatGPT: I want to set activeGamePiece border to red and 2px
             console.log(`Active unit is: ${GamePiece.activeGamePiece.gamePieceName}`);
             //this.scene.getSidePanelScene().headerText.setText(this.gamePieceName);
