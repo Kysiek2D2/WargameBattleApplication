@@ -14,6 +14,8 @@ class SidePanelScene extends Phaser.Scene {
         this.sidePanelWidth;
         this.sidePanelHeight;
         this.camera;
+
+        this.headerText;
     }
 
     init() {
@@ -26,9 +28,7 @@ class SidePanelScene extends Phaser.Scene {
         this.camera.setBackgroundColor(0xff0000); // Red background color
         // Set up the side panel UI elements (e.g., header, buttons, etc.)
         // You can use this.add.text, this.add.image, etc. to create elements
-
-        this.addText("Unit's Name", 16);
-
+        this.headerText = this.addText("GamePiece Name", 16);
         // Update the health display
         this.healthText = this.add.text(10, 80, `Health: ${this.sidePanelConfig.health}`, {
             fontSize: '16px',
@@ -53,18 +53,21 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
-    addText(headerText, fontSize) {
-        this.headerText = this.add.text(10, 10, headerText, { fontSize: `${fontSize}px`, fill: '#fff' });
+    addText(textString, fontSize) {
+        var textNode = this.add.text(10, 10, textString, { fontSize: `${fontSize}px`, fill: '#fff' });
         // Center the header text horizontally
-        const headerTextX = (this.sidePanelWidth / 2) - (this.headerText.width / 2);
-        this.headerText.setX(headerTextX);
+        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
+        textNode.setX(headerTextX);
         console.log(`headerTextX: ${headerTextX}`);
+        return textNode;
     }
 
     updateSidePanelScene({ headerText }) {
         //TODO: this function is called when GamePiece is set active. 
         //Here we update SidePanelScene properties to be displayed.
-        this.headerText = headerText;
+        this.headerText.setText(headerText);
+        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
+        this.headerText.setX(headerTextX);
     }
 
     createGamePieceStrengthComponent() {

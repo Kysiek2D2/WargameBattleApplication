@@ -27,7 +27,17 @@ class FireAndSwordScene extends WargameScene {
             spriteKey: 'basicInfantryUnitSizeL',
             gamePieceName: 'Regiment Gwardii',
         });
-        //var testUnit2 = new GamePiece(this, 1300, 310, 6.3, 2.5, 'basicInfantryUnitSizeL', 'abc');
+        console.log(`TestUnit1 depth: ${testUnit1.sprite.depth}`)
+        var testUnit2 = new GamePiece(this, {
+            x: 1120,
+            y: 110,
+            displayWidth: 6.3,
+            displayHeight: 2.5,
+            spriteKey: 'basicInfantryUnitSizeL',
+            gamePieceName: 'Kozacy Rejestrowi',
+        });
+        console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
+
     }
 
     update() {

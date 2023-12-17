@@ -24,7 +24,7 @@ class GamePiece {
 
         //Additional configuration
         this.setOnDragListener();
-        this.addPointerDownListenerForGamePiece();
+        this.setGamePieceListener();
         GamePiece.instances = [...GamePiece.instances, this];
     }
 
@@ -36,10 +36,13 @@ class GamePiece {
         })
     }
 
-    addPointerDownListenerForGamePiece() {
-        this.scene.input.on('pointerdown', (pointer) => {
-            console.log(`GamePiece clicked on (addPointerDownListenerForGamePiece)`);
-
+    setGamePieceListener() {
+        this.sprite.setInteractive(); // Make sure the sprite is interactive
+        this.sprite.on('pointerdown', () => {
+            console.log('GamePiece clicked:', this.gamePieceName);
+            this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName });
+            //this.scene.getSidePanelScene().headerText.setText(this.gamePieceName);
+            // You can perform additional actions or callbacks here if needed
         });
     }
 
