@@ -19,8 +19,15 @@ class FireAndSwordScene extends WargameScene {
         console.log('FireAndSwordScene create...')
         this.loadMap('universalGrassBattleground');
 
-        var testUnit = new GamePiece(this, 1100, 110, 6.3, 2.5, 'basicInfantryUnitSizeL');
-        var testUnit2 = new GamePiece(this, 1300, 310, 6.3, 2.5, 'basicInfantryUnitSizeL');
+        var testUnit1 = new GamePiece(this, {
+            x: 1100,
+            y: 110,
+            displayWidth: 6.3,
+            displayHeight: 2.5,
+            spriteKey: 'basicInfantryUnitSizeL',
+            gamePieceName: 'Regiment Gwardii',
+        });
+        //var testUnit2 = new GamePiece(this, 1300, 310, 6.3, 2.5, 'basicInfantryUnitSizeL', 'abc');
     }
 
     update() {

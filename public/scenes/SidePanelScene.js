@@ -61,9 +61,10 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`headerTextX: ${headerTextX}`);
     }
 
-    updateSidePanelScene() {
+    updateSidePanelScene({ headerText }) {
         //TODO: this function is called when GamePiece is set active. 
         //Here we update SidePanelScene properties to be displayed.
+        this.headerText = headerText;
     }
 
     createGamePieceStrengthComponent() {

@@ -6,13 +6,12 @@ class GamePiece {
     static instances = [];
     static idCounter = 0;
 
-    constructor(scene, x, y, displayWidth, displayHeight, spriteKey) {
+    constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed' }) {
         console.log(`GamePiece constructor...`);
         this.scene = scene;
         this.sprite = scene.add.sprite(x, y, spriteKey)
-            .setOrigin(0.5, 0.5)
+            .setOrigin(0.5, 0.5) //origin in the middle ?
             .setInteractive({ draggable: true });
-
         this.sprite.displayWidth = displayWidth * scene.sceneDistanceUnitPixels;
         this.sprite.displayHeight = displayHeight * scene.sceneDistanceUnitPixels;
         this.spriteKey = spriteKey;
@@ -21,10 +20,11 @@ class GamePiece {
         this.id = GamePiece.idCounter++;
         this.isSelected = false;
         this.isBlocked = false;
-
+        this.gamePieceName = gamePieceName;
 
         //Additional configuration
         this.setOnDragListener();
+        this.addPointerDownListenerForGamePiece();
         GamePiece.instances = [...GamePiece.instances, this];
     }
 
@@ -34,6 +34,13 @@ class GamePiece {
             gameObject.x = dragX;
             gameObject.y = dragY;
         })
+    }
+
+    addPointerDownListenerForGamePiece() {
+        this.scene.input.on('pointerdown', (pointer) => {
+            console.log(`GamePiece clicked on (addPointerDownListenerForGamePiece)`);
+
+        });
     }
 
     static isMouseClickOnGamePiece(pointer, scene) {
