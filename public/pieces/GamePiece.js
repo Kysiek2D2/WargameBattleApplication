@@ -26,6 +26,7 @@ class GamePiece {
         this.setOnDragListener();
         this.setGamePieceListener();
         GamePiece.instances = [...GamePiece.instances, this];
+        GamePiece.activeGamePiece = null;
     }
 
     setOnDragListener() {
@@ -41,6 +42,11 @@ class GamePiece {
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
             this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName });
+            GamePiece.activeGamePiece = this;
+            this.sprite.setStroke(0xff0000, 2); // Red color, 2px width
+
+            //Hey ChatGPT: I want to set activeGamePiece border to red and 2px
+            console.log(`Active unit is: ${GamePiece.activeGamePiece.gamePieceName}`);
             //this.scene.getSidePanelScene().headerText.setText(this.gamePieceName);
             // You can perform additional actions or callbacks here if needed
         });

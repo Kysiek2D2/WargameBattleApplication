@@ -28,7 +28,7 @@ class SidePanelScene extends Phaser.Scene {
         this.camera.setBackgroundColor(0xff0000); // Red background color
         // Set up the side panel UI elements (e.g., header, buttons, etc.)
         // You can use this.add.text, this.add.image, etc. to create elements
-        this.headerText = this.addText("GamePiece Name", 16);
+        this.headerText = this.addText("GamePiece Name Placeholder", 16);
         // Update the health display
         this.healthText = this.add.text(10, 80, `Health: ${this.sidePanelConfig.health}`, {
             fontSize: '16px',
@@ -66,7 +66,7 @@ class SidePanelScene extends Phaser.Scene {
         //TODO: this function is called when GamePiece is set active. 
         //Here we update SidePanelScene properties to be displayed.
         this.headerText.setText(headerText);
-        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
+        const headerTextX = (this.sidePanelWidth / 2) - (this.headerText.width / 2);
         this.headerText.setX(headerTextX);
     }
 
