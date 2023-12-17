@@ -8,17 +8,22 @@ class GamePiece {
 
     constructor(scene, x, y, displayWidth, displayHeight, spriteKey) {
         console.log(`GamePiece constructor...`);
-        this.id = GamePiece.idCounter++;
         this.scene = scene;
-        this.spriteKey = spriteKey;
         this.sprite = scene.add.sprite(x, y, spriteKey)
             .setOrigin(0.5, 0.5)
             .setInteractive({ draggable: true });
-        this.isSelected = false;
-        this.isBlocked = false;
+
         this.sprite.displayWidth = displayWidth * scene.sceneDistanceUnitPixels;
         this.sprite.displayHeight = displayHeight * scene.sceneDistanceUnitPixels;
+        this.spriteKey = spriteKey;
 
+        //Usable properties
+        this.id = GamePiece.idCounter++;
+        this.isSelected = false;
+        this.isBlocked = false;
+
+
+        //Additional configuration
         this.setOnDragListener();
         GamePiece.instances = [...GamePiece.instances, this];
     }

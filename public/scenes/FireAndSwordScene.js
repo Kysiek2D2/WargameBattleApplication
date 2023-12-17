@@ -17,7 +17,6 @@ class FireAndSwordScene extends WargameScene {
     create() {
         super.create();
         console.log('FireAndSwordScene create...')
-        this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadMap('universalGrassBattleground');
 
         var testUnit = new GamePiece(this, 1100, 110, 6.3, 2.5, 'basicInfantryUnitSizeL');
@@ -25,7 +24,7 @@ class FireAndSwordScene extends WargameScene {
     }
 
     update() {
-        this.handleZooming();
+        super.update();
     }
 }
 

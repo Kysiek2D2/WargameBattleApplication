@@ -31,9 +31,15 @@ class WargameScene extends Phaser.Scene {
         console.log('WargameScene create...');
         this.scene.add(CONSTANTS.SCENES.SIDE_PANEL_SCENE, SidePanelScene, true);
         this.setListenerForCameraMovement();
+        this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
+
         // Set up communication between scenes
         // this.sidePanelScene.events.on('setHealth', this.setHealth, this);
         // this.sidePanelScene.events.on('setVisible', this.setSidePanelVisibility, this);
+    }
+
+    update() {
+        this.handleZooming();
     }
 
     // Add these methods for communication with SidePanelScene
@@ -67,7 +73,7 @@ class WargameScene extends Phaser.Scene {
         map.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
         map.displayWidth = this.mapWidthInGameDistanceUnits * this.sceneDistanceUnitPixels;
         map.displayHeight = this.mapHeightInGameDistanceUnits * this.sceneDistanceUnitPixels;
-
+        console.log(`Canvas/GameConfig size: \n width: ${this.gameConfig.width}, \n height: ${this.gameConfig.height}`);
         console.log(`Map size: \n width: ${map.width} px, \n height: ${map.height} px.`);
     }
 
@@ -109,7 +115,13 @@ class WargameScene extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
             if (GamePiece.isMouseClickOnGamePiece(pointer, this) && !this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE).isMouseClickOnSidePanel(pointer)) {
                 console.log('Mouse click on unit!');
-            } else {
+                //TODO: set SidePanelScene visibility = true, set activeGamePiece, 
+                //pass parameters to SidePanelScene#updateSidePanelScene() (name, pieceStrengt, reference to GamePiece? ...)
+                //
+            }
+            //TODO: check GamePiece state and perform actions like rotation, move etc.
+            else {
+                //TODO: set SidePanelScene visibility = false, unset activeGamePiece...
                 console.log('Mouse click OUTSIDE OF unit!');
             }
         }, this);
