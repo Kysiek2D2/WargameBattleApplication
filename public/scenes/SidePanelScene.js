@@ -15,6 +15,7 @@ class SidePanelScene extends Phaser.Scene {
         this.camera;
 
         this.sidePanelSceneAllComponentsContainer;
+        this.panelLastOccupiedPixelOnYAxis = 0;
         this.headerText;
         this.gamePieceStrengthComponent;
     }
@@ -29,15 +30,21 @@ class SidePanelScene extends Phaser.Scene {
     create() {
         this.adjustCamera();
         this.camera.setBackgroundColor(0xff0000); // Red background color
-        // Set up the side panel UI elements (e.g., header, buttons, etc.)
-        // You can use this.add.text, this.add.image, etc. to create elements
-        this.headerText = this.setTextAndAddToList("GamePiece Name Placeholder", 16);
-        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponentAndAddToList();
-        // Update the health display
-        this.distributeElementsEqually_On_Y_Axis(this.sidePanelSceneAllComponentsContainer);
-        // Add a listener to handle input inside SidePanelScene
-        // this.input.on('pointerdown', this.handlePointerInteraction, this);
+        this.setTransparentSpaceholder(50);
+        this.headerText = this.setText("GamePiece Name Placeholder", 16);
+        this.setTransparentSpaceholder(200);
+        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent();
     }
+
+    setTransparentSpaceholder(height) {
+        // Add a transparent sprite to take up space
+        const transparentSprite = this.add.sprite(0, 0, null);
+        transparentSprite.isVerticalSpaceholder = true;
+        transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
+        transparentSprite.setSize(this.sidePanelWidth, height); // Adjust the size as needed
+        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down SidePanelScene elements
+    }
+
 
     distributeElementsEqually_On_Y_Axis(container) {
         let totalHeight = 0;
@@ -51,7 +58,6 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     distributeElementsEquallyOn_X_Axis(container) {
-        // Distribute the elements equally along the X-axis
         let totalWidth = 0;
         container.list.forEach((element) => {
             totalWidth += element.width;
@@ -69,15 +75,14 @@ class SidePanelScene extends Phaser.Scene {
         this.sidePanelHeight = gameConfigHeight;
         console.log(`SidePanel size: \n width: ${this.sidePanelWidth}, \n height: ${this.sidePanelHeight}`);
         this.camera.setViewport(gameConfigWidth - this.sidePanelWidth, 0, this.sidePanelWidth, gameConfigHeight);
-        // Log x and y coordinates of the SidePanelScene
         console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
 
 
-    setGamePieceStrengthComponentAndAddToList() {
-        const container = this.add.container(this.sidePanelWidth / 2, 0);
-
+    setGamePieceStrengthComponent() {
+        const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
+        container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const minusButton = this.add.image(0, 0, 'minusButton')
             .setOrigin(0, 0)
             .setInteractive()
@@ -100,14 +105,12 @@ class SidePanelScene extends Phaser.Scene {
             });
         container.add(plusButton);
 
-        // Call the function to distribute elements equally
         this.distributeElementsEquallyOn_X_Axis(container);
-        this.sidePanelSceneAllComponentsContainer.add(container)
+        this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down SidePanelScene elements
         return container;
     }
 
     distributeElementsEquallyOn_X_Axis(container) {
-        // Distribute the elements equally along the X-axis
         let totalWidth = 0;
         container.list.forEach((element) => {
             totalWidth += element.width;
@@ -118,13 +121,13 @@ class SidePanelScene extends Phaser.Scene {
         });
     }
 
-    setTextAndAddToList(textString, fontSize) {
-        var textNode = this.add.text(10, 10, textString, { fontSize: `${fontSize}px`, fill: '#fff' });
-        // Center the header text horizontally
+    setText(textString, fontSize) {
+        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#fff' });
+        textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
         console.log(`Added text: ${headerTextX}`);
-        this.sidePanelSceneAllComponentsContainer.add(textNode);
+        this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
         return textNode;
     }
 
