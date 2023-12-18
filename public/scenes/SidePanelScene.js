@@ -20,6 +20,10 @@ class SidePanelScene extends Phaser.Scene {
         this.gamePieceStrengthComponent;
     }
 
+    preload() {
+        this.load.image({ key: 'oldPaperBackground', url: 'assets/scenery/oldScroll.png' })
+    }
+
     init() {
         this.sidePanelSceneAllComponentsContainer = this.add.container(0, 0);
         this.setVisible(this.sidePanelConfig.isVisible);
@@ -29,11 +33,18 @@ class SidePanelScene extends Phaser.Scene {
 
     create() {
         this.adjustCamera();
-        this.camera.setBackgroundColor(0xff0000); // Red background color
+        this.loadSidePanelSceneBackground('oldPaperBackground');
         this.setTransparentSpaceholder(50);
         this.headerText = this.setText("GamePiece Name Placeholder", 16);
         this.setTransparentSpaceholder(200);
         this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent();
+    }
+
+    loadSidePanelSceneBackground(spriteKey) {
+        const background = this.add.image(0, 0, spriteKey);
+        background.setOrigin(0);
+        background.setScale(this.sidePanelWidth / background.width, this.sidePanelHeight / background.height);
+        background.setDepth(-1);
     }
 
     setTransparentSpaceholder(height) {
