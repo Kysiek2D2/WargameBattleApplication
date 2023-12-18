@@ -10,14 +10,13 @@ class FireAndSwordScene extends WargameScene {
     }
 
     preload() {
-        this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/universalGrass.jpg' });
+        super.preload();
         this.load.image({ key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png' });
     }
 
     create() {
         super.create();
-        console.log('FireAndSwordScene create...')
-        this.loadMap('universalGrassBattleground');
+        console.log('FireAndSwordScene create...');
 
         var testUnit1 = new GamePiece(this, {
             x: 1100,

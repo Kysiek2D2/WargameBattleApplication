@@ -27,11 +27,18 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits = data.mapHeightInGameDistanceUnits;
     }
 
+    preload() {
+        this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/universalGrass.jpg' });
+        this.load.image({ key: 'wood', url: 'assets/scenery/wood.jpg' })
+    }
+
     create() {
         console.log('WargameScene create...');
         this.setSidePanelScene();
         this.setListenerForCameraMovement();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
+        this.loadBackground('wood');
+        this.loadMap('universalGrassBattleground');
 
         // Set up communication between scenes
         // this.sidePanelScene.events.on('setHealth', this.setHealth, this);
@@ -65,6 +72,29 @@ class WargameScene extends Phaser.Scene {
 
     getSidePanelScene() {
         return this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
+    }
+
+    loadBackground(spriteKey) {
+        var background;
+        background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
+        background.setOrigin(0.0, 0.0);
+        background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
+        background.setScale(1, 1); // Create mirror reflection
+
+        background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
+        background.setOrigin(0.0, 0.0);
+        background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
+        background.setScale(-1, 1); // Create mirror reflection
+
+        background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
+        background.setOrigin(1.0, 0.0);
+        background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
+        background.setScale(1, -1); // Create mirror reflection
+
+        background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
+        background.setOrigin(1.0, 0.0);
+        background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
+        background.setScale(-1, -1); // Create mirror reflection
     }
 
     loadMap(mapName) {

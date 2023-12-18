@@ -15,7 +15,7 @@ var config = {
         mouse: true,
         touch: true
     },
-    backgroundColor: '0xffffff'
+    backgroundColor: 0x000000
 };
 
 var game = new Phaser.Game(config);
