@@ -35,18 +35,10 @@ class WargameScene extends Phaser.Scene {
 
         // Set up communication between scenes
         // this.sidePanelScene.events.on('setHealth', this.setHealth, this);
-        // this.sidePanelScene.events.on('setVisible', this.setSidePanelVisibility, this);
     }
 
     update() {
         this.handleZooming();
-    }
-
-    // Add these methods for communication with SidePanelScene
-    setHealth(health) {
-        if (this.sidePanelScene) {
-            this.sidePanelScene.setHealth(health);
-        }
     }
 
     setSidePanelVisibility(isVisible) {

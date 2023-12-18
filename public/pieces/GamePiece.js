@@ -76,9 +76,6 @@ class GamePiece {
         this.sprite.setPosition(x, y);
     }
 
-    changeTexture() {
-        this.sprite.setTexture(this.spriteKey);
-    }
 
     select() {
         this.isSelected = true;

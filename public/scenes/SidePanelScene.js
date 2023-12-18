@@ -9,37 +9,57 @@ class SidePanelScene extends Phaser.Scene {
             widthPercentage: 15,
             heightPercentage: 100,
             isVisible: true,
-            health: 100, // Initial health value
         };
         this.sidePanelWidth;
         this.sidePanelHeight;
         this.camera;
 
+        this.sidePanelSceneAllComponentsContainer;
         this.headerText;
+        this.gamePieceStrengthComponent;
     }
 
     init() {
+        this.sidePanelSceneAllComponentsContainer = this.add.container(0, 0);
         this.setVisible(this.sidePanelConfig.isVisible);
         this.camera = this.cameras.main;
     }
+
 
     create() {
         this.adjustCamera();
         this.camera.setBackgroundColor(0xff0000); // Red background color
         // Set up the side panel UI elements (e.g., header, buttons, etc.)
         // You can use this.add.text, this.add.image, etc. to create elements
-        this.headerText = this.addText("GamePiece Name Placeholder", 16);
+        this.headerText = this.setTextAndAddToList("GamePiece Name Placeholder", 16);
+        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponentAndAddToList();
         // Update the health display
-        this.healthText = this.add.text(10, 80, `Health: ${this.sidePanelConfig.health}`, {
-            fontSize: '16px',
-            fill: '#fff',
-        });
-
-
+        this.distributeElementsEqually_On_Y_Axis(this.sidePanelSceneAllComponentsContainer);
         // Add a listener to handle input inside SidePanelScene
         // this.input.on('pointerdown', this.handlePointerInteraction, this);
-        // this.input.on('pointermove', this.handlePointerInteraction, this);
+    }
 
+    distributeElementsEqually_On_Y_Axis(container) {
+        let totalHeight = 0;
+        container.list.forEach((element) => {
+            totalHeight += element.height;
+        });
+        const spacing = totalHeight / (container.list.length - 1);
+        container.list.forEach((element, index) => {
+            element.y = (index + 1) * spacing;
+        });
+    }
+
+    distributeElementsEquallyOn_X_Axis(container) {
+        // Distribute the elements equally along the X-axis
+        let totalWidth = 0;
+        container.list.forEach((element) => {
+            totalWidth += element.width;
+        });
+        const spacing = totalWidth / (container.list.length - 1);
+        container.list.forEach((element, index) => {
+            element.x = (index - 1) * spacing;
+        });
     }
 
     adjustCamera() {
@@ -53,12 +73,58 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
-    addText(textString, fontSize) {
+
+
+    setGamePieceStrengthComponentAndAddToList() {
+        const container = this.add.container(this.sidePanelWidth / 2, 0);
+
+        const minusButton = this.add.image(0, 0, 'minusButton')
+            .setOrigin(0, 0)
+            .setInteractive()
+            .on('pointerdown', () => {
+                console.log('Minus button clicked');
+                this.updateGamePiece();
+            });
+        container.add(minusButton);
+
+        const gamePieceStrengthText = this.add.text(0, 0, '0', { fontSize: '32px', fill: '#fff' })
+            .setOrigin(0.5, 0);
+        container.add(gamePieceStrengthText);
+
+        const plusButton = this.add.image(0, 0, 'plusButton')
+            .setOrigin(1, 0)
+            .setInteractive()
+            .on('pointerdown', () => {
+                console.log('Plus button clicked');
+                this.updateGamePiece();
+            });
+        container.add(plusButton);
+
+        // Call the function to distribute elements equally
+        this.distributeElementsEquallyOn_X_Axis(container);
+        this.sidePanelSceneAllComponentsContainer.add(container)
+        return container;
+    }
+
+    distributeElementsEquallyOn_X_Axis(container) {
+        // Distribute the elements equally along the X-axis
+        let totalWidth = 0;
+        container.list.forEach((element) => {
+            totalWidth += element.width;
+        });
+        const spacing = totalWidth / (container.list.length - 1);
+        container.list.forEach((element, index) => {
+            element.x = (index - 1) * spacing;
+        });
+    }
+
+    setTextAndAddToList(textString, fontSize) {
         var textNode = this.add.text(10, 10, textString, { fontSize: `${fontSize}px`, fill: '#fff' });
         // Center the header text horizontally
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
-        console.log(`headerTextX: ${headerTextX}`);
+        console.log(`Added text: ${headerTextX}`);
+        this.sidePanelSceneAllComponentsContainer.add(textNode);
         return textNode;
     }
 
@@ -91,13 +157,6 @@ class SidePanelScene extends Phaser.Scene {
         } else {
             console.log('Pointer down OUTSIDE SidePanelScene');
             return false;
-        }
-    }
-
-    setHealth(health) {
-        this.sidePanelConfig.health = health;
-        if (this.healthText) {
-            this.healthText.setText(`Health: ${this.sidePanelConfig.health}`);
         }
     }
 
