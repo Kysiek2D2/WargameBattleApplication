@@ -33,10 +33,12 @@ class SidePanelScene extends Phaser.Scene {
 
     create() {
         this.adjustCamera();
+        this.setTransparentSpaceholder(this.sidePanelHeight * 0.1);
+
         this.loadSidePanelSceneBackground('oldPaperBackground');
         this.setTransparentSpaceholder(50);
         this.headerText = this.setText("GamePiece Name Placeholder", 20);
-        this.setTransparentSpaceholder(200);
+        this.setTransparentSpaceholder(50);
         this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent();
     }
 
@@ -89,8 +91,6 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
-
-
     setGamePieceStrengthComponent() {
         const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
         container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
@@ -133,7 +133,7 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     setText(textString, fontSize) {
-        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000' });
+        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
         textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
