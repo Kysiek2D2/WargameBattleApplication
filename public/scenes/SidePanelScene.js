@@ -39,7 +39,7 @@ class SidePanelScene extends Phaser.Scene {
         this.setTransparentSpaceholder(50);
         this.headerText = this.setText("GamePiece Name Placeholder", 20);
         this.setTransparentSpaceholder(50);
-        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent();
+        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent(36);
     }
 
     loadSidePanelSceneBackground(spriteKey) {
@@ -48,16 +48,6 @@ class SidePanelScene extends Phaser.Scene {
         background.setScale(this.sidePanelWidth / background.width, this.sidePanelHeight / background.height);
         background.setDepth(-1);
     }
-
-    setTransparentSpaceholder(height) {
-        // Add a transparent sprite to take up space
-        const transparentSprite = this.add.sprite(0, 0, null);
-        transparentSprite.isVerticalSpaceholder = true;
-        transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
-        transparentSprite.setSize(this.sidePanelWidth, height); // Adjust the size as needed
-        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down SidePanelScene elements
-    }
-
 
     distributeElementsEqually_On_Y_Axis(container) {
         let totalHeight = 0;
@@ -81,6 +71,15 @@ class SidePanelScene extends Phaser.Scene {
         });
     }
 
+    setTransparentSpaceholder(height) {
+        // Add a transparent sprite to take up space
+        const transparentSprite = this.add.sprite(0, 0, null);
+        transparentSprite.isVerticalSpaceholder = true;
+        transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
+        transparentSprite.setSize(this.sidePanelWidth, height); // Adjust the size as needed
+        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down SidePanelScene elements
+    }
+
     adjustCamera() {
         // Adjust the camera to take only a portion of the screen
         const { width: gameConfigWidth, height: gameConfigHeight } = this.game.config;
@@ -91,7 +90,17 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
-    setGamePieceStrengthComponent() {
+    setText(textString, fontSize) {
+        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
+        textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
+        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
+        textNode.setX(headerTextX);
+        console.log(`Added text: ${headerTextX}`);
+        this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
+        return textNode;
+    }
+
+    setGamePieceStrengthComponent(fontSize) {
         const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
         container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const minusButton = this.add.image(0, 0, 'minusButton')
@@ -103,7 +112,7 @@ class SidePanelScene extends Phaser.Scene {
             });
         container.add(minusButton);
 
-        const gamePieceStrengthText = this.add.text(0, 0, '0', { fontSize: '32px', fill: '#fff' })
+        const gamePieceStrengthText = this.add.text(0, 0, '0', { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
             .setOrigin(0.5, 0);
         container.add(gamePieceStrengthText);
 
@@ -119,27 +128,6 @@ class SidePanelScene extends Phaser.Scene {
         this.distributeElementsEquallyOn_X_Axis(container);
         this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down SidePanelScene elements
         return container;
-    }
-
-    distributeElementsEquallyOn_X_Axis(container) {
-        let totalWidth = 0;
-        container.list.forEach((element) => {
-            totalWidth += element.width;
-        });
-        const spacing = totalWidth / (container.list.length - 1);
-        container.list.forEach((element, index) => {
-            element.x = (index - 1) * spacing;
-        });
-    }
-
-    setText(textString, fontSize) {
-        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
-        textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
-        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
-        textNode.setX(headerTextX);
-        console.log(`Added text: ${headerTextX}`);
-        this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
-        return textNode;
     }
 
     updateSidePanelScene({ headerText }) {
