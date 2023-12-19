@@ -37,12 +37,6 @@ class SidePanelScene extends Phaser.Scene {
     create() {
         this.adjustCamera();
         this.setTransparentSpaceholder(this.sidePanelHeight * 0.1);
-
-        // this.loadSidePanelSceneBackground('oldPaperBackground');
-        // this.setTransparentSpaceholder(50);
-        // this.headerText = this.setText("GamePiece Name Placeholder", 20);
-        // this.setTransparentSpaceholder(50);
-        // this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent(36, 0);
     }
 
     loadSidePanelSceneBackground(spriteKey) {
@@ -95,14 +89,11 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     setText(textString, fontSize) {
-        //var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
         var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
-        //textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
         console.log(`Added text: ${headerTextX}`);
         this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
-        //return textNode;
     }
 
     setGamePieceStrengthComponent({ fontSize, gamePieceStrengthValue }) {
@@ -128,7 +119,6 @@ class SidePanelScene extends Phaser.Scene {
         const gamePieceStrengthText = this.add.text(0, 0, gamePieceStrengthValue, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
             .setOrigin(0.5, 0.5)
             .setY(elementHeight / 2)
-        //gamePieceStrengthText.setSize(gamePieceStrengthText.width * 1.5, gamePieceStrengthText.height);
         gamePieceStrengthText.width = elementWidth;
         gamePieceStrengthText.height = elementHeight;
         container.add(gamePieceStrengthText);
@@ -149,7 +139,6 @@ class SidePanelScene extends Phaser.Scene {
 
         this.distributeElementsEquallyOn_X_Axis(container);
         this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down SidePanelScene elements
-        //return container;
     }
 
     updateSidePanelScene({ gamePiece, headerText, gamePieceStrengthValue }) {
