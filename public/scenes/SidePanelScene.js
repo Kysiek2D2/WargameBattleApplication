@@ -23,6 +23,9 @@ class SidePanelScene extends Phaser.Scene {
 
     preload() {
         this.load.image({ key: 'backgroundImage', url: 'assets/scenery/oldScroll2.png' })
+        this.load.image({ key: 'plusButton', url: 'assets/icons/plusButtonGrey_ver1.png' })
+        this.load.image({ key: 'minusButton', url: 'assets/icons/minusButtonGrey_ver1.png' })
+
     }
 
     init() {
@@ -63,6 +66,7 @@ class SidePanelScene extends Phaser.Scene {
     distributeElementsEquallyOn_X_Axis(container) {
         let totalWidth = 0;
         container.list.forEach((element) => {
+            console.log(`element.width: ${element.width}`)
             totalWidth += element.width;
         });
         const spacing = totalWidth / (container.list.length - 1);
@@ -104,8 +108,12 @@ class SidePanelScene extends Phaser.Scene {
     setGamePieceStrengthComponent({ fontSize, gamePieceStrengthValue }) {
         const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
         container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
+        const elementWidth = 50;
+        const elementHeight = 50;
+
         const minusButton = this.add.image(0, 0, 'minusButton')
             .setOrigin(0, 0)
+            .setDisplaySize(elementWidth, elementHeight)
             .setInteractive()
             .on('pointerdown', () => {
                 console.log('Minus button clicked');
@@ -113,15 +121,21 @@ class SidePanelScene extends Phaser.Scene {
                 gamePieceStrengthText.setText(this.gamePieceStrengthValue);
                 this.updateGamePiece({ newGamePieceStrengthValue: this.gamePieceStrengthValue });
             });
+        minusButton.width = elementWidth;
+        minusButton.height = elementHeight;
         container.add(minusButton);
 
         const gamePieceStrengthText = this.add.text(0, 0, gamePieceStrengthValue, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
-            .setOrigin(0.5, 0);
-        gamePieceStrengthText.setSize(gamePieceStrengthText.width * 1.5, gamePieceStrengthText.height);
+            .setOrigin(0.5, 0.5)
+            .setY(elementHeight / 2)
+        //gamePieceStrengthText.setSize(gamePieceStrengthText.width * 1.5, gamePieceStrengthText.height);
+        gamePieceStrengthText.width = elementWidth;
+        gamePieceStrengthText.height = elementHeight;
         container.add(gamePieceStrengthText);
 
         const plusButton = this.add.image(0, 0, 'plusButton')
             .setOrigin(1, 0)
+            .setDisplaySize(elementWidth, elementHeight)
             .setInteractive()
             .on('pointerdown', () => {
                 console.log('Plus button clicked');
@@ -129,6 +143,8 @@ class SidePanelScene extends Phaser.Scene {
                 gamePieceStrengthText.setText(this.gamePieceStrengthValue);
                 this.updateGamePiece({ newGamePieceStrengthValue: this.gamePieceStrengthValue });
             });
+        plusButton.width = elementWidth;
+        plusButton.height = elementHeight;
         container.add(plusButton);
 
         this.distributeElementsEquallyOn_X_Axis(container);
