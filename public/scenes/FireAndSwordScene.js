@@ -25,6 +25,7 @@ class FireAndSwordScene extends WargameScene {
             displayHeight: 2.5,
             spriteKey: 'basicInfantryUnitSizeL',
             gamePieceName: 'Regiment Gwardii',
+            gamePieceStrength: 5,
         });
         console.log(`TestUnit1 depth: ${testUnit1.sprite.depth}`)
         var testUnit2 = new GamePiece(this, {
@@ -34,6 +35,7 @@ class FireAndSwordScene extends WargameScene {
             displayHeight: 2.5,
             spriteKey: 'basicInfantryUnitSizeL',
             gamePieceName: 'Kozacy Rejestrowi',
+            gamePieceStrength: 10,
         });
         console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
 

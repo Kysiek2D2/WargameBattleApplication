@@ -13,19 +13,21 @@ class SidePanelScene extends Phaser.Scene {
         this.sidePanelWidth;
         this.sidePanelHeight;
         this.camera;
+        this.sidePanelBackground;
 
         this.sidePanelSceneAllComponentsContainer;
         this.panelLastOccupiedPixelOnYAxis = 0;
         this.headerText;
-        this.gamePieceStrengthComponent;
+        this.gamePieceStrengthValue = 0;
     }
 
     preload() {
-        this.load.image({ key: 'oldPaperBackground', url: 'assets/scenery/oldScroll2.png' })
+        this.load.image({ key: 'backgroundImage', url: 'assets/scenery/oldScroll2.png' })
     }
 
     init() {
         this.sidePanelSceneAllComponentsContainer = this.add.container(0, 0);
+        this.sidePanelBackground = 'backgroundImage';
         this.setVisible(this.sidePanelConfig.isVisible);
         this.camera = this.cameras.main;
     }
@@ -35,11 +37,11 @@ class SidePanelScene extends Phaser.Scene {
         this.adjustCamera();
         this.setTransparentSpaceholder(this.sidePanelHeight * 0.1);
 
-        this.loadSidePanelSceneBackground('oldPaperBackground');
-        this.setTransparentSpaceholder(50);
-        this.headerText = this.setText("GamePiece Name Placeholder", 20);
-        this.setTransparentSpaceholder(50);
-        this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent(36);
+        // this.loadSidePanelSceneBackground('oldPaperBackground');
+        // this.setTransparentSpaceholder(50);
+        // this.headerText = this.setText("GamePiece Name Placeholder", 20);
+        // this.setTransparentSpaceholder(50);
+        // this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent(36, 0);
     }
 
     loadSidePanelSceneBackground(spriteKey) {
@@ -91,16 +93,17 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     setText(textString, fontSize) {
+        //var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
         var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
-        textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
+        //textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
         console.log(`Added text: ${headerTextX}`);
         this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
-        return textNode;
+        //return textNode;
     }
 
-    setGamePieceStrengthComponent(fontSize) {
+    setGamePieceStrengthComponent({ fontSize, gamePieceStrengthValue }) {
         const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
         container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const minusButton = this.add.image(0, 0, 'minusButton')
@@ -112,7 +115,7 @@ class SidePanelScene extends Phaser.Scene {
             });
         container.add(minusButton);
 
-        const gamePieceStrengthText = this.add.text(0, 0, '0', { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
+        const gamePieceStrengthText = this.add.text(0, 0, gamePieceStrengthValue, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
             .setOrigin(0.5, 0);
         container.add(gamePieceStrengthText);
 
@@ -127,15 +130,26 @@ class SidePanelScene extends Phaser.Scene {
 
         this.distributeElementsEquallyOn_X_Axis(container);
         this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down SidePanelScene elements
-        return container;
+        //return container;
     }
 
-    updateSidePanelScene({ headerText }) {
+    updateSidePanelScene({ headerText, gamePieceStrengthValue }) {
         //TODO: this function is called when GamePiece is set active. 
         //Here we update SidePanelScene properties to be displayed.
-        this.headerText.setText(headerText);
-        const headerTextX = (this.sidePanelWidth / 2) - (this.headerText.width / 2);
-        this.headerText.setX(headerTextX);
+        this.headerText = headerText;
+        this.gamePieceStrengthValue = gamePieceStrengthValue;
+        this.clearSidePanelScene(); //clearing previous SidePanelScene elements so it's rendered again
+        this.loadSidePanelSceneBackground(this.sidePanelBackground);
+
+        this.setTransparentSpaceholder(this.sidePanelHeight * 0.2);
+        this.setText(this.headerText, 20);
+        this.setTransparentSpaceholder(50);
+        this.setGamePieceStrengthComponent({ fontSize: 36, gamePieceStrengthValue: this.gamePieceStrengthValue });
+    }
+
+    clearSidePanelScene() {
+        this.children.removeAll();
+        this.panelLastOccupiedPixelOnYAxis = 0;
     }
 
     createGamePieceStrengthComponent() {

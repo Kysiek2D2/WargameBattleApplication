@@ -6,7 +6,7 @@ class GamePiece {
     static instances = [];
     static idCounter = 0;
 
-    constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed' }) {
+    constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed', gamePieceStrength = 15 }) {
         console.log(`GamePiece constructor...`);
         this.scene = scene;
 
@@ -22,6 +22,7 @@ class GamePiece {
         this.isSelected = false;
         this.isBlocked = false;
         this.gamePieceName = gamePieceName;
+        this.gamePieceStrength = gamePieceStrength;
 
         //Additional configuration
         this.setOnDragListener();
@@ -42,7 +43,8 @@ class GamePiece {
         this.sprite.setInteractive(); // Make sure the sprite is interactive
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
-            this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName });
+            console.log(`GamePieceStrength: ${this.gamePieceStrength}`)
+            this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
             GamePiece.activeGamePiece?.sprite.clearTint();
             GamePiece.activeGamePiece = this;
             GamePiece.activeGamePiece.sprite.setTint(185273);
