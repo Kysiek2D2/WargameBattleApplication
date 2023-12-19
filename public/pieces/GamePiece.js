@@ -24,18 +24,64 @@ class GamePiece {
         this.gamePieceName = gamePieceName;
         this.gamePieceStrength = gamePieceStrength;
 
+        this.rotationNodes = {
+            cornerTopLeft: null,
+            cornerTopRight: null,
+            cornerBottomLeft: null,
+            cornerBottomRight: null,
+        }
+
         //Additional configuration
+        this.setRotationNodes();
         this.setOnDragListener();
         this.setGamePieceListener();
         GamePiece.instances = [...GamePiece.instances, this];
         GamePiece.activeGamePiece = null;
     }
 
+    getCorners() {
+        var corners = {
+            topLeft: this.sprite.getTopLeft(),
+            topRight: this.sprite.getTopRight(),
+            bottomLeft: this.sprite.getBottomLeft(),
+            bottomRight: this.sprite.getBottomRight(),
+        }
+        return corners;
+    }
+
+    setRotationNodes() {
+        var corners = this.getCorners();
+
+        this.rotationNodes = {
+            nodeTopLeft: this.createSingleRotationNode(corners.topLeft.x, corners.topLeft.y, 5, 0x0000ff),
+            nodeTopRight: this.createSingleRotationNode(corners.topRight.x, corners.topRight.y, 5, 0x0000ff),
+            nodeBottomLeft: this.createSingleRotationNode(corners.bottomLeft.x, corners.bottomLeft.y, 5, 0x0000ff),
+            nodeBottomRight: this.createSingleRotationNode(corners.bottomRight.x, corners.bottomRight.y, 5, 0x0000ff),
+        }
+    }
+
+    createSingleRotationNode(x, y, radius, color) {
+        var cornerRotationNode = this.scene.add.circle(x, y, 5, 0x0000ff);
+        cornerRotationNode.setOrigin(0.5, 0.5);
+        cornerRotationNode.setInteractive();
+        return cornerRotationNode;
+    }
+
+    updateRotationNodes() {
+        var corners = this.getCorners();
+
+        this.rotationNodes.nodeTopLeft.setPosition(corners.topLeft.x, corners.topLeft.y);
+        this.rotationNodes.nodeTopRight.setPosition(corners.topRight.x, corners.topRight.y);
+        this.rotationNodes.nodeBottomLeft.setPosition(corners.bottomLeft.x, corners.bottomLeft.y);
+        this.rotationNodes.nodeBottomRight.setPosition(corners.bottomRight.x, corners.bottomRight.y);
+    }
+
     setOnDragListener() {
         this.scene.input.setDraggable(this.sprite);
-        this.scene.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+        this.scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
             gameObject.x = dragX;
             gameObject.y = dragY;
+            this.updateRotationNodes();
         })
     }
 
