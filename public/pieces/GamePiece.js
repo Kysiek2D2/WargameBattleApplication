@@ -43,11 +43,11 @@ class GamePiece {
         this.sprite.setInteractive(); // Make sure the sprite is interactive
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
-            console.log(`GamePieceStrength: ${this.gamePieceStrength}`)
-            this.scene.getSidePanelScene().updateSidePanelScene({ headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
+            console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
             GamePiece.activeGamePiece?.sprite.clearTint();
             GamePiece.activeGamePiece = this;
             GamePiece.activeGamePiece.sprite.setTint(185273);
+            this.scene.getSidePanelScene().updateSidePanelScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
             //Hey ChatGPT: I want to set activeGamePiece border to red and 2px
             console.log(`Active unit is: ${GamePiece.activeGamePiece.gamePieceName}`);
             //this.scene.getSidePanelScene().headerText.setText(this.gamePieceName);

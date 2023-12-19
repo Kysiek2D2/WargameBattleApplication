@@ -15,7 +15,7 @@ class SidePanelScene extends Phaser.Scene {
         this.camera;
         this.sidePanelBackground;
 
-        this.sidePanelSceneAllComponentsContainer;
+        this.gamePiece = null;
         this.panelLastOccupiedPixelOnYAxis = 0;
         this.headerText;
         this.gamePieceStrengthValue = 0;
@@ -26,12 +26,10 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     init() {
-        this.sidePanelSceneAllComponentsContainer = this.add.container(0, 0);
         this.sidePanelBackground = 'backgroundImage';
         this.setVisible(this.sidePanelConfig.isVisible);
         this.camera = this.cameras.main;
     }
-
 
     create() {
         this.adjustCamera();
@@ -111,12 +109,15 @@ class SidePanelScene extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => {
                 console.log('Minus button clicked');
-                this.updateGamePiece();
+                this.gamePieceStrengthValue -= 1;
+                gamePieceStrengthText.setText(this.gamePieceStrengthValue);
+                this.updateGamePiece({ newGamePieceStrengthValue: this.gamePieceStrengthValue });
             });
         container.add(minusButton);
 
         const gamePieceStrengthText = this.add.text(0, 0, gamePieceStrengthValue, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' })
             .setOrigin(0.5, 0);
+        gamePieceStrengthText.setSize(gamePieceStrengthText.width * 1.5, gamePieceStrengthText.height);
         container.add(gamePieceStrengthText);
 
         const plusButton = this.add.image(0, 0, 'plusButton')
@@ -124,7 +125,9 @@ class SidePanelScene extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => {
                 console.log('Plus button clicked');
-                this.updateGamePiece();
+                this.gamePieceStrengthValue += 1;
+                gamePieceStrengthText.setText(this.gamePieceStrengthValue);
+                this.updateGamePiece({ newGamePieceStrengthValue: this.gamePieceStrengthValue });
             });
         container.add(plusButton);
 
@@ -133,9 +136,10 @@ class SidePanelScene extends Phaser.Scene {
         //return container;
     }
 
-    updateSidePanelScene({ headerText, gamePieceStrengthValue }) {
+    updateSidePanelScene({ gamePiece, headerText, gamePieceStrengthValue }) {
         //TODO: this function is called when GamePiece is set active. 
         //Here we update SidePanelScene properties to be displayed.
+        this.gamePiece = gamePiece;
         this.headerText = headerText;
         this.gamePieceStrengthValue = gamePieceStrengthValue;
         this.clearSidePanelScene(); //clearing previous SidePanelScene elements so it's rendered again
@@ -157,7 +161,8 @@ class SidePanelScene extends Phaser.Scene {
         //Set listeners here. After value is changed, it's propagated to related GamePiece.
     }
 
-    updateGamePiece() {
+    updateGamePiece({ newGamePieceStrengthValue }) {
+        this.gamePiece.gamePieceStrength = newGamePieceStrengthValue;
         //Here we can sent request to GamePiece to be updated.
     }
 
