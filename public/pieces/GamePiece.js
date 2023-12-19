@@ -34,7 +34,7 @@ class GamePiece {
         //Additional configuration
         this.setRotationNodes();
         this.setOnDragListener();
-        this.setGamePieceListener();
+        this.setActivateListener();
         GamePiece.instances = [...GamePiece.instances, this];
         GamePiece.activeGamePiece = null;
     }
@@ -64,6 +64,7 @@ class GamePiece {
         var cornerRotationNode = this.scene.add.circle(x, y, 5, 0x0000ff);
         cornerRotationNode.setOrigin(0.5, 0.5);
         cornerRotationNode.setInteractive();
+        cornerRotationNode.setVisible(false);
         return cornerRotationNode;
     }
 
@@ -85,14 +86,23 @@ class GamePiece {
         })
     }
 
-    setGamePieceListener() {
+    setActivateListener() {
         this.sprite.setInteractive(); // Make sure the sprite is interactive
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
             console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
-            GamePiece.activeGamePiece?.sprite.clearTint();
+
+            //Clear previous activeGamePiece IF not null
+            if (GamePiece.activeGamePiece !== null) {
+                Object.values(GamePiece.activeGamePiece.rotationNodes).forEach(node => node.setVisible(false));
+                GamePiece.activeGamePiece?.sprite.clearTint();
+            }
+
             GamePiece.activeGamePiece = this;
+
             GamePiece.activeGamePiece.sprite.setTint(185273);
+            Object.values(GamePiece.activeGamePiece.rotationNodes).forEach(node => node.setVisible(true));
+
             this.scene.getSidePanelScene().updateSidePanelScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
             //Hey ChatGPT: I want to set activeGamePiece border to red and 2px
             console.log(`Active unit is: ${GamePiece.activeGamePiece.gamePieceName}`);
