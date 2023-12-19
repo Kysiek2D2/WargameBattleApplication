@@ -28,7 +28,7 @@ class WargameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/universalGrass.jpg' });
+        this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/landOfWonders.jpg' });
         this.load.image({ key: 'wood', url: 'assets/scenery/wood.jpg' })
     }
 

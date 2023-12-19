@@ -6,7 +6,7 @@ class SidePanelScene extends Phaser.Scene {
         console.log(`SidePanelScene constructor...`);
         super({ key: CONSTANTS.SCENES.SIDE_PANEL_SCENE, active: true });
         this.sidePanelConfig = {
-            widthPercentage: 15,
+            widthPercentage: 20,
             heightPercentage: 100,
             isVisible: true,
         };
@@ -21,7 +21,7 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image({ key: 'oldPaperBackground', url: 'assets/scenery/oldScroll.png' })
+        this.load.image({ key: 'oldPaperBackground', url: 'assets/scenery/oldScroll2.png' })
     }
 
     init() {
@@ -35,7 +35,7 @@ class SidePanelScene extends Phaser.Scene {
         this.adjustCamera();
         this.loadSidePanelSceneBackground('oldPaperBackground');
         this.setTransparentSpaceholder(50);
-        this.headerText = this.setText("GamePiece Name Placeholder", 16);
+        this.headerText = this.setText("GamePiece Name Placeholder", 20);
         this.setTransparentSpaceholder(200);
         this.gamePieceStrengthComponent = this.setGamePieceStrengthComponent();
     }
@@ -133,7 +133,7 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     setText(textString, fontSize) {
-        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#fff' });
+        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000' });
         textNode.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
         const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
         textNode.setX(headerTextX);
