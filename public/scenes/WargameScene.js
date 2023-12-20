@@ -35,7 +35,7 @@ class WargameScene extends Phaser.Scene {
     create() {
         console.log('WargameScene create...');
         this.setSidePanelScene();
-        this.setListenerForCameraMovement();
+        this.setPointerListeners();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
         this.loadMap('universalGrassBattleground');
@@ -93,7 +93,7 @@ class WargameScene extends Phaser.Scene {
         console.log(`Map size: \n width: ${map.width} px, \n height: ${map.height} px.`);
     }
 
-    setListenerForCameraMovement() {
+    setPointerListeners() {
         console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
             if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this) || this.sidePanelScene.isMouseClickOnSidePanel(pointer)) return;
