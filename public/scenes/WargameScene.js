@@ -91,6 +91,14 @@ class WargameScene extends Phaser.Scene {
         console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
     }
 
+    setSidePanelScene() {
+        this.scene.add(CONSTANTS.SCENES.SIDE_PANEL_SCENE, SidePanelScene, true);
+        this.sidePanelScene = this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
+    }
+
+    getSidePanelScene() {
+        return this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
+    }
 
     setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
@@ -98,7 +106,7 @@ class WargameScene extends Phaser.Scene {
             if (!pointer.isDown
                 || GamePiece.isMouseClickOnGamePiece(pointer, this)
                 || this.sidePanelScene.isMouseClickOnSidePanel(pointer)
-                || GamePiece.activateGamePiece !== null) return;
+                || GamePiece.activeGamePiece !== null) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
         });
@@ -137,21 +145,6 @@ class WargameScene extends Phaser.Scene {
         } else {
             // Decrease the cooldown on each update
             this.zoomCooldown -= this.time.deltaMS;
-        }
-    }
-
-    setSidePanelScene() {
-        this.scene.add(CONSTANTS.SCENES.SIDE_PANEL_SCENE, SidePanelScene, true);
-        this.sidePanelScene = this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
-    }
-
-    getSidePanelScene() {
-        return this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
-    }
-
-    setSidePanelVisibility(isVisible) {
-        if (this.sidePanelScene) {
-            this.sidePanelScene.setVisible(isVisible);
         }
     }
 

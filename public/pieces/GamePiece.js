@@ -35,19 +35,9 @@ class GamePiece {
         //Additional configuration
         this.setRotationNodes();
         this.setOnDragListener();
-        this.setActivateAndDeactivateListener();
+        this.setActivateListener();
         GamePiece.instances = [...GamePiece.instances, this];
         GamePiece.activeGamePiece = null;
-    }
-
-    getCorners() {
-        var corners = {
-            topLeft: this.sprite.getTopLeft(),
-            topRight: this.sprite.getTopRight(),
-            bottomLeft: this.sprite.getBottomLeft(),
-            bottomRight: this.sprite.getBottomRight(),
-        }
-        return corners;
     }
 
     setRotationNodes() {
@@ -59,17 +49,6 @@ class GamePiece {
             nodeBottomLeft: this.createSingleRotationNode(corners.bottomLeft.x, corners.bottomLeft.y, 7, 0x914148),
             nodeBottomRight: this.createSingleRotationNode(corners.bottomRight.x, corners.bottomRight.y, 7, 0x914148),
         }
-    }
-
-    static isMouseClickOnActiveGamePieceRotationNode(pointer) {
-        // Convert screen coordinates to world coordinates
-        if (GamePiece.activeGamePiece === null) return false;
-        var worldX = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        var isMouseOnRotationNode = Object.values(GamePiece.activeGamePiece.rotationNodes).some(node => node.getBounds().contains(worldX, worldY));
-
-        console.log(`Is mouse click on rotation node: ${isMouseOnRotationNode}`);
-        return isMouseOnRotationNode;
     }
 
     createSingleRotationNode(x, y, radius, color) {
@@ -97,11 +76,30 @@ class GamePiece {
 
     updateRotationNodes() {
         var corners = this.getCorners();
-
         this.rotationNodes.nodeTopLeft.setPosition(corners.topLeft.x, corners.topLeft.y);
         this.rotationNodes.nodeTopRight.setPosition(corners.topRight.x, corners.topRight.y);
         this.rotationNodes.nodeBottomLeft.setPosition(corners.bottomLeft.x, corners.bottomLeft.y);
         this.rotationNodes.nodeBottomRight.setPosition(corners.bottomRight.x, corners.bottomRight.y);
+    }
+
+    getCorners() {
+        var corners = {
+            topLeft: this.sprite.getTopLeft(),
+            topRight: this.sprite.getTopRight(),
+            bottomLeft: this.sprite.getBottomLeft(),
+            bottomRight: this.sprite.getBottomRight(),
+        }
+        return corners;
+    }
+
+    static isMouseClickOnActiveGamePieceRotationNode(pointer) {
+        // Convert screen coordinates to world coordinates
+        if (GamePiece.activeGamePiece === null) return false;
+        var worldX = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
+        var worldY = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
+        var isMouseOnRotationNode = Object.values(GamePiece.activeGamePiece.rotationNodes).some(node => node.getBounds().contains(worldX, worldY));
+        console.log(`Is mouse click on rotation node: ${isMouseOnRotationNode}`);
+        return isMouseOnRotationNode;
     }
 
     setOnDragListener() {
@@ -113,7 +111,7 @@ class GamePiece {
         })
     }
 
-    setActivateAndDeactivateListener() {
+    setActivateListener() {
         //Activate listener
         this.sprite.setInteractive(); // Make sure the sprite is interactive
         this.sprite.on('pointerdown', () => {
@@ -139,9 +137,11 @@ class GamePiece {
     }
 
     static deactivateGamePiece() {
+        if (GamePiece.activeGamePiece === null) return;
         Object.values(GamePiece.activeGamePiece.rotationNodes).forEach(node => node.setVisible(false));
         GamePiece.activeGamePiece?.sprite.clearTint();
         GamePiece.activeGamePiece?.scene.getSidePanelScene().setVisible(false);
+        GamePiece.activeGamePiece = null;
     }
 
     static isMouseClickOnGamePiece(pointer, scene) {
@@ -153,27 +153,6 @@ class GamePiece {
         var isMouseOnGamePiece = gamePiecesUnderClick.length > 0;
         console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
         return isMouseOnGamePiece;
-    }
-
-    getById(id) {
-        GamePiece.instances.get(id);
-    }
-
-    rotate() {
-        this.sprite.angle += angle;
-    }
-
-    move(x, y) {
-        this.sprite.setPosition(x, y);
-    }
-
-
-    select() {
-        this.isSelected = true;
-    }
-
-    deselect() {
-        this.isSelected = false;
     }
 }
 
