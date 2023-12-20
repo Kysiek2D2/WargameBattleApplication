@@ -18,6 +18,7 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits;
         this.sceneDistanceUnitPixels;
         this.sidePanelScene;
+        this.map;
     }
 
     init(data) {
@@ -35,13 +36,10 @@ class WargameScene extends Phaser.Scene {
     create() {
         console.log('WargameScene create...');
         this.setSidePanelScene();
-        this.setPointerListeners();
+        this.setCameraMovementListeners();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
         this.loadMap('universalGrassBattleground');
-
-        // Set up communication between scenes
-        // this.sidePanelScene.events.on('setHealth', this.setHealth, this);
     }
 
     update() {
@@ -84,22 +82,34 @@ class WargameScene extends Phaser.Scene {
 
     loadMap(mapName) {
         console.log('Loading map...');
-        var map = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, mapName);
-        map.setOrigin(0.5, 0.5);
-        map.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
-        map.displayWidth = this.mapWidthInGameDistanceUnits * this.sceneDistanceUnitPixels;
-        map.displayHeight = this.mapHeightInGameDistanceUnits * this.sceneDistanceUnitPixels;
+        this.map = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, mapName)
+            .setOrigin(0.5, 0.5)
+            .setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2)
+        this.map.displayWidth = this.mapWidthInGameDistanceUnits * this.sceneDistanceUnitPixels;
+        this.map.displayHeight = this.mapHeightInGameDistanceUnits * this.sceneDistanceUnitPixels;
         console.log(`Canvas/GameConfig size: \n width: ${this.gameConfig.width}, \n height: ${this.gameConfig.height}`);
-        console.log(`Map size: \n width: ${map.width} px, \n height: ${map.height} px.`);
+        console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
     }
 
-    setPointerListeners() {
+
+    setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
             if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this) || this.sidePanelScene.isMouseClickOnSidePanel(pointer)) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
         });
+
+        this.input.on('pointerdown', (pointer) => {
+            console.log(`***** setActivateAndDeactivateListener`);
+            if (!GamePiece.isMouseClickOnGamePiece(pointer, this)
+                && !this.getSidePanelScene().isMouseClickOnSidePanel(pointer)
+                && !GamePiece.isMouseClickOnActiveGamePieceRotationNode(pointer)
+                && GamePiece.activateGamePiece !== null) {
+                console.log('Deactivating game piece...');
+                GamePiece.deactivateGamePiece();
+            }
+        }, this);
     }
 
     zoomScene(cursorX, cursorY, zoomChange) {

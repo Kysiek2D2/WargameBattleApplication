@@ -61,14 +61,13 @@ class GamePiece {
         }
     }
 
-    isMouseClickOnRotationNode(pointer) {
+    static isMouseClickOnActiveGamePieceRotationNode(pointer) {
         // Convert screen coordinates to world coordinates
-        var worldX = this.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = this.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        var isMouseOnRotationNode = Object.values(this.rotationNodes).some(node => node.getBounds().contains(worldX, worldY));
-        //var isMouseOnRotationNode = Object.values(this.rotationNodes).filter(node => node.contains(pointer.x, pointer.y)).length > 0;
-        // console.log(`rotationNodes bounds: ${Object.values(this.rotationNodes).map(node => node.getBounds())}`)
-        // var bounds = Object.values(this.rotationNodes).map(node => node.getBounds());
+        if (GamePiece.activeGamePiece === null) return false;
+        var worldX = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
+        var worldY = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
+        var isMouseOnRotationNode = Object.values(GamePiece.activeGamePiece.rotationNodes).some(node => node.getBounds().contains(worldX, worldY));
+
         console.log(`Is mouse click on rotation node: ${isMouseOnRotationNode}`);
         return isMouseOnRotationNode;
     }
@@ -89,7 +88,7 @@ class GamePiece {
 
         cornerRotationNode.on('pointerdown', () => {
             if (GamePiece.activeGamePiece !== null) {
-                this.deactivateGamePiece(); //deactivate previous activeGamePiece
+                GamePiece.deactivateGamePiece(); //deactivate previous activeGamePiece
             }
             this.activateGamePiece();
         });
@@ -122,29 +121,13 @@ class GamePiece {
             console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
 
             if (GamePiece.activeGamePiece !== null) {
-                this.deactivateGamePiece(); //deactivate previous activeGamePiece
+                GamePiece.deactivateGamePiece(); //deactivate previous activeGamePiece
             }
 
             this.activateGamePiece();
 
             console.log(`Active unit is: ${GamePiece.activeGamePiece.gamePieceName}`);
         });
-
-        //Deactivate listener
-        this.scene.input.on('pointerdown', (pointer) => {
-            console.log(`***** setActivateAndDeactivateListener`);
-
-            console.log(`Deactivate? \n isMouseClickOnRotationNode: ${this.isMouseClickOnRotationNode(pointer)} 
-            \n isMouseClickOnGamePiece: ${GamePiece.isMouseClickOnGamePiece(pointer, this.scene)} 
-            \n isMouseClickOnSidePanel: ${this.scene.getSidePanelScene().isMouseClickOnSidePanel(pointer)} \n
-            outcome: ${!GamePiece.isMouseClickOnGamePiece(pointer, this.scene) && !this.scene.getSidePanelScene().isMouseClickOnSidePanel(pointer) && !this.isMouseClickOnRotationNode(pointer)}`)
-            if (!GamePiece.isMouseClickOnGamePiece(pointer, this.scene)
-                && !this.scene.getSidePanelScene().isMouseClickOnSidePanel(pointer)
-                && !this.isMouseClickOnRotationNode(pointer)) {
-                console.log('Deactivating game piece...');
-                this.deactivateGamePiece();
-            }
-        }, this);
     }
 
     activateGamePiece() {
@@ -155,10 +138,10 @@ class GamePiece {
         this.scene.getSidePanelScene().setVisible(true);
     }
 
-    deactivateGamePiece() {
+    static deactivateGamePiece() {
         Object.values(GamePiece.activeGamePiece.rotationNodes).forEach(node => node.setVisible(false));
         GamePiece.activeGamePiece?.sprite.clearTint();
-        this.scene.getSidePanelScene().setVisible(false);
+        GamePiece.activeGamePiece?.scene.getSidePanelScene().setVisible(false);
     }
 
     static isMouseClickOnGamePiece(pointer, scene) {
