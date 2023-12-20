@@ -95,7 +95,10 @@ class WargameScene extends Phaser.Scene {
     setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
-            if (!pointer.isDown || GamePiece.isMouseClickOnGamePiece(pointer, this) || this.sidePanelScene.isMouseClickOnSidePanel(pointer)) return;
+            if (!pointer.isDown
+                || GamePiece.isMouseClickOnGamePiece(pointer, this)
+                || this.sidePanelScene.isMouseClickOnSidePanel(pointer)
+                || GamePiece.activateGamePiece !== null) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
         });

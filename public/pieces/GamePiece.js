@@ -54,10 +54,10 @@ class GamePiece {
         var corners = this.getCorners();
 
         this.rotationNodes = {
-            nodeTopLeft: this.createSingleRotationNode(corners.topLeft.x, corners.topLeft.y, 15, 0x0000ff),
-            nodeTopRight: this.createSingleRotationNode(corners.topRight.x, corners.topRight.y, 15, 0x0000ff),
-            nodeBottomLeft: this.createSingleRotationNode(corners.bottomLeft.x, corners.bottomLeft.y, 15, 0x0000ff),
-            nodeBottomRight: this.createSingleRotationNode(corners.bottomRight.x, corners.bottomRight.y, 15, 0x0000ff),
+            nodeTopLeft: this.createSingleRotationNode(corners.topLeft.x, corners.topLeft.y, 7, 0x914148),
+            nodeTopRight: this.createSingleRotationNode(corners.topRight.x, corners.topRight.y, 7, 0x914148),
+            nodeBottomLeft: this.createSingleRotationNode(corners.bottomLeft.x, corners.bottomLeft.y, 7, 0x914148),
+            nodeBottomRight: this.createSingleRotationNode(corners.bottomRight.x, corners.bottomRight.y, 7, 0x914148),
         }
     }
 
