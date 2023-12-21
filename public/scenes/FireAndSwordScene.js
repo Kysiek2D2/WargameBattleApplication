@@ -38,6 +38,15 @@ class FireAndSwordScene extends WargameScene {
             gamePieceStrength: 10,
         });
         console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
+        var testUnit3 = new GamePiece(this, {
+            x: 1200,
+            y: 110,
+            displayWidth: 6.3,
+            displayHeight: 2.5,
+            spriteKey: 'basicInfantryUnitSizeL',
+            gamePieceName: 'Strzelcy Grodowi',
+            gamePieceStrength: 10,
+        });
 
     }
 

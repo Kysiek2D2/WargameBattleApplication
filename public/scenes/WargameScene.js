@@ -103,6 +103,7 @@ class WargameScene extends Phaser.Scene {
     setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
+            console.log(`***** setListenerForCameraMovement`);
             if (!pointer.isDown
                 || GamePiece.isMouseClickOnGamePiece(pointer, this)
                 || this.sidePanelScene.isMouseClickOnSidePanel(pointer)
@@ -115,7 +116,7 @@ class WargameScene extends Phaser.Scene {
             console.log(`***** setActivateAndDeactivateListener`);
             if (!GamePiece.isMouseClickOnGamePiece(pointer, this)
                 && !this.getSidePanelScene().isMouseClickOnSidePanel(pointer)
-                && !GamePiece.isMouseClickOnActiveGamePieceRotationNode(pointer)
+                && !GamePiece.isMouseClickOnActiveGamePieceCornerNode(pointer)
                 && GamePiece.activateGamePiece !== null) {
                 console.log('Deactivating game piece...');
                 GamePiece.deactivateGamePiece();
