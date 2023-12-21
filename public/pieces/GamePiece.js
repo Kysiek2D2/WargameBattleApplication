@@ -12,7 +12,7 @@ class GamePiece {
         this.scene = scene;
 
         this.sprite = scene.add.image(x, y, spriteKey)
-            .setOrigin(0.5, 0.5) //origin in the middle?
+            .setOrigin(0.5, 0.0) //origin in the middle?
             .setInteractive({ draggable: true })
             .setDisplaySize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels)
 
