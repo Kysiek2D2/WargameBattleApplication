@@ -59,10 +59,21 @@ class GamePiece {
         cornerRotationNode.setSize(radius * 2, radius * 2);
         //Add event listener for dragging cornerRotationNode
         this.scene.input.setDraggable(cornerRotationNode);
-        cornerRotationNode.on('drag', (pointer, gameObject, dragX, dragY) => {
-            //Rotate this gamePiece to the direction of pointer as long as pointer is down
-            var angle = Phaser.Math.Angle.BetweenPoints(this.sprite, pointer);
+
+        cornerRotationNode.on('drag', (pointer) => {
+            console.log(`createSingleRotationNode pointer:`)
+            var pointerWorldPoint = {
+                x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
+                y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
+            };
+            var angle = Phaser.Math.Angle.BetweenPoints(this.sprite, pointerWorldPoint);
             this.sprite.rotation = angle;
+            console.log(`sprite rotation angle: ${angle}`)
+
+            //Comment-out to show rotation line
+            // var line = new Phaser.Geom.Line(this.sprite.x, this.sprite.y, pointerWorldPoint.x, pointerWorldPoint.y);
+            // var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
+            // graphics.strokeLineShape(line);
         });
 
         cornerRotationNode.on('pointerdown', () => {
