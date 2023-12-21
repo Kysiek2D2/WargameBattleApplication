@@ -4,4 +4,19 @@ export const CONSTANTS = {
         FIRE_AND_SWORD_SCENE: "FireAndSwordScene",
         SIDE_PANEL_SCENE: "SidePanelScene"
     },
+    FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES: {
+        SIZE_S: {
+            width: 3.26,
+            height: 2.45,
+        },
+        SIZE_M: {
+            width: 4.90,
+            height: 2.45,
+        },
+        SIZE_L: {
+            width: 6.53,
+            height: 2.24,
+        },
+    },
 }
+
