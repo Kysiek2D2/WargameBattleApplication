@@ -2,7 +2,7 @@ export const CONSTANTS = {
     SCENES: {
         MAIN_MENU_SCENE: "MainMenuScene",
         FIRE_AND_SWORD_SCENE: "FireAndSwordScene",
-        SIDE_PANEL_SCENE: "SidePanelScene"
+        GAME_PIECE_DETAILS_SCENE: "GamePieceDetailsScene"
     },
     FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES: {
         SIZE_S: {

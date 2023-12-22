@@ -7,3 +7,4 @@
 - Any changes in application will be immadiatelly visible on page from server due to nodemon library.
 
 *  Note: when adding Units graphics jpg or png, remember that unit front should face up.
+*  Note: if you want to change rotation point of GamePiece, change it's sprite origin by .setOrigin()

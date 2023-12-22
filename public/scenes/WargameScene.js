@@ -1,5 +1,5 @@
 import GamePiece from "../pieces/GamePiece.js";
-import SidePanelScene from "./SidePanelScene.js";
+import GamePieceDetailsScene from "./GamePieceDetailsScene.js";
 import { CONSTANTS } from "../Constants.js";
 
 class WargameScene extends Phaser.Scene {
@@ -17,7 +17,7 @@ class WargameScene extends Phaser.Scene {
         this.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits;
         this.sceneDistanceUnitPixels;
-        this.sidePanelScene;
+        this.gamePieceDetailsScene;
         this.map;
     }
 
@@ -36,7 +36,7 @@ class WargameScene extends Phaser.Scene {
 
     create() {
         console.log('WargameScene create...');
-        this.setSidePanelScene();
+        this.setGamePieceDetailsScene();
         this.setCameraMovementListeners();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
@@ -92,13 +92,13 @@ class WargameScene extends Phaser.Scene {
         console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
     }
 
-    setSidePanelScene() {
-        this.scene.add(CONSTANTS.SCENES.SIDE_PANEL_SCENE, SidePanelScene, true);
-        this.sidePanelScene = this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
+    setGamePieceDetailsScene() {
+        this.scene.add(CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE, GamePieceDetailsScene, true);
+        this.gamePieceDetailsScene = this.scene.get(CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE);
     }
 
-    getSidePanelScene() {
-        return this.scene.get(CONSTANTS.SCENES.SIDE_PANEL_SCENE);
+    getGamePieceDetailsScene() {
+        return this.scene.get(CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE);
     }
 
     setCameraMovementListeners() {
@@ -107,7 +107,7 @@ class WargameScene extends Phaser.Scene {
             console.log(`***** setListenerForCameraMovement`);
             if (!pointer.isDown
                 || GamePiece.isMouseClickOnGamePiece(pointer, this)
-                || this.sidePanelScene.isMouseClickOnSidePanel(pointer)
+                || this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
                 || GamePiece.activeGamePiece !== null) return;
             this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
             this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
@@ -116,7 +116,7 @@ class WargameScene extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
             console.log(`***** setActivateAndDeactivateListener`);
             if (!GamePiece.isMouseClickOnGamePiece(pointer, this)
-                && !this.getSidePanelScene().isMouseClickOnSidePanel(pointer)
+                && !this.getGamePieceDetailsScene().isMouseClickOnGamePieceDetailsScene(pointer)
                 && !GamePiece.isMouseClickOnActiveGamePieceCornerNode(pointer)
                 && GamePiece.activateGamePiece !== null) {
                 console.log('Deactivating game piece...');

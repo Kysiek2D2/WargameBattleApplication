@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../Constants.js";
-import SidePanelScene from "../scenes/SidePanelScene.js";
+import GamePieceDetailsScene from "../scenes/GamePieceDetailsScene.js";
 
 
 class GamePiece {
@@ -180,8 +180,8 @@ class GamePiece {
         GamePiece.activeGamePiece = this;
         GamePiece.activeGamePiece.sprite.setTint(185273);
         GamePiece.showActiveGamePieceNodes();
-        this.scene.getSidePanelScene().updateSidePanelScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
-        this.scene.getSidePanelScene().setVisible(true);
+        this.scene.getGamePieceDetailsScene().updateGamePieceDetailsScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
+        this.scene.getGamePieceDetailsScene().setVisible(true);
     }
 
     static deactivateGamePiece() {
@@ -189,12 +189,12 @@ class GamePiece {
         GamePiece.activeGamePiece.updateCornerNodes()
         GamePiece.hideActiveGamePieceNodes();
         GamePiece.activeGamePiece?.sprite.clearTint();
-        GamePiece.activeGamePiece?.scene.getSidePanelScene().setVisible(false);
+        GamePiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
         GamePiece.activeGamePiece = null;
     }
 
     static isMouseClickOnGamePiece(pointer, scene) {
-        // Convert screen coordinates to world coordinates
+        // Convert screen coordinates to world coordinates  
         var worldX = scene.camera.getWorldPoint(pointer.x, pointer.y).x;
         var worldY = scene.camera.getWorldPoint(pointer.x, pointer.y).y;
         // Check if the converted coordinates are within the bounds of the 'unit'

@@ -1,19 +1,19 @@
 import { CONSTANTS } from "../Constants.js";
 
 
-class SidePanelScene extends Phaser.Scene {
+class GamePieceDetailsScene extends Phaser.Scene {
     constructor() {
-        console.log(`SidePanelScene constructor...`);
-        super({ key: CONSTANTS.SCENES.SIDE_PANEL_SCENE, active: true });
-        this.sidePanelConfig = {
+        console.log(`GamePieceDetailsScene constructor...`);
+        super({ key: CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE, active: true });
+        this.sceneConfig = {
             widthPercentage: 20,
             heightPercentage: 100,
             isVisible: true,
         };
-        this.sidePanelWidth;
-        this.sidePanelHeight;
+        this.sceneWidth;
+        this.sceneHeight;
         this.camera;
-        this.sidePanelBackground;
+        this.sceneBackground;
 
         this.gamePiece = null;
         this.panelLastOccupiedPixelOnYAxis = 0;
@@ -29,20 +29,20 @@ class SidePanelScene extends Phaser.Scene {
     }
 
     init() {
-        this.sidePanelBackground = 'backgroundImage';
-        this.setVisible(this.sidePanelConfig.isVisible);
+        this.sceneBackground = 'backgroundImage';
+        this.setVisible(this.sceneConfig.isVisible);
         this.camera = this.cameras.main;
     }
 
     create() {
         this.adjustCamera();
-        this.setTransparentSpaceholder(this.sidePanelHeight * 0.1);
+        this.setTransparentSpaceholder(this.sceneHeight * 0.1);
     }
 
-    loadSidePanelSceneBackground(spriteKey) {
+    loadSceneBackground(spriteKey) {
         const background = this.add.image(0, 0, spriteKey);
         background.setOrigin(0);
-        background.setScale(this.sidePanelWidth / background.width, this.sidePanelHeight / background.height);
+        background.setScale(this.sceneWidth / background.width, this.sceneHeight / background.height);
         background.setDepth(-1);
     }
 
@@ -74,31 +74,31 @@ class SidePanelScene extends Phaser.Scene {
         const transparentSprite = this.add.sprite(0, 0, null);
         transparentSprite.isVerticalSpaceholder = true;
         transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
-        transparentSprite.setSize(this.sidePanelWidth, height); // Adjust the size as needed
-        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down SidePanelScene elements
+        transparentSprite.setSize(this.sceneWidth, height); // Adjust the size as needed
+        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down GamePieceDetailsScene elements
     }
 
     adjustCamera() {
         // Adjust the camera to take only a portion of the screen
         const { width: gameConfigWidth, height: gameConfigHeight } = this.game.config;
-        this.sidePanelWidth = (this.sidePanelConfig.widthPercentage / 100) * gameConfigWidth;
-        this.sidePanelHeight = gameConfigHeight;
-        console.log(`SidePanel size: \n width: ${this.sidePanelWidth}, \n height: ${this.sidePanelHeight}`);
-        this.camera.setViewport(gameConfigWidth - this.sidePanelWidth, 0, this.sidePanelWidth, gameConfigHeight);
-        console.log(`SidePanelScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
+        this.sceneWidth = (this.sceneConfig.widthPercentage / 100) * gameConfigWidth;
+        this.sceneHeight = gameConfigHeight;
+        console.log(`GamePieceDetailsScene size: \n width: ${this.sceneWidth}, \n height: ${this.sceneHeight}`);
+        this.camera.setViewport(gameConfigWidth - this.sceneWidth, 0, this.sceneWidth, gameConfigHeight);
+        console.log(`GamePieceDetailsScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
     setText(textString, fontSize) {
-        var textNode = this.add.text(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
-        const headerTextX = (this.sidePanelWidth / 2) - (textNode.width / 2);
-        textNode.setX(headerTextX);
-        console.log(`Added text: ${headerTextX}`);
-        this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down SidePanelScene elements
+        var textNode = this.add.text(this.sceneWidth / 2, this.panelLastOccupiedPixelOnYAxis, textString, { fontSize: `${fontSize}px`, fill: '#000', fontFamily: 'Algerian' });
+        const textX = (this.sceneWidth / 2) - (textNode.width / 2);
+        textNode.setX(textX);
+        console.log(`Added text: ${textX}`);
+        this.panelLastOccupiedPixelOnYAxis += textNode.height; //Lifting down GamePieceDetailsScene elements
     }
 
     setGamePieceStrengthComponent({ fontSize, gamePieceStrengthValue }) {
-        const container = this.add.container(this.sidePanelWidth / 2, this.panelLastOccupiedPixelOnYAxis);
-        container.setSize(this.sidePanelWidth, 50); //need to declare size to give it some space to take
+        const container = this.add.container(this.sceneWidth / 2, this.panelLastOccupiedPixelOnYAxis);
+        container.setSize(this.sceneWidth, 50); //need to declare size to give it some space to take
         const elementWidth = 50;
         const elementHeight = 50;
 
@@ -138,25 +138,25 @@ class SidePanelScene extends Phaser.Scene {
         container.add(plusButton);
 
         this.distributeElementsEquallyOn_X_Axis(container);
-        this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down SidePanelScene elements
+        this.panelLastOccupiedPixelOnYAxis += container.height; //Lifting down GamePieceDetailsScene elements
     }
 
-    updateSidePanelScene({ gamePiece, headerText, gamePieceStrengthValue }) {
+    updateGamePieceDetailsScene({ gamePiece, headerText, gamePieceStrengthValue }) {
         //TODO: this function is called when GamePiece is set active. 
-        //Here we update SidePanelScene properties to be displayed.
+        //Here we update GamePieceDetailsScene properties to be displayed.
         this.gamePiece = gamePiece;
         this.headerText = headerText;
         this.gamePieceStrengthValue = gamePieceStrengthValue;
-        this.clearSidePanelScene(); //clearing previous SidePanelScene elements so it's rendered again
-        this.loadSidePanelSceneBackground(this.sidePanelBackground);
+        this.clearGamePieceDetailsScene(); //clearing previous GamePieceDetailsScene elements so it's rendered again
+        this.loadSceneBackground(this.sceneBackground);
 
-        this.setTransparentSpaceholder(this.sidePanelHeight * 0.2);
+        this.setTransparentSpaceholder(this.sceneHeight * 0.2);
         this.setText(this.headerText, 20);
         this.setTransparentSpaceholder(50);
         this.setGamePieceStrengthComponent({ fontSize: 36, gamePieceStrengthValue: this.gamePieceStrengthValue });
     }
 
-    clearSidePanelScene() {
+    clearGamePieceDetailsScene() {
         this.children.removeAll();
         this.panelLastOccupiedPixelOnYAxis = 0;
     }
@@ -171,25 +171,25 @@ class SidePanelScene extends Phaser.Scene {
         //Here we can sent request to GamePiece to be updated.
     }
 
-    isMouseClickOnSidePanel(pointer) {
-        // Check if the pointer click is inside the SidePanelScene bounds
+    isMouseClickOnGamePieceDetailsScene(pointer) {
+        // Check if the pointer click is inside the GamePieceDetailsScene bounds
         const { width, height } = this.game.config;
-        const sidePanelWidth = (this.sidePanelConfig.widthPercentage / 100) * width;
-        if (pointer.x >= width - sidePanelWidth) {
-            // Handle the interaction within the SidePanelScene
+        const GamePieceDetailsSceneWidth = (this.sceneConfig.widthPercentage / 100) * width;
+        if (pointer.x >= width - GamePieceDetailsSceneWidth) {
+            // Handle the interaction within the GamePieceDetailsScene
             // For example, you can add logic to handle button clicks, etc.
-            console.log('Pointer down INSIDE SidePanelScene');
+            console.log('Pointer down INSIDE GamePieceDetailsScene');
             return true;
         } else {
-            console.log('Pointer down OUTSIDE SidePanelScene');
+            console.log('Pointer down OUTSIDE GamePieceDetailsScene');
             return false;
         }
     }
 
     setVisible(isVisible) {
-        this.sidePanelConfig.isVisible = isVisible;
+        this.sceneConfig.isVisible = isVisible;
         this.scene.setVisible(isVisible, this);
     }
 }
 
-export default SidePanelScene;
+export default GamePieceDetailsScene;
