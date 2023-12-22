@@ -1,4 +1,5 @@
 import { CONSTANTS } from "../Constants.js";
+import AxeShapeMeasureTape from "../pieces/AxeShapeMeasureTape.js";
 
 class ToolsScene extends Phaser.Scene {
     constructor() {
@@ -12,6 +13,7 @@ class ToolsScene extends Phaser.Scene {
         this.sceneBackground;
         this.camera;
 
+        this.elementsTintTimeoutInMs = 150;
         this.panelLastOccupiedPixelOnYAxis = 0;
     }
     preload() {
@@ -29,14 +31,30 @@ class ToolsScene extends Phaser.Scene {
         this.adjustCamera();
         this.setTransparentSpaceholder(this.sceneHeight * 0.15);
         this.loadSceneBackground(this.sceneBackground);
+        this.addMeasureTapeIcon();
+    }
 
-        //Add measureTabeIcon to ToolsScene and set it's position on the top and centered to the middle
-        const measureTapeIcon = this.add.image(50, 50, 'measureTapeIcon');
+    addMeasureTapeIcon() {
+        const measureTapeIcon = this.add.image(0, 0, 'measureTapeIcon');
         measureTapeIcon.setOrigin(0.5, 0);
         measureTapeIcon.setScale(0.03);
         measureTapeIcon.x = this.sceneWidth / 2;
         measureTapeIcon.y = this.panelLastOccupiedPixelOnYAxis;
         this.panelLastOccupiedPixelOnYAxis += measureTapeIcon.height;
+        measureTapeIcon.setInteractive();
+        measureTapeIcon.on('pointerdown', (pointer) => {
+            measureTapeIcon.setTint(0x00ff00);
+            setTimeout(() => {
+                measureTapeIcon.clearTint();
+            }, this.elementsTintTimeoutInMs);
+            var measureTape = new AxeShapeMeasureTape();
+            //AxeShapeMeasureTape.instances.push(measureTape);    
+        });
+        return measureTapeIcon;
+    }
+
+    isMouseClickOnToolsScene(pointer) {
+        return pointer.x < this.sceneWidth && pointer.y < this.sceneHeight;
     }
 
     //TODO: Move to generic class, it's also used in GamePieceDetailsScene

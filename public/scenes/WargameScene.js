@@ -2,6 +2,7 @@ import GamePiece from "../pieces/GamePiece.js";
 import GamePieceDetailsScene from "./GamePieceDetailsScene.js";
 import ToolsScene from "./ToolsScene.js";
 import { CONSTANTS } from "../Constants.js";
+import AxeShapeMeasureTape from "../pieces/AxeShapeMeasureTape.js";
 
 class WargameScene extends Phaser.Scene {
 
@@ -112,23 +113,43 @@ class WargameScene extends Phaser.Scene {
     setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
         this.input.on("pointermove", (pointer) => {
-            console.log(`***** setListenerForCameraMovement`);
-            if (!pointer.isDown
-                || GamePiece.isMouseClickOnGamePiece(pointer, this)
-                || this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
-                || GamePiece.activeGamePiece !== null) return;
-            this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
-            this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
+            if (pointer.isDown
+                && !GamePiece.isMouseClickOnGamePiece(pointer, this)
+                && !this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
+                && !this.toolsScene.isMouseClickOnToolsScene(pointer)
+                && GamePiece.activeGamePiece === null
+                && (AxeShapeMeasureTape.getLastMeasureTapeInstance() == null
+                    || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED
+                    || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.CANCELED
+                )) {
+                console.log(`move camera`)
+                this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
+                this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
+            } else if (!this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
+                && !this.toolsScene.isMouseClickOnToolsScene(pointer)
+                && AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.STARTED) {
+                console.log('Measuring: setEndPoint');
+                var measureTape = AxeShapeMeasureTape.getLastMeasureTapeInstance();
+                measureTape.setEndPoint(pointer.x, pointer.y);
+                measureTape.updateMeasureTape(this);
+            }
         });
-
         this.input.on('pointerdown', (pointer) => {
-            console.log(`***** setActivateAndDeactivateListener`);
+            //console.log(`***** setActivateAndDeactivateListener`);
             if (!GamePiece.isMouseClickOnGamePiece(pointer, this)
                 && !this.getGamePieceDetailsScene().isMouseClickOnGamePieceDetailsScene(pointer)
                 && !GamePiece.isMouseClickOnActiveGamePieceCornerNode(pointer)
-                && GamePiece.activateGamePiece !== null) {
+                && GamePiece.activateGamePiece !== null
+                && (AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED
+                    || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.CANCELED
+                )) {
                 console.log('Deactivating game piece...');
                 GamePiece.deactivateGamePiece();
+            } else if (AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.REQUESTED) {
+                console.log('Measuring: setStartPoint...');
+                AxeShapeMeasureTape.getLastMeasureTapeInstance().setStartPointAndStage(pointer.x, pointer.y);
+            } else if (AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.STARTED) {
+                AxeShapeMeasureTape.getLastMeasureTapeInstance().setStage(CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED);
             }
         }, this);
     }

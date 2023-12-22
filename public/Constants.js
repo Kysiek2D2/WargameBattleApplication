@@ -19,5 +19,11 @@ export const CONSTANTS = {
             height: 2.24,
         },
     },
+    MEASURE_TAPE_CREATION_STAGES: {
+        REQUESTED: 'requested',
+        STARTED: 'started',
+        COMPLETED: 'completed',
+        CANCELED: 'canceled',
+    }
 }
 

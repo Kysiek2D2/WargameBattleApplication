@@ -66,7 +66,7 @@ class GamePiece {
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
             this.sprite.rotation = angle;
             //this.updateCornerNodes();
-            console.log(`sprite rotation angle: ${angle}`)
+            //console.log(`sprite rotation angle: ${angle}`)
             //Calculate point between cornerNodes
             var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
             var thisNode = cornerNode;
@@ -102,10 +102,10 @@ class GamePiece {
 
     getOppositeCornerNode(cornerNode) {
         if (cornerNode === this.cornerNodes.cornerNodeTopLeft) {
-            console.log(`Opposite corner node is: cornerTopRight`);
+            //console.log(`Opposite corner node is: cornerTopRight`);
             return this.cornerNodes.cornerNodeTopRight;
         } else if (cornerNode === this.cornerNodes.cornerNodeTopRight) {
-            console.log(`Opposite corner node is: cornerTopLeft`);
+            //console.log(`Opposite corner node is: cornerTopLeft`);
             return this.cornerNodes.cornerNodeTopLeft;
         } else {
             return null;
@@ -200,7 +200,7 @@ class GamePiece {
         // Check if the converted coordinates are within the bounds of the 'unit'
         var gamePiecesUnderClick = GamePiece.instances.filter(i => i.sprite.getBounds().contains(worldX, worldY));
         var isMouseOnGamePiece = gamePiecesUnderClick.length > 0;
-        console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
+        //console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
         return isMouseOnGamePiece;
     }
 }

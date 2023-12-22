@@ -142,8 +142,6 @@ class GamePieceDetailsScene extends Phaser.Scene {
     }
 
     updateGamePieceDetailsScene({ gamePiece, headerText, gamePieceStrengthValue }) {
-        //TODO: this function is called when GamePiece is set active. 
-        //Here we update GamePieceDetailsScene properties to be displayed.
         this.gamePiece = gamePiece;
         this.headerText = headerText;
         this.gamePieceStrengthValue = gamePieceStrengthValue;
@@ -161,29 +159,12 @@ class GamePieceDetailsScene extends Phaser.Scene {
         this.panelLastOccupiedPixelOnYAxis = 0;
     }
 
-    createGamePieceStrengthComponent() {
-        //That can be separate component.
-        //Set listeners here. After value is changed, it's propagated to related GamePiece.
-    }
-
     updateGamePiece({ newGamePieceStrengthValue }) {
         this.gamePiece.gamePieceStrength = newGamePieceStrengthValue;
-        //Here we can sent request to GamePiece to be updated.
     }
 
     isMouseClickOnGamePieceDetailsScene(pointer) {
-        // Check if the pointer click is inside the GamePieceDetailsScene bounds
-        const { width, height } = this.game.config;
-        const GamePieceDetailsSceneWidth = (this.sceneConfig.widthPercentage / 100) * width;
-        if (pointer.x >= width - GamePieceDetailsSceneWidth) {
-            // Handle the interaction within the GamePieceDetailsScene
-            // For example, you can add logic to handle button clicks, etc.
-            console.log('Pointer down INSIDE GamePieceDetailsScene');
-            return true;
-        } else {
-            console.log('Pointer down OUTSIDE GamePieceDetailsScene');
-            return false;
-        }
+        return pointer.x >= this.camera.x && pointer.y >= this.camera.y;
     }
 
     setVisible(isVisible) {
