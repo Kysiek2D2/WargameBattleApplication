@@ -1,6 +1,7 @@
 import FireAndSwordScene from "./scenes/FireAndSwordScene.js";
 import MainMenuScene from "./scenes/MainMenuScene.js";
 import GamePieceDetailsScene from "./scenes/GamePieceDetailsScene.js";
+import ToolsScene from "./scenes/ToolsScene.js";
 
 var config = {
     type: Phaser.AUTO,

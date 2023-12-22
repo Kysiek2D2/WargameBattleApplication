@@ -1,5 +1,6 @@
 import GamePiece from "../pieces/GamePiece.js";
 import GamePieceDetailsScene from "./GamePieceDetailsScene.js";
+import ToolsScene from "./ToolsScene.js";
 import { CONSTANTS } from "../Constants.js";
 
 class WargameScene extends Phaser.Scene {
@@ -18,6 +19,7 @@ class WargameScene extends Phaser.Scene {
         this.mapHeightInGameDistanceUnits;
         this.sceneDistanceUnitPixels;
         this.gamePieceDetailsScene;
+        this.toolsScene;
         this.map;
     }
 
@@ -37,6 +39,7 @@ class WargameScene extends Phaser.Scene {
     create() {
         console.log('WargameScene create...');
         this.setGamePieceDetailsScene();
+        this.setToolsScene();
         this.setCameraMovementListeners();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
@@ -95,6 +98,11 @@ class WargameScene extends Phaser.Scene {
     setGamePieceDetailsScene() {
         this.scene.add(CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE, GamePieceDetailsScene, true);
         this.gamePieceDetailsScene = this.scene.get(CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE);
+    }
+
+    setToolsScene() {
+        this.scene.add(CONSTANTS.SCENES.TOOLS_SCENE, ToolsScene, true);
+        this.toolsScene = this.scene.get(CONSTANTS.SCENES.TOOLS_SCENE);
     }
 
     getGamePieceDetailsScene() {
