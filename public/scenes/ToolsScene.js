@@ -13,12 +13,12 @@ class ToolsScene extends Phaser.Scene {
         this.camera;
     }
     preload() {
-        this.load.image({ key: 'backgroundImage', url: 'assets/scenery/oldScroll2.png' })
+        this.load.image({ key: 'toolsSceneBackground', url: 'assets/scenery/verticalRedBanner.png' })
 
     }
 
     init() {
-        this.sceneBackground = 'backgroundImage';
+        this.sceneBackground = 'toolsSceneBackground';
         this.setVisible(this.sceneConfig.isVisible);
         this.camera = this.cameras.main;
     }

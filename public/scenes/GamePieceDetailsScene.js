@@ -22,14 +22,14 @@ class GamePieceDetailsScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image({ key: 'backgroundImage', url: 'assets/scenery/oldScroll2.png' })
+        this.load.image({ key: 'gamePieceDetailsBackground', url: 'assets/scenery/oldScroll2.png' })
         this.load.image({ key: 'plusButton', url: 'assets/icons/plusButtonGrey_ver1.png' })
         this.load.image({ key: 'minusButton', url: 'assets/icons/minusButtonGrey_ver1.png' })
 
     }
 
     init() {
-        this.sceneBackground = 'backgroundImage';
+        this.sceneBackground = 'gamePieceDetailsBackground';
         this.setVisible(this.sceneConfig.isVisible);
         this.camera = this.cameras.main;
     }
