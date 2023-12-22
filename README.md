@@ -6,4 +6,4 @@
 - To stop server, in terminal do 'ctr+C' shortcut.
 - Any changes in application will be immadiatelly visible on page from server due to nodemon library.
 
-*  
+*  Note: when adding Units graphics jpg or png, remember that unit front should face up.

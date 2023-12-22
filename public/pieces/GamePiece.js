@@ -40,7 +40,6 @@ class GamePiece {
 
     setCornerNodes() {
         var corners = this.getCornersPositions();
-
         this.cornerNodes = {
             cornerNodeTopLeft: this.createSingleCornerNode(corners.topLeft.x, corners.topLeft.y, 7, 0x914148),
             cornerNodeTopRight: this.createSingleCornerNode(corners.topRight.x, corners.topRight.y, 7, 0x914148),
@@ -53,38 +52,29 @@ class GamePiece {
         cornerNode.setInteractive();
         cornerNode.setVisible(false);
         cornerNode.setSize(radius * 2, radius * 2);
-
         this.scene.input.setDraggable(cornerNode);
         cornerNode.on('dragstart', (pointer) => {
             console.log('Drag started');
         });
-
         cornerNode.on('drag', (pointer) => {
-
             console.log(`createSingleCornerNode pointer:`)
             GamePiece.hideActiveGamePieceNodes();
-
             var pointerWorldPoint = {
                 x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
             };
-
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
             this.sprite.rotation = angle;
-
             //this.updateCornerNodes();
             console.log(`sprite rotation angle: ${angle}`)
-
             //Calculate point between cornerNodes
             var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
             var thisNode = cornerNode;
-
             /* //Comment-out to show rotation line
             var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
             var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
             graphics.strokeLineShape(line); */
         });
-
         cornerNode.on('dragend', (pointer) => {
             console.log('Drag ended');
             this.updateCornerNodes();
@@ -101,16 +91,13 @@ class GamePiece {
         return cornerNode;
     }
 
-    getRotationAngle(cornerNode, pointerWorldPoint) {
-        var angle = null;
-        var opposideCornerNode = this.getOppositeCornerNode(cornerNode);
-        if (cornerNode == this.cornerNodes.cornerNodeTopRight) {
-            var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint);
-        }
-        else if (cornerNode == this.cornerNodes.cornerNodeTopLeft) {
-            var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint) - Math.PI;
-        }
-        return angle;
+    static hideActiveGamePieceNodes() {
+        Object.values(GamePiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(false));
+        //TODO: add more, for arrows etc as well
+    }
+
+    static showActiveGamePieceNodes() {
+        Object.values(GamePiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(true));
     }
 
     getOppositeCornerNode(cornerNode) {
@@ -139,6 +126,18 @@ class GamePiece {
             bottomRight: this.sprite.getBottomRight(),
         }
         return corners;
+    }
+
+    getRotationAngle(cornerNode, pointerWorldPoint) {
+        var angle = null;
+        var opposideCornerNode = this.getOppositeCornerNode(cornerNode);
+        if (cornerNode == this.cornerNodes.cornerNodeTopRight) {
+            var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint);
+        }
+        else if (cornerNode == this.cornerNodes.cornerNodeTopLeft) {
+            var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint) - Math.PI;
+        }
+        return angle;
     }
 
     static isMouseClickOnActiveGamePieceCornerNode(pointer) {
@@ -192,15 +191,6 @@ class GamePiece {
         GamePiece.activeGamePiece?.sprite.clearTint();
         GamePiece.activeGamePiece?.scene.getSidePanelScene().setVisible(false);
         GamePiece.activeGamePiece = null;
-    }
-
-    static hideActiveGamePieceNodes() {
-        Object.values(GamePiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(false));
-        //TODO: add more, for arrows etc as well
-    }
-
-    static showActiveGamePieceNodes() {
-        Object.values(GamePiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(true));
     }
 
     static isMouseClickOnGamePiece(pointer, scene) {

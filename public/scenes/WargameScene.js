@@ -30,6 +30,7 @@ class WargameScene extends Phaser.Scene {
 
     preload() {
         this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/landOfWonders.jpg' });
+        this.load.image({ key: 'universalGrassBattleground2', url: 'assets/maps/maps72x48/respring.jpg' });
         this.load.image({ key: 'wood', url: 'assets/scenery/wood.jpg' })
     }
 
@@ -39,7 +40,7 @@ class WargameScene extends Phaser.Scene {
         this.setCameraMovementListeners();
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
-        this.loadMap('universalGrassBattleground');
+        this.loadMap('universalGrassBattleground2');
     }
 
     update() {
