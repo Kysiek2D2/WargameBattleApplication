@@ -5,16 +5,18 @@ class ToolsScene extends Phaser.Scene {
         console.log(`ToolsScene constructor...`);
         super({ key: CONSTANTS.SCENES.TOOLS_SCENE, active: true });
         this.sceneConfig = {
-            widthPercentage: 10,
+            widthPercentage: 5,
             heightPercentage: 30,
             isVisible: true,
         };
         this.sceneBackground;
         this.camera;
+
+        this.panelLastOccupiedPixelOnYAxis = 0;
     }
     preload() {
         this.load.image({ key: 'toolsSceneBackground', url: 'assets/scenery/verticalRedBanner.png' })
-
+        this.load.image({ key: 'measureTapeIcon', url: 'assets/icons/measureTape1.png' })
     }
 
     init() {
@@ -25,8 +27,16 @@ class ToolsScene extends Phaser.Scene {
 
     create() {
         this.adjustCamera();
-        this.setTransparentSpaceholder(this.sceneHeight * 0.1);
+        this.setTransparentSpaceholder(this.sceneHeight * 0.15);
         this.loadSceneBackground(this.sceneBackground);
+
+        //Add measureTabeIcon to ToolsScene and set it's position on the top and centered to the middle
+        const measureTapeIcon = this.add.image(50, 50, 'measureTapeIcon');
+        measureTapeIcon.setOrigin(0.5, 0);
+        measureTapeIcon.setScale(0.03);
+        measureTapeIcon.x = this.sceneWidth / 2;
+        measureTapeIcon.y = this.panelLastOccupiedPixelOnYAxis;
+        this.panelLastOccupiedPixelOnYAxis += measureTapeIcon.height;
     }
 
     //TODO: Move to generic class, it's also used in GamePieceDetailsScene
