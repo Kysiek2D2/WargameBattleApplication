@@ -39,12 +39,13 @@ class WargameScene extends Phaser.Scene {
 
     create() {
         console.log('WargameScene create...');
+        //Order of invoking methods is important!
         this.setGamePieceDetailsScene();
         this.setToolsScene();
-        this.setCameraMovementListeners();
-        this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadBackground('wood');
+        this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
         this.loadMap('universalGrassBattleground2');
+        this.setCameraMovementListeners();
     }
 
     update() {
@@ -112,11 +113,10 @@ class WargameScene extends Phaser.Scene {
 
     setCameraMovementListeners() {
         console.log(`setListenerForCameraMovement`);
-        this.input.on("pointermove", (pointer) => {
+
+        this.map.setInteractive();
+        this.map.on("pointermove", (pointer) => {
             if (pointer.isDown
-                && !GamePiece.isMouseClickOnGamePiece(pointer, this)
-                && !this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
-                && !this.toolsScene.isMouseClickOnToolsScene(pointer)
                 && GamePiece.activeGamePiece === null
                 && (AxeShapeMeasureTape.getLastMeasureTapeInstance() == null
                     || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED
@@ -125,22 +125,19 @@ class WargameScene extends Phaser.Scene {
                 console.log(`move camera`)
                 this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
                 this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
-            } else if (!this.gamePieceDetailsScene.isMouseClickOnGamePieceDetailsScene(pointer)
-                && !this.toolsScene.isMouseClickOnToolsScene(pointer)
-                && AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.STARTED) {
+            } else if (
+                AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.STARTED) {
                 console.log('Measuring: setEndPoint');
                 var measureTape = AxeShapeMeasureTape.getLastMeasureTapeInstance();
                 measureTape.setEndPoint(pointer.x, pointer.y);
                 measureTape.updateMeasureTape(this);
             }
         });
-        this.input.on('pointerdown', (pointer) => {
+        this.map.on('pointerdown', (pointer) => {
             //console.log(`***** setActivateAndDeactivateListener`);
-            if (!GamePiece.isMouseClickOnGamePiece(pointer, this)
-                && !this.getGamePieceDetailsScene().isMouseClickOnGamePieceDetailsScene(pointer)
-                && !GamePiece.isMouseClickOnActiveGamePieceCornerNode(pointer)
-                && GamePiece.activateGamePiece !== null
-                && (AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED
+            if (GamePiece.activateGamePiece !== null
+                && (AxeShapeMeasureTape.getLastMeasureTapeInstance() === null
+                    || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.COMPLETED
                     || AxeShapeMeasureTape.getLastMeasureTapeInstance()?.stage === CONSTANTS.MEASURE_TAPE_CREATION_STAGES.CANCELED
                 )) {
                 console.log('Deactivating game piece...');

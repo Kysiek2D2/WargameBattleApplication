@@ -59,25 +59,24 @@ class GamePiece {
         cornerNode.on('drag', (pointer) => {
             console.log(`createSingleCornerNode pointer:`)
             GamePiece.hideActiveGamePieceNodes();
+            //set cornerNode size to 
             var pointerWorldPoint = {
                 x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
             };
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
             this.sprite.rotation = angle;
-            //this.updateCornerNodes();
-            //console.log(`sprite rotation angle: ${angle}`)
-            //Calculate point between cornerNodes
-            var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
-            var thisNode = cornerNode;
+            this.updateCornerNodes();
+
             /* //Comment-out to show rotation line
+            // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
+            // var thisNode = cornerNode;
             var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
             var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
             graphics.strokeLineShape(line); */
         });
         cornerNode.on('dragend', (pointer) => {
             console.log('Drag ended');
-            this.updateCornerNodes();
             GamePiece.showActiveGamePieceNodes();
             // Perform your action here
         });
@@ -150,11 +149,21 @@ class GamePiece {
         return isMouseOnCornerNode;
     }
 
-    setOnDragListener() {
+    // setOnDragListener() {
+    //     this.scene.input.setDraggable(this.sprite);
+    //     this.scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+    //         gameObject.x = dragX;
+    //         gameObject.y = dragY;
+    //         this.updateCornerNodes();
+    //     })
+    // }
+    setOnDragListener() { //WORKS
         this.scene.input.setDraggable(this.sprite);
-        this.scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
+        this.sprite.on('drag', (pointer, dragX, dragY) => {
+            const dx = dragX - this.sprite.x;
+            const dy = dragY - this.sprite.y;
+            this.sprite.x += dx;
+            this.sprite.y += dy;
             this.updateCornerNodes();
         })
     }
