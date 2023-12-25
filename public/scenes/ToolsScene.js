@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../Constants.js";
-import AxeShapeMeasureTape from "../pieces/AxeShapeMeasureTape.js";
+import BasicMeasureTape from "../pieces/BasicMeasureTape.js";
 
 class ToolsScene extends Phaser.Scene {
     constructor() {
@@ -47,7 +47,7 @@ class ToolsScene extends Phaser.Scene {
             setTimeout(() => {
                 measureTapeIcon.clearTint();
             }, this.elementsTintTimeoutInMs);
-            var measureTape = new AxeShapeMeasureTape();
+            var measureTape = new BasicMeasureTape();
             //AxeShapeMeasureTape.instances.push(measureTape);    
         });
         return measureTapeIcon;

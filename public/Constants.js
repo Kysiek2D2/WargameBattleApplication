@@ -19,11 +19,11 @@ export const CONSTANTS = {
             height: 2.24,
         },
     },
-    MEASURE_TAPE_CREATION_STAGES: {
-        REQUESTED: 'requested',
-        STARTED: 'started',
-        COMPLETED: 'completed',
-        CANCELED: 'canceled',
+    CONTROL_MODE: {
+        CAMERA_MODE: 'cameraMode',
+        GAME_PIECE_MODE: 'gamePieceMode',
+        MEASURE_PENDING_MODE: 'measureRequestedMode',
+        MEASURE_STARTED_MODE: 'measureStartedMode',
     }
 }
 

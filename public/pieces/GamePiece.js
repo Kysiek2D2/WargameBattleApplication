@@ -212,6 +212,11 @@ class GamePiece {
         //console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
         return isMouseOnGamePiece;
     }
+
+    static getActiveGamePiece() {
+        return GamePiece.activeGamePiece;
+    }
 }
+
 
 export default GamePiece;
