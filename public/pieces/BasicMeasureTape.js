@@ -68,8 +68,6 @@ class BasicMeasureTape {
             && lastInstance.getEndPoint() !== null
             && lastInstance.isCompleted;
     }
-
-
 }
 
 export default BasicMeasureTape;

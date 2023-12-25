@@ -1,7 +1,6 @@
 import WargameScene from "./WargameScene.js";
 import GamePiece from "../pieces/GamePiece.js";
 import { CONSTANTS } from "../Constants.js";
-import { someFunction } from "../UtilityClasses/UtilityMain.js";
 
 class FireAndSwordScene extends WargameScene {
 

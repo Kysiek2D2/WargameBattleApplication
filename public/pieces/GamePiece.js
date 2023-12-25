@@ -1,7 +1,3 @@
-import { CONSTANTS } from "../Constants.js";
-import GamePieceDetailsScene from "../scenes/GamePieceDetailsScene.js";
-
-
 class GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
     static instances = [];
@@ -149,14 +145,6 @@ class GamePiece {
         return isMouseOnCornerNode;
     }
 
-    // setOnDragListener() {
-    //     this.scene.input.setDraggable(this.sprite);
-    //     this.scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
-    //         gameObject.x = dragX;
-    //         gameObject.y = dragY;
-    //         this.updateCornerNodes();
-    //     })
-    // }
     setOnDragListener() { //WORKS
         this.scene.input.setDraggable(this.sprite);
         this.sprite.on('drag', (pointer, dragX, dragY) => {
@@ -169,8 +157,7 @@ class GamePiece {
     }
 
     setActivateListener() {
-        //Activate listener
-        this.sprite.setInteractive(); // Make sure the sprite is interactive
+        this.sprite.setInteractive();
         this.sprite.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
             console.log(`GamePieceStrength: ${this.gamePieceStrength}`);

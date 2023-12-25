@@ -1,4 +1,3 @@
-import GamePiece from "../pieces/GamePiece.js";
 import GamePieceDetailsScene from "./GamePieceDetailsScene.js";
 import ToolsScene from "./ToolsScene.js";
 import { CONSTANTS } from "../Constants.js";
@@ -138,22 +137,6 @@ class WargameScene extends Phaser.Scene {
             this.zoomCooldown -= this.time.deltaMS;
         }
     }
-
-    /* //UNUSED
-    setListenerForPointerDown() { //This is not used, but might be useful as reference
-        this.input.on('pointerdown', (pointer) => {
-            if (GamePiece.isMouseClickOnGamePiece(pointer, this) && !this.sidePanelScene.isMouseClickOnSidePanel(pointer)) {
-                console.log('Mouse click on unit!');
-                //TODO: set SidePanelScene visibility = true, set activeGamePiece, 
-                //pass parameters to SidePanelScene#updateSidePanelScene() (name, pieceStrengt, reference to GamePiece? ...)
-            }
-            //TODO: check GamePiece state and perform actions like rotation, move etc.
-            else {
-                //TODO: set SidePanelScene visibility = false, unset activeGamePiece...
-                console.log('Mouse click OUTSIDE OF unit!');
-            }
-        }, this);
-    }*/
 }
 
 export default WargameScene;
