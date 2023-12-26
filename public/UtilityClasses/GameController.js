@@ -33,7 +33,7 @@ class GameController {
                 case CONSTANTS.CONTROL_MODE.MEASURE_STARTED_MODE:
                     var measureTape = BasicMeasureTape.popInstance();
                     measureTape.setEndPoint(pointer.x, pointer.y);
-                    measureTape.updateMeasureTape(this.scene);
+                    measureTape.updateMeasureTape(this.scene, 18);
                     break;
                 case CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE:
                     break;

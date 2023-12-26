@@ -91,7 +91,6 @@ class ToolsScene extends Phaser.Scene {
         this.sceneConfig.isVisible = isVisible;
         this.scene.setVisible(isVisible, this);
     }
-
 }
 
 export default ToolsScene;
