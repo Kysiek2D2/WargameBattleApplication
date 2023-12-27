@@ -5,15 +5,15 @@ class GamePieceDetailsScene extends Phaser.Scene {
     constructor() {
         console.log(`GamePieceDetailsScene constructor...`);
         super({ key: CONSTANTS.SCENES.GAME_PIECE_DETAILS_SCENE, active: true });
-        this.sceneConfig = {
-            widthPercentage: 20,
-            heightPercentage: 100,
-            isVisible: true,
-        };
-        this.sceneWidth;
-        this.sceneHeight;
-        this.camera;
-        this.sceneBackground;
+        this.sceneConfig = {//+
+            widthPercentage: 20,//+
+            heightPercentage: 100,//+
+            isVisible: false,//+
+        };//+
+        this.sceneWidth;//+
+        this.sceneHeight;//+
+        this.camera;//+
+        this.sceneBackground;//+
 
         this.gamePiece = null;
         this.panelLastOccupiedPixelOnYAxis = 0;
@@ -21,24 +21,26 @@ class GamePieceDetailsScene extends Phaser.Scene {
         this.gamePieceStrengthValue = 0;
     }
 
-    preload() {
+    preload() { //+
         this.load.image({ key: 'gamePieceDetailsBackground', url: 'assets/scenery/oldScroll2.png' })
         this.load.image({ key: 'plusButton', url: 'assets/icons/plusButtonGrey_ver1.png' })
         this.load.image({ key: 'minusButton', url: 'assets/icons/minusButtonGrey_ver1.png' })
-
     }
 
-    init() {
-        this.sceneBackground = 'gamePieceDetailsBackground';
-        this.setVisible(this.sceneConfig.isVisible);
-        this.camera = this.cameras.main;
+    init() {//+
+        this.sceneBackground = 'gamePieceDetailsBackground';//+
+        this.setVisible(this.sceneConfig.isVisible); //+
+        this.camera = this.cameras.main; //+
     }
 
     create() {
-        this.adjustCamera();
+        this.adjustCamera(); //+
+        this.loadSceneBackground(this.sceneBackground); //+
         this.setTransparentSpaceholder(this.sceneHeight * 0.1);
+        //this.setVisible(false);
     }
 
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
     loadSceneBackground(spriteKey) {
         const background = this.add.image(0, 0, spriteKey);
         background.setOrigin(0);
@@ -46,6 +48,39 @@ class GamePieceDetailsScene extends Phaser.Scene {
         background.setDepth(-1);
     }
 
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
+    adjustCamera() {
+        // Adjust the camera to take only a portion of the screen
+        const { width: gameConfigWidth, height: gameConfigHeight } = this.game.config;
+        this.sceneWidth = (this.sceneConfig.widthPercentage / 100) * gameConfigWidth;
+        this.sceneHeight = gameConfigHeight;
+        console.log(`GamePieceDetailsScene size: \n width: ${this.sceneWidth}, \n height: ${this.sceneHeight}`);
+        this.camera.setViewport(gameConfigWidth - this.sceneWidth, 0, this.sceneWidth, gameConfigHeight);
+        console.log(`GamePieceDetailsScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
+    }
+
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
+    setTransparentSpaceholder(height) {
+        // Add a transparent sprite to take up space
+        const transparentSprite = this.add.sprite(0, 0, null);
+        transparentSprite.isVerticalSpaceholder = true;
+        transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
+        transparentSprite.setSize(this.sceneWidth, height); // Adjust the size as needed
+        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down GamePieceDetailsScene elements
+    }
+
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
+    isMouseClickOnSidePanelScene(pointer) {
+        return pointer.x >= this.camera.x && pointer.y >= this.camera.y;
+    }
+
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
+    setVisible(isVisible) {
+        this.sceneConfig.isVisible = isVisible;
+        this.scene.setVisible(isVisible, this);
+    }
+
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
     distributeElementsEqually_On_Y_Axis(container) {
         let totalHeight = 0;
         container.list.forEach((element) => {
@@ -57,6 +92,7 @@ class GamePieceDetailsScene extends Phaser.Scene {
         });
     }
 
+    //TODO: Move to generic class, it's also used in GamePieceDetailsScene
     distributeElementsEquallyOn_X_Axis(container) {
         let totalWidth = 0;
         container.list.forEach((element) => {
@@ -67,25 +103,6 @@ class GamePieceDetailsScene extends Phaser.Scene {
         container.list.forEach((element, index) => {
             element.x = (index - 1) * spacing;
         });
-    }
-
-    setTransparentSpaceholder(height) {
-        // Add a transparent sprite to take up space
-        const transparentSprite = this.add.sprite(0, 0, null);
-        transparentSprite.isVerticalSpaceholder = true;
-        transparentSprite.setAlpha(0); // Set the alpha value to 0 for transparency
-        transparentSprite.setSize(this.sceneWidth, height); // Adjust the size as needed
-        this.panelLastOccupiedPixelOnYAxis += transparentSprite.height; //Lifting down GamePieceDetailsScene elements
-    }
-
-    adjustCamera() {
-        // Adjust the camera to take only a portion of the screen
-        const { width: gameConfigWidth, height: gameConfigHeight } = this.game.config;
-        this.sceneWidth = (this.sceneConfig.widthPercentage / 100) * gameConfigWidth;
-        this.sceneHeight = gameConfigHeight;
-        console.log(`GamePieceDetailsScene size: \n width: ${this.sceneWidth}, \n height: ${this.sceneHeight}`);
-        this.camera.setViewport(gameConfigWidth - this.sceneWidth, 0, this.sceneWidth, gameConfigHeight);
-        console.log(`GamePieceDetailsScene camera x: ${this.camera.x}, y: ${this.camera.y}`);
     }
 
     setText(textString, fontSize) {
@@ -161,15 +178,6 @@ class GamePieceDetailsScene extends Phaser.Scene {
 
     updateGamePiece({ newGamePieceStrengthValue }) {
         this.gamePiece.gamePieceStrength = newGamePieceStrengthValue;
-    }
-
-    isMouseClickOnGamePieceDetailsScene(pointer) {
-        return pointer.x >= this.camera.x && pointer.y >= this.camera.y;
-    }
-
-    setVisible(isVisible) {
-        this.sceneConfig.isVisible = isVisible;
-        this.scene.setVisible(isVisible, this);
     }
 }
 
