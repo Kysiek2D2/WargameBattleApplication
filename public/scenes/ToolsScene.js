@@ -12,7 +12,7 @@ class ToolsScene extends Phaser.Scene {
         };
         this.sceneBackground;
         this.camera;
-
+        this.mainScene;
         this.elementsTintTimeoutInMs = 150;
         this.panelLastOccupiedPixelOnYAxis = 0;
     }
@@ -47,8 +47,7 @@ class ToolsScene extends Phaser.Scene {
             setTimeout(() => {
                 measureTapeIcon.clearTint();
             }, this.elementsTintTimeoutInMs);
-            var measureTape = new BasicMeasureTape();
-            //AxeShapeMeasureTape.instances.push(measureTape);    
+            var measureTape = new BasicMeasureTape(this.mainScene);
         });
         return measureTapeIcon;
     }
@@ -59,7 +58,6 @@ class ToolsScene extends Phaser.Scene {
 
     //TODO: Move to generic class, it's also used in GamePieceDetailsScene
     adjustCamera() {
-        // Adjust the camera to take only a portion of the screen
         const { width: gameConfigWidth, height: gameConfigHeight } = this.game.config;
         this.sceneWidth = (this.sceneConfig.widthPercentage / 100) * gameConfigWidth;
         this.sceneHeight = this.sceneConfig.heightPercentage / 100 * gameConfigHeight;

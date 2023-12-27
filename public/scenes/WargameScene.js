@@ -107,6 +107,7 @@ class WargameScene extends Phaser.Scene {
     setToolsScene() {
         this.scene.add(CONSTANTS.SCENES.TOOLS_SCENE, ToolsScene, true);
         this.toolsScene = this.scene.get(CONSTANTS.SCENES.TOOLS_SCENE);
+        this.toolsScene.mainScene = this;
     }
 
     getGamePieceDetailsScene() {
