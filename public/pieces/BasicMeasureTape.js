@@ -88,7 +88,8 @@ class BasicMeasureTape {
     }
 
     setStartPoint(x, y) {
-        this.startPoint = { x: x, y: y };;
+        var worldPoint = this.scene.camera.getWorldPoint(x, y);
+        this.startPoint = { x: worldPoint.x, y: worldPoint.y };
     }
 
     getStartPoint() {
@@ -96,7 +97,8 @@ class BasicMeasureTape {
     }
 
     setEndPoint(x, y) {
-        this.endPoint = { x: x, y: y };
+        var worldPoint = this.scene.camera.getWorldPoint(x, y);
+        this.endPoint = { x: worldPoint.x, y: worldPoint.y };
     }
 
     getEndPoint() {
