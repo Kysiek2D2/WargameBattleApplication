@@ -21,6 +21,7 @@ class BasicMeasureTape {
         this.distanceMarkerWidth = 2;
         this.distance = null;
         this.numDistanceMarkers = null;
+        this.container = null;
 
         this.isCompleted = false;
         BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
@@ -35,9 +36,27 @@ class BasicMeasureTape {
 
     updateMeasureTape() {
         this.destroyPreviousShape();
+
+
         this.createLineShape();
+        this.container = this.scene.add.container((this.startPoint.x + this.endPoint.x) / 2, (this.startPoint.y + this.endPoint.y) / 2);
+
+        this.container.add(this.lineShape);
+        this.container.setSize(this.distance, this.tapeWidth);
+        this.container.setAngle(this.lineAngle * 180 / Math.PI);
+
         this.addDistanceMarkers();
+
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, 0xff0000));
+        this.container.setInteractive();
+        this.scene.input.setDraggable(this.container);
+        this.container.on('drag', (pointer) => {
+            console.log('dragging container')
+            this.container.x = pointer.x;
+            this.container.y = pointer.y;
+        });
     }
+
 
     destroyPreviousShape() {
         if (this.lineShape !== null) {
@@ -48,13 +67,16 @@ class BasicMeasureTape {
                 point.distanceCircle.destroy();
             });
         }
+        this.container?.destroy();
     }
 
     createLineShape() {
         this.line = new Phaser.Geom.Line(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y);
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
-        this.lineShape = this.scene.add.graphics({ lineStyle: { width: this.tapeWidth, color: this.tapeColor } });
-        this.lineShape.strokeLineShape(this.line);
+        this.lineShape = this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor);
+        this.lineShape.setOrigin(0, 0.5);
+        this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
+
         this.distance = Phaser.Geom.Line.Length(this.line);
         this.numDistanceMarkers = Math.floor(this.distance / this.distanceUnitPixels);
     }
@@ -69,6 +91,9 @@ class BasicMeasureTape {
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
+            this.container.add(distanceMarker);
+            this.container.add(circle); // Added code to add the circle
+            this.container.add(distanceText);
             this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceCircle: circle, distanceText: distanceText }]; // Updated code to include the circle
         }
     }
