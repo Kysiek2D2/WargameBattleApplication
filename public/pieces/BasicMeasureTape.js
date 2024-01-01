@@ -37,24 +37,27 @@ class BasicMeasureTape {
     updateMeasureTape() {
         this.destroyPreviousShape();
 
-
-        this.createLineShape();
         this.container = this.scene.add.container((this.startPoint.x + this.endPoint.x) / 2, (this.startPoint.y + this.endPoint.y) / 2);
 
-        this.container.add(this.lineShape);
-        this.container.setSize(this.distance, this.tapeWidth);
-        this.container.setAngle(this.lineAngle * 180 / Math.PI);
+        this.createLineShape();
 
         this.addDistanceMarkers();
 
+        this.addContainerListeners();
         //Uncomment below if you want to see container's bounds
         //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, 0xff0000));
+    }
+
+    addContainerListeners() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer) => {
             console.log('dragging container')
             this.container.x = pointer.x;
             this.container.y = pointer.y;
+        });
+        this.container.on('pointerdown', (pointer) => {
+            this.isCompleted = true;
         });
     }
 
@@ -77,6 +80,10 @@ class BasicMeasureTape {
         this.lineShape.setOrigin(0, 0.5);
         //this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
         this.distance = Phaser.Geom.Line.Length(this.line);
+
+        this.container.add(this.lineShape);
+        this.container.setSize(this.distance, this.tapeWidth);
+        this.container.setAngle(this.lineAngle * 180 / Math.PI);
     }
 
     addDistanceMarkers() {
