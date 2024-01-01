@@ -35,10 +35,11 @@ class GamePiece {
     }
 
     setCornerNodes() {
+        var cornerNodeColor = 0x914148;
         var corners = this.getCornersPositions();
         this.cornerNodes = {
-            cornerNodeTopLeft: this.createSingleCornerNode(corners.topLeft.x, corners.topLeft.y, 7, 0x914148),
-            cornerNodeTopRight: this.createSingleCornerNode(corners.topRight.x, corners.topRight.y, 7, 0x914148),
+            cornerNodeTopLeft: this.createSingleCornerNode(corners.topLeft.x, corners.topLeft.y, 7, cornerNodeColor),
+            cornerNodeTopRight: this.createSingleCornerNode(corners.topRight.x, corners.topRight.y, 7, cornerNodeColor),
         }
     }
 

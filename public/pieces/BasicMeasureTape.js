@@ -14,7 +14,7 @@ class BasicMeasureTape {
         this.startPoint = null;
         this.endPoint = null;
         this.line = null;
-        this.lineShape = null;
+        this.lineShape = null; //needed???
         this.lineAngle = null;
 
         this.distanceMarkerPoints = [];
@@ -43,18 +43,29 @@ class BasicMeasureTape {
 
         this.addDistanceMarkers();
 
+        //create small red rectangle with rounded corners at start point and another at end point
+        var rectangleColor = 0x914148;
+        var startRectangle = this.scene.add.rectangle(0 - this.distance / 2, 0, this.tapeWidth / 4, this.tapeWidth / 3, rectangleColor);
+        //var endRectangle = this.scene.add.rectangle(this.endPoint.x, this.endPoint.y, this.tapeWidth, this.tapeWidth, 1, rectangleColor);
+        this.container.add(startRectangle);
+        //this.container.add(endRectangle);
+
+
         this.addContainerListeners();
         //Uncomment below if you want to see container's bounds
-        //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, 0xff0000));
+        //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
     addContainerListeners() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
-        this.container.on('drag', (pointer) => {
+        this.container.on('drag', (pointer, dragX, dragY) => {
+            if (this.isCompleted === false) return;
             console.log('dragging container')
-            this.container.x = pointer.x;
-            this.container.y = pointer.y;
+            const dx = dragX - this.container.x;
+            const dy = dragY - this.container.y;
+            this.container.x += dx;
+            this.container.y += dy;
         });
         this.container.on('pointerdown', (pointer) => {
             this.isCompleted = true;
@@ -74,16 +85,19 @@ class BasicMeasureTape {
     }
 
     createLineShape() {
+
         this.line = new Phaser.Geom.Line(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y);
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
-        this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
-        this.lineShape.setOrigin(0, 0.5);
+        //this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
+        //this.lineShape.setOrigin(0, 0.5);
         //this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
         this.distance = Phaser.Geom.Line.Length(this.line);
 
-        this.container.add(this.lineShape);
+        //this.container.add(this.lineShape);
         this.container.setSize(this.distance, this.tapeWidth);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor));
+
     }
 
     addDistanceMarkers() {
