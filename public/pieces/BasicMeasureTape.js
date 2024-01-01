@@ -47,7 +47,8 @@ class BasicMeasureTape {
 
         this.addDistanceMarkers();
 
-        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, 0xff0000));
+        //Uncomment below if you want to see container's bounds
+        //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, 0xff0000));
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer) => {
@@ -56,7 +57,6 @@ class BasicMeasureTape {
             this.container.y = pointer.y;
         });
     }
-
 
     destroyPreviousShape() {
         if (this.lineShape !== null) {
@@ -73,26 +73,26 @@ class BasicMeasureTape {
     createLineShape() {
         this.line = new Phaser.Geom.Line(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y);
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
-        this.lineShape = this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor);
+        this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
         this.lineShape.setOrigin(0, 0.5);
-        this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
-
+        //this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
         this.distance = Phaser.Geom.Line.Length(this.line);
-        this.numDistanceMarkers = Math.floor(this.distance / this.distanceUnitPixels);
     }
 
     addDistanceMarkers() {
+        this.numDistanceMarkers = Math.floor(this.distance / this.distanceUnitPixels);
+
         for (var i = 1; i < this.numDistanceMarkers; i++) {
-            var point = Phaser.Geom.Line.GetPoint(this.line, i * this.distanceUnitPixels / this.distance);
+            var point = { x: (i * this.distanceUnitPixels) - this.distance / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
+
             var distanceMarker = this.scene.add.rectangle(point.x, point.y, this.distanceMarkerWidth, this.tapeWidth, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
-            distanceMarker.setAngle(this.lineAngle * 180 / Math.PI);
-            var circle = this.scene.add.circle(point.x, point.y, this.tapeWidth / 3, this.tapeColor); // Added code to draw the circle
+            var circle = this.scene.add.circle(point.x, point.y, this.tapeWidth / 3, this.tapeColor);
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
             this.container.add(distanceMarker);
-            this.container.add(circle); // Added code to add the circle
+            this.container.add(circle);
             this.container.add(distanceText);
             this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceCircle: circle, distanceText: distanceText }]; // Updated code to include the circle
         }
