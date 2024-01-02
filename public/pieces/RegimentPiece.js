@@ -10,11 +10,17 @@ class RegimentPiece extends GamePiece {
         console.log(`GamePiece constructor...`);
         this.scene = scene; //++
 
-        this.sprite = scene.add.image(x, y, spriteKey)
+        this.container = this.scene.add.container(x, y);
+
+        this.sprite = scene.add.image(0, 0, spriteKey)
             .setOrigin(0.5, 0.0) //origin in the middle?
             .setInteractive({ draggable: true })
             .setDisplaySize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels)
 
+        this.container.add(this.sprite);
+
+        this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels, 0xff0000));
+        this.container.setSize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels);
         this.spriteKey = spriteKey;
 
         //Usable properties
@@ -48,6 +54,8 @@ class RegimentPiece extends GamePiece {
 
     createSingleCornerNode(x, y, radius, color) {
         var cornerNode = this.scene.add.circle(x, y, radius, color);
+        this.container.add(cornerNode);
+
         cornerNode.setOrigin(0.5, 0.5);
         cornerNode.setInteractive();
         cornerNode.setVisible(false);
@@ -66,7 +74,7 @@ class RegimentPiece extends GamePiece {
             };
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
             this.sprite.rotation = angle;
-            this.updateCornerNodes();
+            //this.updateCornerNodes();
 
             /* //Comment-out to show rotation line
             // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
@@ -74,6 +82,13 @@ class RegimentPiece extends GamePiece {
             var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
             var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
             graphics.strokeLineShape(line); */
+
+            //Comment-out to show rotation line
+            // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
+            // var thisNode = cornerNode;
+            var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
+            var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
+            graphics.strokeLineShape(line);
         });
         cornerNode.on('dragend', (pointer) => {
             console.log('Drag ended');
@@ -150,13 +165,15 @@ class RegimentPiece extends GamePiece {
     }
 
     setOnDragListener() { //WORKS
-        this.scene.input.setDraggable(this.sprite);
-        this.sprite.on('drag', (pointer, dragX, dragY) => {
-            const dx = dragX - this.sprite.x;
-            const dy = dragY - this.sprite.y;
-            this.sprite.x += dx;
-            this.sprite.y += dy;
-            this.updateCornerNodes();
+        this.container.setInteractive();
+        this.scene.input.setDraggable(this.container);
+        this.container.on('drag', (pointer, dragX, dragY) => {
+            console.log('!!!!!!dragging container')
+            const dx = dragX - this.container.x;
+            const dy = dragY - this.container.y;
+            this.container.x += dx;
+            this.container.y += dy;
+            //this.updateCornerNodes();
         })
     }
 
@@ -186,7 +203,7 @@ class RegimentPiece extends GamePiece {
 
     static deactivateGamePiece() { //++
         if (RegimentPiece.activeGamePiece === null) return;
-        RegimentPiece.activeGamePiece.updateCornerNodes()
+        //RegimentPiece.activeGamePiece.updateCornerNodes()
         RegimentPiece.hideActiveGamePieceNodes();
         RegimentPiece.activeGamePiece?.sprite.clearTint();
         RegimentPiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
