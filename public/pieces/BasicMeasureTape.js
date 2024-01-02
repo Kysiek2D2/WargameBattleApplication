@@ -1,11 +1,14 @@
 import { CONSTANTS } from "../Constants.js";
-class BasicMeasureTape {
+import GamePiece from "./GamePiece.js";
+
+class BasicMeasureTape extends GamePiece {
 
     static measureRequestOn = false;
     static instances = [];
 
     constructor(scene, tapeWidth = scene.sceneDistanceUnitPixels) {
-        this.scene = scene;
+        super();
+        this.scene = scene; //++
         this.tapeWidth = tapeWidth;
         this.tapeColor = 0xfcf403;
         this.distanceMarkerColor = 0x000000;
@@ -21,7 +24,7 @@ class BasicMeasureTape {
         this.distanceMarkerWidth = 2;
         this.distance = null;
         this.numDistanceMarkers = null;
-        this.container = null;
+        this.container = null; //++
 
         this.isCompleted = false;
         BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
