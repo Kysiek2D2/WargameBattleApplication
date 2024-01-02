@@ -2,13 +2,10 @@ import GamePiece from "./GamePiece.js";
 
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
-    static instances = [];
-    static idCounter = 0;
 
-    constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed', gamePieceStrength = 15 }) {
-        super();
-        console.log(`GamePiece constructor...`);
-        this.scene = scene; //++
+    constructor(scene, gamePieceName = 'Game Piece Unnamed', { x, y, displayWidth, displayHeight, spriteKey, gamePieceStrength = 15 }) {
+        super(scene, gamePieceName);
+        console.log(`RegimentPiece constructor...`);
 
         this.sprite = scene.add.image(x, y, spriteKey)
             .setOrigin(0.5, 0.0) //origin in the middle?
@@ -17,11 +14,6 @@ class RegimentPiece extends GamePiece {
 
         this.spriteKey = spriteKey;
 
-        //Usable properties
-        this.id = RegimentPiece.idCounter++; //++
-        this.isSelected = false; //++
-        this.isBlocked = false; //++
-        this.gamePieceName = gamePieceName;
         this.gamePieceStrength = gamePieceStrength;
 
         this.cornerNodes = {
@@ -32,9 +24,7 @@ class RegimentPiece extends GamePiece {
         //Additional configuration
         this.setCornerNodes();
         this.setOnDragListener();
-        this.setActivateListener();
-        RegimentPiece.instances = [...RegimentPiece.instances, this]; //++
-        RegimentPiece.activeGamePiece = null; //++
+        this.setActivateListener(this.sprite);
     }
 
     setCornerNodes() {
@@ -82,8 +72,8 @@ class RegimentPiece extends GamePiece {
         });
 
         cornerNode.on('pointerdown', () => {
-            if (RegimentPiece.activeGamePiece !== null) {
-                RegimentPiece.deactivateGamePiece(); //deactivate previous activeGamePiece
+            if (GamePiece.activeGamePiece !== null) {
+                GamePiece.deactivateGamePiece(); //deactivate previous activeGamePiece
             }
             this.activateGamePiece();
         });
@@ -139,17 +129,12 @@ class RegimentPiece extends GamePiece {
         return angle;
     }
 
-    static isMouseClickOnActiveGamePieceCornerNode(pointer) {
-        // Convert screen coordinates to world coordinates
-        if (RegimentPiece.activeGamePiece === null) return false;
-        var worldX = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        var isMouseOnCornerNode = Object.values(RegimentPiece.activeGamePiece.cornerNodes).some(node => node.getBounds().contains(worldX, worldY));
-        console.log(`Is mouse click on corner ion node: ${isMouseOnCornerNode}`);
-        return isMouseOnCornerNode;
+    activateGamePiece() {
+        super.activateGamePiece();
+        RegimentPiece.showActiveGamePieceNodes();
     }
 
-    setOnDragListener() { //WORKS
+    setOnDragListener() {
         this.scene.input.setDraggable(this.sprite);
         this.sprite.on('drag', (pointer, dragX, dragY) => {
             const dx = dragX - this.sprite.x;
@@ -160,54 +145,11 @@ class RegimentPiece extends GamePiece {
         })
     }
 
-    setActivateListener() { //++
-        this.sprite.setInteractive();
-        this.sprite.on('pointerdown', () => {
-            console.log('GamePiece clicked:', this.gamePieceName);
-            console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
-
-            if (RegimentPiece.activeGamePiece !== null) {
-                RegimentPiece.deactivateGamePiece(); //deactivate previous activeGamePiece
-            }
-
-            this.activateGamePiece();
-
-            console.log(`Active unit is: ${RegimentPiece.activeGamePiece.gamePieceName}`);
-        });
-    }
-
-    activateGamePiece() { //++
-        RegimentPiece.activeGamePiece = this;
-        RegimentPiece.activeGamePiece.sprite.setTint(185273);
-        RegimentPiece.showActiveGamePieceNodes();
-        this.scene.getGamePieceDetailsScene().updateGamePieceDetailsScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
-        this.scene.getGamePieceDetailsScene().setVisible(true);
-    }
-
-    static deactivateGamePiece() { //++
-        if (RegimentPiece.activeGamePiece === null) return;
+    static deactivateGamePiece() {
+        super.deactivateGamePiece();
         RegimentPiece.activeGamePiece.updateCornerNodes()
         RegimentPiece.hideActiveGamePieceNodes();
-        RegimentPiece.activeGamePiece?.sprite.clearTint();
-        RegimentPiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
-        RegimentPiece.activeGamePiece = null;
-    }
-
-    static isMouseClickOnGamePiece(pointer, scene) { //++
-        // Convert screen coordinates to world coordinates  
-        var worldX = scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        // Check if the converted coordinates are within the bounds of the 'unit'
-        var gamePiecesUnderClick = RegimentPiece.instances.filter(i => i.sprite.getBounds().contains(worldX, worldY));
-        var isMouseOnGamePiece = gamePiecesUnderClick.length > 0;
-        //console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
-        return isMouseOnGamePiece;
-    }
-
-    static getActiveGamePiece() { //++
-        return RegimentPiece.activeGamePiece;
     }
 }
-
 
 export default RegimentPiece;

@@ -6,9 +6,8 @@ class BasicMeasureTape extends GamePiece {
     static measureRequestOn = false;
     static instances = [];
 
-    constructor(scene, tapeWidth = scene.sceneDistanceUnitPixels) {
-        super();
-        this.scene = scene; //++
+    constructor(scene, gamePieceName = "Game Piece Unnamed", tapeWidth = scene.sceneDistanceUnitPixels) {
+        super(scene, gamePieceName);
         this.tapeWidth = tapeWidth;
         this.tapeColor = 0xfcf403;
         this.distanceMarkerColor = 0x000000;
@@ -88,7 +87,6 @@ class BasicMeasureTape extends GamePiece {
     }
 
     createLineShape() {
-
         this.line = new Phaser.Geom.Line(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y);
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
         //this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...

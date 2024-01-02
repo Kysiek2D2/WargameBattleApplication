@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../Constants.js";
-import RegimentPiece from "../pieces/RegimentPiece.js";
 import BasicMeasureTape from "../pieces/BasicMeasureTape.js";
+import GamePiece from "../pieces/GamePiece.js";
 
 class GameController {
     constructor(scene) {
@@ -17,7 +17,7 @@ class GameController {
             this.mode = CONSTANTS.CONTROL_MODE.MEASURE_PENDING_MODE;
         else if (!BasicMeasureTape.isMeasureCompleted())
             this.mode = CONSTANTS.CONTROL_MODE.MEASURE_STARTED_MODE;
-        else if (RegimentPiece.getActiveGamePiece() !== null)
+        else if (GamePiece.getActiveGamePiece() !== null)
             this.mode = CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE;
         else
             this.mode = CONSTANTS.CONTROL_MODE.CAMERA_MODE;
@@ -61,7 +61,7 @@ class GameController {
                     break;
                 case CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE:
                     console.log('Deactivating game piece...');
-                    RegimentPiece.deactivateGamePiece();
+                    GamePiece.deactivateGamePiece();
                     break;
                 case CONSTANTS.CONTROL_MODE.CAMERA_MODE:
                     break;
