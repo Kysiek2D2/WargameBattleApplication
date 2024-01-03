@@ -13,13 +13,15 @@ class RegimentPiece extends GamePiece {
         this.container = this.scene.add.container(x, y);
 
         this.sprite = scene.add.image(0, 0, spriteKey)
-            .setOrigin(0.5, 0.0) //origin in the middle?
-            .setInteractive({ draggable: true })
+            .setOrigin(0.5, 0.5) //origin in the middle?
+            //.setInteractive({ draggable: true })
             .setDisplaySize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels)
 
         this.container.add(this.sprite);
 
-        this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels, 0xff0000));
+        //Red rectangle for testing to mark container boundaries
+        this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
+
         this.container.setSize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels);
         this.spriteKey = spriteKey;
 
@@ -73,7 +75,7 @@ class RegimentPiece extends GamePiece {
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
             };
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
-            this.sprite.rotation = angle;
+            this.container.rotation = angle;
             //this.updateCornerNodes();
 
             /* //Comment-out to show rotation line
@@ -178,8 +180,8 @@ class RegimentPiece extends GamePiece {
     }
 
     setActivateListener() { //++
-        this.sprite.setInteractive();
-        this.sprite.on('pointerdown', () => {
+        this.container.setInteractive();
+        this.container.on('pointerdown', () => {
             console.log('GamePiece clicked:', this.gamePieceName);
             console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
 
