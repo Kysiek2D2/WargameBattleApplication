@@ -56,7 +56,7 @@ class RegimentPiece extends GamePiece {
 
     createSingleCornerNode(x, y, radius, color) {
         var cornerNode = this.scene.add.circle(x, y, radius, color);
-        this.container.add(cornerNode);
+        //this.container.add(cornerNode);
 
         cornerNode.setOrigin(0.5, 0.5);
         cornerNode.setInteractive();
@@ -74,9 +74,11 @@ class RegimentPiece extends GamePiece {
                 x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
             };
+
+            console.log(`pointerWorldPoint: ${JSON.stringify(pointerWorldPoint)}`)
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
             this.container.rotation = angle;
-            //this.updateCornerNodes();
+            this.updateCornerNodes();
 
             /* //Comment-out to show rotation line
             // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
@@ -135,13 +137,22 @@ class RegimentPiece extends GamePiece {
     }
 
     getCornersPositions() {
-        var corners = {
-            topLeft: this.sprite.getTopLeft(),
-            topRight: this.sprite.getTopRight(),
-            bottomLeft: this.sprite.getBottomLeft(),
-            bottomRight: this.sprite.getBottomRight(),
+        //get this.container corners positions
+        var containerCorners = {
+            topLeft: { x: this.container.x - this.container.width / 2, y: this.container.y - this.container.height / 2 },
+            topRight: { x: this.container.x + this.container.width / 2, y: this.container.y - this.container.height / 2 },
+            bottomLeft: { x: this.container.x - this.container.width / 2, y: this.container.y + this.container.height / 2 },
+            bottomRight: { x: this.container.x + this.container.width / 2, y: this.container.y + this.container.height / 2 },
         }
-        return corners;
+
+        // var spriteCorners = {
+        //     topLeft: this.sprite.getTopLeft(),
+        //     topRight: this.sprite.getTopRight(),
+        //     bottomLeft: this.sprite.getBottomLeft(),
+        //     bottomRight: this.sprite.getBottomRight(),
+        // }
+        console.log(`containerCorners: ${JSON.stringify(containerCorners)}`)
+        return containerCorners;
     }
 
     getRotationAngle(cornerNode, pointerWorldPoint) {
@@ -175,7 +186,7 @@ class RegimentPiece extends GamePiece {
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-            //this.updateCornerNodes();
+            this.updateCornerNodes();
         })
     }
 
@@ -205,7 +216,7 @@ class RegimentPiece extends GamePiece {
 
     static deactivateGamePiece() { //++
         if (RegimentPiece.activeGamePiece === null) return;
-        //RegimentPiece.activeGamePiece.updateCornerNodes()
+        RegimentPiece.activeGamePiece.updateCornerNodes()
         RegimentPiece.hideActiveGamePieceNodes();
         RegimentPiece.activeGamePiece?.sprite.clearTint();
         RegimentPiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
