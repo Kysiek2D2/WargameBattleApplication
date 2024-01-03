@@ -46,6 +46,7 @@ class RegimentPiece extends GamePiece {
     }
 
     setCornerNodes() {
+        //note: corner nodes are not part of container, they are outside of it
         var cornerNodeColor = 0x914148;
         var corners = this.getCornersPositions();
         this.cornerNodes = {
@@ -77,7 +78,9 @@ class RegimentPiece extends GamePiece {
 
             console.log(`pointerWorldPoint: ${JSON.stringify(pointerWorldPoint)}`)
             var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
-            this.container.rotation = angle;
+            //rotate container
+            this.container.setRotation(angle);
+            //this.container.rotation = angle;
             this.updateCornerNodes();
 
             /* //Comment-out to show rotation line
@@ -145,12 +148,18 @@ class RegimentPiece extends GamePiece {
             bottomRight: { x: this.container.x + this.container.width / 2, y: this.container.y + this.container.height / 2 },
         }
 
-        // var spriteCorners = {
-        //     topLeft: this.sprite.getTopLeft(),
-        //     topRight: this.sprite.getTopRight(),
-        //     bottomLeft: this.sprite.getBottomLeft(),
-        //     bottomRight: this.sprite.getBottomRight(),
-        // }
+        // Apply container rotation angle
+        var angle = this.container.rotation;
+        var cosAngle = Math.cos(angle);
+        var sinAngle = Math.sin(angle);
+
+        Object.values(containerCorners).forEach(corner => {
+            var rotatedX = (corner.x - this.container.x) * cosAngle - (corner.y - this.container.y) * sinAngle + this.container.x;
+            var rotatedY = (corner.x - this.container.x) * sinAngle + (corner.y - this.container.y) * cosAngle + this.container.y;
+            corner.x = rotatedX;
+            corner.y = rotatedY;
+        });
+
         console.log(`containerCorners: ${JSON.stringify(containerCorners)}`)
         return containerCorners;
     }
