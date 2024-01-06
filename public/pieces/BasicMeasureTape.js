@@ -61,6 +61,7 @@ class BasicMeasureTape extends GamePiece {
 
         this.addDistanceMarkers();
 
+        this.endPoint = this.getSideMiddlePoints().rightMiddle;
         //this.addContainerListeners();
         //Uncomment below if you want to see container's bounds
         //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
@@ -113,7 +114,7 @@ class BasicMeasureTape extends GamePiece {
 
         this.startPointNode.setInteractive();
         this.scene.input.setDraggable(this.startPointNode);
-        this.startPointNode.on('drag', (pointer, dragX, dragY) => {
+        this.startPointNode.on('drag', (pointer) => {
             console.log('dragging start point node')
             var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
             this.startPointNode.x = worldPoint.x;
