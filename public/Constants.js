@@ -22,8 +22,6 @@ export const CONSTANTS = {
     CONTROL_MODE: {
         CAMERA_MODE: 'cameraMode',
         GAME_PIECE_MODE: 'gamePieceMode',
-        MEASURE_PENDING_MODE: 'measureRequestedMode',
-        MEASURE_STARTED_MODE: 'measureStartedMode',
     }
 }
 

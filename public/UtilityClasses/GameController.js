@@ -13,11 +13,7 @@ class GameController {
     }
 
     setMode() {
-        if (BasicMeasureTape.isMeasurePending())
-            this.mode = CONSTANTS.CONTROL_MODE.MEASURE_PENDING_MODE;
-        else if (!BasicMeasureTape.isMeasureCompleted())
-            this.mode = CONSTANTS.CONTROL_MODE.MEASURE_STARTED_MODE;
-        else if (RegimentPiece.getActiveGamePiece() !== null)
+        if (RegimentPiece.getActiveGamePiece() !== null)
             this.mode = CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE;
         else
             this.mode = CONSTANTS.CONTROL_MODE.CAMERA_MODE;
@@ -28,13 +24,6 @@ class GameController {
         map.on("pointermove", (pointer) => {
             this.setMode();
             switch (this.mode) {
-                case CONSTANTS.CONTROL_MODE.MEASURE_PENDING_MODE:
-                    break;
-                case CONSTANTS.CONTROL_MODE.MEASURE_STARTED_MODE:
-                    var measureTape = BasicMeasureTape.popInstance();
-                    measureTape.setEndPoint(pointer.x, pointer.y);
-                    measureTape.updateMeasureTape(this.scene, 18);
-                    break;
                 case CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE:
                     break;
                 case CONSTANTS.CONTROL_MODE.CAMERA_MODE:
