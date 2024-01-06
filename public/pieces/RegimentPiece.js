@@ -2,15 +2,12 @@ import GamePiece from "./GamePiece.js";
 
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
-    static instances = [];
-    static idCounter = 0;
 
-    constructor(scene, { x, y, displayWidth, displayHeight, spriteKey, gamePieceName = 'Game Piece Unnamed', gamePieceStrength = 15 }) {
-        super();
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, displayWidth, displayHeight, spriteKey, gamePieceStrength = 15 }) {
+        super({ scene: scene, gamePieceName: gamePieceName });
         console.log(`GamePiece constructor...`);
-        this.scene = scene; //++
-
         this.container = this.scene.add.container(x, y);
+
 
         this.sprite = scene.add.image(0, 0, spriteKey)
             .setOrigin(0.5, 0.5) //origin in the middle?
@@ -29,7 +26,6 @@ class RegimentPiece extends GamePiece {
         this.id = RegimentPiece.idCounter++; //++
         this.isSelected = false; //++
         this.isBlocked = false; //++
-        this.gamePieceName = gamePieceName;
         this.gamePieceStrength = gamePieceStrength;
 
         this.cornerNodes = {
@@ -77,7 +73,7 @@ class RegimentPiece extends GamePiece {
             };
 
             console.log(`pointerWorldPoint: ${JSON.stringify(pointerWorldPoint)}`)
-            var angle = this.getRotationAngle(cornerNode, pointerWorldPoint);
+            var angle = this.getRotationAngleFromCornernNode(cornerNode, pointerWorldPoint);
             //rotate container
             this.container.setRotation(angle);
             //this.container.rotation = angle;
@@ -164,7 +160,7 @@ class RegimentPiece extends GamePiece {
         return containerCorners;
     }
 
-    getRotationAngle(cornerNode, pointerWorldPoint) {
+    getRotationAngleFromCornernNode(cornerNode, pointerWorldPoint) {
         var angle = null;
         var opposideCornerNode = this.getOppositeCornerNode(cornerNode);
         if (cornerNode == this.cornerNodes.cornerNodeTopRight) {

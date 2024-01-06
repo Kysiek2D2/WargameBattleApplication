@@ -22,7 +22,6 @@ class ToolsScene extends SidePanelScene {
         super.create();
         this.adjustCamera();
         this.loadSceneBackground(this.sceneBackground);
-
         this.setTransparentSpaceholder(this.sceneHeight * 0.15);
         this.addMeasureTapeIcon();
     }
@@ -49,7 +48,7 @@ class ToolsScene extends SidePanelScene {
             setTimeout(() => {
                 measureTapeIcon.clearTint();
             }, this.elementsTintTimeoutInMs);
-            var measureTape = new BasicMeasureTape(this.mainScene);
+            var measureTape = new BasicMeasureTape({ scene: this.mainScene, gamePieceName: 'tape' });
         });
         return measureTapeIcon;
     }

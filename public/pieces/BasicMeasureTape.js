@@ -6,8 +6,8 @@ class BasicMeasureTape extends GamePiece {
     static measureRequestOn = false;
     static instances = [];
 
-    constructor(scene, tapeWidth = scene.sceneDistanceUnitPixels) {
-        super();
+    constructor({ scene, gamePieceName, tapeWidth = scene.sceneDistanceUnitPixels }) {
+        super({ scene: scene, gamePieceName: gamePieceName });
         this.scene = scene; //++
         this.tapeWidth = tapeWidth;
         this.tapeColor = 0xfcf403;

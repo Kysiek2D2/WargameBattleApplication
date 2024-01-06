@@ -19,7 +19,8 @@ class FireAndSwordScene extends WargameScene {
         super.create();
         console.log('FireAndSwordScene create...');
 
-        var testUnit1 = new RegimentPiece(this, {
+        var testUnit1 = new RegimentPiece({
+            scene: this,
             x: 1100,
             y: 110,
             displayWidth: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_L.width,
@@ -29,7 +30,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceStrength: 16,
         });
         console.log(`TestUnit1 depth: ${testUnit1.sprite.depth}`)
-        var testUnit2 = new RegimentPiece(this, {
+        var testUnit2 = new RegimentPiece({
+            scene: this,
             x: 1120,
             y: 110,
             displayWidth: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_M.width,
@@ -39,7 +41,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceStrength: 13,
         });
         console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
-        var testUnit3 = new RegimentPiece(this, {
+        var testUnit3 = new RegimentPiece({
+            scene: this,
             x: 1200,
             y: 110,
             displayWidth: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_L.width,
@@ -48,7 +51,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Strzelcy \nGrodowi',
             gamePieceStrength: 10,
         });
-        var testUnit4 = new RegimentPiece(this, {
+        var testUnit4 = new RegimentPiece({
+            scene: this,
             x: 1250,
             y: 310,
             displayWidth: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_S.width,
