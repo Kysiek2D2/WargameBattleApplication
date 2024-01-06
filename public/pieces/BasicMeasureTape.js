@@ -66,6 +66,37 @@ class BasicMeasureTape extends GamePiece {
         //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
+    getSideMiddlePoints() {
+
+        var leftMiddle = { x: this.container.x - (this.distance / 2), y: this.container.y };
+        var rightMiddle = { x: this.container.x + (this.distance / 2), y: this.container.y };
+
+        // Apply container rotation angle
+        var angle = this.container.rotation;
+        var cosAngle = Math.cos(angle);
+        var sinAngle = Math.sin(angle);
+
+        // Rotate each side middle point around the container's center
+        leftMiddle = {
+            x: this.container.x + (leftMiddle.x - this.container.x) * cosAngle - (leftMiddle.y - this.container.y) * sinAngle,
+            y: this.container.y + (leftMiddle.x - this.container.x) * sinAngle + (leftMiddle.y - this.container.y) * cosAngle
+        };
+        rightMiddle = {
+            x: this.container.x + (rightMiddle.x - this.container.x) * cosAngle - (rightMiddle.y - this.container.y) * sinAngle,
+            y: this.container.y + (rightMiddle.x - this.container.x) * sinAngle + (rightMiddle.y - this.container.y) * cosAngle
+        };
+
+        var sideMiddlePoints = { leftMiddle, rightMiddle };
+
+        this.leftMiddleCircle?.destroy();
+        this.rightMiddleCircle?.destroy();
+        // Mark leftMiddle and rightMiddle as green circles
+        this.leftMiddleCircle = this.scene.add.circle(leftMiddle.x, leftMiddle.y, 5, 0x00ff00);
+        this.rightMiddleCircle = this.scene.add.circle(rightMiddle.x, rightMiddle.y, 5, 0x00ff00);
+
+        return sideMiddlePoints;
+    }
+
     addManipulationNodes() {
         var nodeColor = 0xff0000;//0x914148;
         var nodeWidth = this.tapeWidth / 4;
@@ -74,7 +105,7 @@ class BasicMeasureTape extends GamePiece {
 
         this.startPointNode = this.scene.add.rectangle(this.container.x - (this.distance / 2), this.container.y, nodeWidth, nodeHeight, nodeColor);
         this.startPointNode.setOrigin(0.5, 0.5);
-        //this.container.add(startPointNode);
+        //this.container.add(this.startPointNode);
 
         this.endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
         this.endPointNode.setOrigin(1.0, 0.5);
@@ -87,8 +118,16 @@ class BasicMeasureTape extends GamePiece {
             var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
             this.startPointNode.x = worldPoint.x;
             this.startPointNode.y = worldPoint.y;
+            //this.setEndPoint();
             this.updateMeasureTape();
         });
+    }
+
+    updateExternalComponents() {
+        var sidePoints = this.getSideMiddlePoints();
+        this.endPointNode.setPosition(sidePoints.rightMiddle?.x, sidePoints.rightMiddle?.y);
+        this.startPointNode.setPosition(sidePoints.leftMiddle?.x, sidePoints.leftMiddle?.y);
+        //this.startPointNode.setPosition(this.container.x - (this.distance / 2), this.container.y);
     }
 
     addContainerListeners() {
@@ -100,6 +139,7 @@ class BasicMeasureTape extends GamePiece {
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
+            this.updateExternalComponents();
         });
     }
 
@@ -120,18 +160,19 @@ class BasicMeasureTape extends GamePiece {
     }
 
     createLineShape() {
-
         this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPoint.x, this.endPoint.y);
-        this.lineAngle = Phaser.Geom.Line.Angle(this.line);
-        //this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
-        //this.lineShape.setOrigin(0, 0.5);
-        //this.lineShape.setAngle(this.lineAngle * 180 / Math.PI);
-        this.distance = Phaser.Geom.Line.Length(this.line);
 
-        //this.container.add(this.lineShape);
+        this.lineAngle = Phaser.Geom.Line.Angle(this.line);
+        this.distance = Phaser.Geom.Line.Length(this.line);
         this.container.setSize(this.distance, this.tapeWidth);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
         this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor));
+        // Add green circle to mark endpoint
+        //this.endPointCircle?.destroy();
+        //this.endPointCircle = this.scene.add.circle(this.endPoint.x, this.endPoint.y, this.tapeWidth / 2, 0x00FF00);
+        //this.container.add(endPointCircle);
+
+        var sidePoints = this.getSideMiddlePoints();
 
     }
 
