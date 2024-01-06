@@ -42,12 +42,6 @@ class GameController {
         this.setMode();
         map.on('pointerdown', (pointer) => {
             switch (this.mode) {
-                case CONSTANTS.CONTROL_MODE.MEASURE_PENDING_MODE:
-                    BasicMeasureTape.popInstance().setStartPoint(pointer.x, pointer.y);
-                    break;
-                case CONSTANTS.CONTROL_MODE.MEASURE_STARTED_MODE:
-                    BasicMeasureTape.popInstance().isCompleted = true;
-                    break;
                 case CONSTANTS.CONTROL_MODE.GAME_PIECE_MODE:
                     console.log('Deactivating game piece...');
                     RegimentPiece.deactivateGamePiece();

@@ -29,13 +29,11 @@ class BasicMeasureTape extends GamePiece {
         this.numDistanceMarkers = null;
         this.container = null; //++
 
-        this.isCompleted = false;
-
         this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
         this.createLineShape();
         this.addDistanceMarkers();
         this.addContainerListeners();
-
+        this.addManipulationNodes();
         //Uncomment to show container's bounds as red rectangle
         // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
 
@@ -71,19 +69,39 @@ class BasicMeasureTape extends GamePiece {
         //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
+    addManipulationNodes() {
+        var nodeColor = 0x914148;
+        var nodeWidth = this.tapeWidth / 4;
+        var nodeHeight = this.tapeWidth;
+        //var startRectangle = this.scene.add.rectangle(0 - this.distance / 2, 0, this.tapeWidth / 4, this.tapeWidth / 3, nodeColor);
+        var startPointNode = this.scene.add.rectangle(0 - (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
+        startPointNode.setOrigin(0.0, 0.5);
+        this.container.add(startPointNode);
+
+        var endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
+        endPointNode.setOrigin(1.0, 0.5);
+        this.container.add(endPointNode);
+
+        startPointNode.setInteractive();
+        this.scene.input.setDraggable(startPointNode);
+        startPointNode.on('drag', (pointer, dragX, dragY) => {
+            console.log('dragging start point node')
+            var worldPoint = this.scene.camera.getWorldPoint(dragX, dragY);
+            this.x = worldPoint.x;
+            this.y = worldPoint.y;
+            //this.updateMeasureTape();
+        });
+    }
+
     addContainerListeners() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer, dragX, dragY) => {
-            if (this.isCompleted === false) return;
             console.log('dragging container')
             const dx = dragX - this.container.x;
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-        });
-        this.container.on('pointerdown', (pointer) => {
-            this.isCompleted = true;
         });
     }
 
@@ -134,19 +152,19 @@ class BasicMeasureTape extends GamePiece {
         }
     }
 
-    static isMeasurePending() {
-        var lastInstance = BasicMeasureTape.popInstance();
-        if (lastInstance === null) return false;
-        return lastInstance.getStartPoint() === null && lastInstance.getEndPoint() === null;
-    }
+    // static isMeasurePending() {
+    //     var lastInstance = BasicMeasureTape.popInstance();
+    //     if (lastInstance === null) return false;
+    //     return lastInstance.getStartPoint() === null && lastInstance.getEndPoint() === null;
+    // }
 
-    static isMeasureCompleted() {
-        var lastInstance = BasicMeasureTape.popInstance();
-        if (lastInstance === null) return true;
-        return lastInstance.getStartPoint() !== null
-            && lastInstance.getEndPoint() !== null
-            && lastInstance.isCompleted;
-    }
+    // static isMeasureCompleted() {
+    //     var lastInstance = BasicMeasureTape.popInstance();
+    //     if (lastInstance === null) return true;
+    //     return lastInstance.getStartPoint() !== null
+    //         && lastInstance.getEndPoint() !== null
+    //         && lastInstance.isCompleted;
+    // }
 
     setStartPoint(x, y) {
         var worldPoint = this.scene.camera.getWorldPoint(x, y);
