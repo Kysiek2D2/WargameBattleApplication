@@ -29,11 +29,16 @@ class BasicMeasureTape extends GamePiece {
         this.numDistanceMarkers = null;
         this.container = null; //++
 
+        this.startPointNode;
+        this.endPointNode;
+
         this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
+        this.addManipulationNodes();
+
         this.createLineShape();
         this.addDistanceMarkers();
         this.addContainerListeners();
-        this.addManipulationNodes();
+
         //Uncomment to show container's bounds as red rectangle
         // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
 
@@ -50,46 +55,39 @@ class BasicMeasureTape extends GamePiece {
     updateMeasureTape() {
         this.destroyPreviousShape();
 
-        this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
+        //this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
 
         this.createLineShape();
 
         this.addDistanceMarkers();
 
-        //create small red rectangle with rounded corners at start point and another at end point
-        var rectangleColor = 0x914148;
-        var startRectangle = this.scene.add.rectangle(0 - this.distance / 2, 0, this.tapeWidth / 4, this.tapeWidth / 3, rectangleColor);
-        //var endRectangle = this.scene.add.rectangle(this.endPoint.x, this.endPoint.y, this.tapeWidth, this.tapeWidth, 1, rectangleColor);
-        this.container.add(startRectangle);
-        //this.container.add(endRectangle);
-
-
-        this.addContainerListeners();
+        //this.addContainerListeners();
         //Uncomment below if you want to see container's bounds
         //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
     addManipulationNodes() {
-        var nodeColor = 0x914148;
+        var nodeColor = 0xff0000;//0x914148;
         var nodeWidth = this.tapeWidth / 4;
         var nodeHeight = this.tapeWidth;
-        //var startRectangle = this.scene.add.rectangle(0 - this.distance / 2, 0, this.tapeWidth / 4, this.tapeWidth / 3, nodeColor);
-        var startPointNode = this.scene.add.rectangle(0 - (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
-        startPointNode.setOrigin(0.0, 0.5);
-        this.container.add(startPointNode);
+        var containerWorldPoint = this.scene.camera.getWorldPoint(this.container.x, this.container.y);
 
-        var endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
-        endPointNode.setOrigin(1.0, 0.5);
-        this.container.add(endPointNode);
+        this.startPointNode = this.scene.add.rectangle(containerWorldPoint.x - (this.distance / 2), containerWorldPoint.y, nodeWidth, nodeHeight, nodeColor);
+        this.startPointNode.setOrigin(0.5, 0.5);
+        //this.container.add(startPointNode);
 
-        startPointNode.setInteractive();
-        this.scene.input.setDraggable(startPointNode);
-        startPointNode.on('drag', (pointer, dragX, dragY) => {
+        this.endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
+        this.endPointNode.setOrigin(1.0, 0.5);
+        this.container.add(this.endPointNode);
+
+        this.startPointNode.setInteractive();
+        this.scene.input.setDraggable(this.startPointNode);
+        this.startPointNode.on('drag', (pointer, dragX, dragY) => {
             console.log('dragging start point node')
-            var worldPoint = this.scene.camera.getWorldPoint(dragX, dragY);
-            this.x = worldPoint.x;
-            this.y = worldPoint.y;
-            //this.updateMeasureTape();
+            var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+            this.startPointNode.x = worldPoint.x;
+            this.startPointNode.y = worldPoint.y;
+            this.updateMeasureTape();
         });
     }
 
@@ -105,21 +103,25 @@ class BasicMeasureTape extends GamePiece {
         });
     }
 
+    // destroyPreviousShape() {
+    //     if (this.lineShape !== null) {
+    //         this.lineShape.destroy();
+    //         this.distanceMarkerPoints.forEach((point) => {
+    //             point.distanceMarker.destroy();
+    //             point.distanceText.destroy();
+    //             point.distanceCircle.destroy();
+    //         });
+    //     }
+    //     this.container?.destroy();
+    // }
+
     destroyPreviousShape() {
-        if (this.lineShape !== null) {
-            this.lineShape.destroy();
-            this.distanceMarkerPoints.forEach((point) => {
-                point.distanceMarker.destroy();
-                point.distanceText.destroy();
-                point.distanceCircle.destroy();
-            });
-        }
-        this.container?.destroy();
+        this.container.removeAll(true);
     }
 
     createLineShape() {
 
-        this.line = new Phaser.Geom.Line(this.x, this.y, this.endPoint.x, this.endPoint.y);
+        this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPoint.x, this.endPoint.y);
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
         //this.lineShape = this.scene.add.rectangle(0 - this.distance / 2, 0, this.distance, this.tapeWidth, this.tapeColor); //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
         //this.lineShape.setOrigin(0, 0.5);
