@@ -70,9 +70,9 @@ class BasicMeasureTape extends GamePiece {
         var nodeColor = 0xff0000;//0x914148;
         var nodeWidth = this.tapeWidth / 4;
         var nodeHeight = this.tapeWidth;
-        var containerWorldPoint = this.scene.camera.getWorldPoint(this.container.x, this.container.y);
+        // var containerWorldPoint = this.scene.camera.getWorldPoint(this.container.x, this.container.y);
 
-        this.startPointNode = this.scene.add.rectangle(containerWorldPoint.x - (this.distance / 2), containerWorldPoint.y, nodeWidth, nodeHeight, nodeColor);
+        this.startPointNode = this.scene.add.rectangle(this.container.x - (this.distance / 2), this.container.y, nodeWidth, nodeHeight, nodeColor);
         this.startPointNode.setOrigin(0.5, 0.5);
         //this.container.add(startPointNode);
 
