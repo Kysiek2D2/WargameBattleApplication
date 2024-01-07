@@ -4,7 +4,7 @@
 - You need to have Git, node.js and some IDE like Visual Studio Code installed on your PC.
 - Clone repo.
 - Switch to correct branch (main or other).
-- In terminal run command: npm install. This will install all node.js dependencies and external packages. node_modules folder in repo is empty, and 'npm install' will install all dependencies and external packages into local project using package.json and package-lock.json files.
+- In terminal run command: npm install. node_modules folder will be crated on local. This will install all node.js dependencies and external packages. node_modules folder in repo is empty, and 'npm install' will install all dependencies and external packages into local project using package.json and package-lock.json files.
 
 * How to start server on local?
 - Open terminal in server.js location and execute 'npm start'. It's script determined in package.json file.
