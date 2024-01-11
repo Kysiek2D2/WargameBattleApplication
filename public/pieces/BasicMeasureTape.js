@@ -61,13 +61,13 @@ class BasicMeasureTape extends GamePiece {
 
         this.addDistanceMarkers();
 
-        this.endPoint = this.getSideMiddlePoints().rightMiddle;
-        //this.addContainerListeners();
+        //this.endPoint = this.configureSideMiddlePoints().rightMiddle;
+
         //Uncomment below if you want to see container's bounds
-        //this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
-    getSideMiddlePoints() {
+    configureSideMiddlePoints() {
 
         var leftMiddle = { x: this.container.x - (this.distance / 2), y: this.container.y };
         var rightMiddle = { x: this.container.x + (this.distance / 2), y: this.container.y };
@@ -110,7 +110,7 @@ class BasicMeasureTape extends GamePiece {
 
         this.endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
         this.endPointNode.setOrigin(1.0, 0.5);
-        this.container.add(this.endPointNode);
+        //this.container.add(this.endPointNode);
 
         this.startPointNode.setInteractive();
         this.scene.input.setDraggable(this.startPointNode);
@@ -125,7 +125,7 @@ class BasicMeasureTape extends GamePiece {
     }
 
     updateExternalComponents() {
-        var sidePoints = this.getSideMiddlePoints();
+        var sidePoints = this.configureSideMiddlePoints();
         this.endPointNode.setPosition(sidePoints.rightMiddle?.x, sidePoints.rightMiddle?.y);
         this.startPointNode.setPosition(sidePoints.leftMiddle?.x, sidePoints.leftMiddle?.y);
         //this.startPointNode.setPosition(this.container.x - (this.distance / 2), this.container.y);
@@ -144,37 +144,32 @@ class BasicMeasureTape extends GamePiece {
         });
     }
 
-    // destroyPreviousShape() {
-    //     if (this.lineShape !== null) {
-    //         this.lineShape.destroy();
-    //         this.distanceMarkerPoints.forEach((point) => {
-    //             point.distanceMarker.destroy();
-    //             point.distanceText.destroy();
-    //             point.distanceCircle.destroy();
-    //         });
-    //     }
-    //     this.container?.destroy();
-    // }
-
     destroyPreviousShape() {
         this.container.removeAll(true);
     }
 
     createLineShape() {
-        this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPoint.x, this.endPoint.y);
+        this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPointNode.x, this.endPointNode.y);
+
 
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
         this.distance = Phaser.Geom.Line.Length(this.line);
         this.container.setSize(this.distance, this.tapeWidth);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
         this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor));
+
+        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line); // Get the middle point of the line
+        this.container.x = middlePoint.x;
+        this.container.y = middlePoint.y;
+
         // Add green circle to mark endpoint
         //this.endPointCircle?.destroy();
-        //this.endPointCircle = this.scene.add.circle(this.endPoint.x, this.endPoint.y, this.tapeWidth / 2, 0x00FF00);
+        //this.endPointCircle = this.scene.add.circle(this.endPointNode.x, this.endPointNode.y, this.tapeWidth / 2, 0x00FF00);
         //this.container.add(endPointCircle);
 
-        var sidePoints = this.getSideMiddlePoints();
+        var sidePoints = this.configureSideMiddlePoints();
 
+        // Use the middle point as needed
     }
 
     addDistanceMarkers() {
