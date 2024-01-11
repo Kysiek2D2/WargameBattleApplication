@@ -55,16 +55,23 @@ class BasicMeasureTape extends GamePiece {
     updateMeasureTape() {
         this.destroyPreviousShape();
 
-        //this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
+        var x = this.container.x;
+        var y = this.container.y;
+        this.container.removeAll(true);
+        this.container.destroy();
+        this.container = null;
+        this.container = this.scene.add.container(x, y);
 
         this.createLineShape();
+
+        this.addContainerListeners();
 
         this.addDistanceMarkers();
 
         //this.endPoint = this.configureSideMiddlePoints().rightMiddle;
 
         //Uncomment below if you want to see container's bounds
-        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
+        // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
     configureSideMiddlePoints() {
