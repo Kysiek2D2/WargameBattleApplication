@@ -71,21 +71,25 @@ class WargameScene extends Phaser.Scene {
         background.setOrigin(0.0, 0.0);
         background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
         background.setScale(1, 1); // Create mirror reflection
+        background.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.BACKGROUND);
 
         background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
         background.setOrigin(0.0, 0.0);
         background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
         background.setScale(-1, 1); // Create mirror reflection
+        background.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.BACKGROUND);
 
         background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
         background.setOrigin(1.0, 0.0);
         background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
         background.setScale(1, -1); // Create mirror reflection
+        background.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.BACKGROUND);
 
         background = this.add.sprite(this.gameConfig.width / 2, this.gameConfig.height / 2, spriteKey);
         background.setOrigin(1.0, 0.0);
         background.setPosition(this.gameConfig.width / 2, this.gameConfig.height / 2);
         background.setScale(-1, -1); // Create mirror reflection
+        background.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.BACKGROUND);
     }
 
     loadMap(mapName) {
@@ -97,6 +101,7 @@ class WargameScene extends Phaser.Scene {
         this.map.displayHeight = this.mapHeightInGameDistanceUnits * this.sceneDistanceUnitPixels;
         console.log(`Canvas/GameConfig size: \n width: ${this.gameConfig.width}, \n height: ${this.gameConfig.height}`);
         console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
+        this.map.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MAP);
     }
 
     setGamePieceDetailsScene() {

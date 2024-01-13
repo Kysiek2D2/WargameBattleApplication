@@ -55,13 +55,6 @@ class BasicMeasureTape extends GamePiece {
     updateMeasureTape() {
         this.destroyPreviousShape();
 
-        var x = this.container.x;
-        var y = this.container.y;
-        this.container.removeAll(true);
-        this.container.destroy();
-        this.container = null;
-        this.container = this.scene.add.container(x, y);
-
         this.createLineShape();
 
         this.addContainerListeners();
@@ -70,7 +63,7 @@ class BasicMeasureTape extends GamePiece {
 
         //this.endPoint = this.configureSideMiddlePoints().rightMiddle;
 
-        //Uncomment below if you want to see container's bounds
+        //!!! Uncomment below if you want to see container's bounds
         // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
     }
 
@@ -158,12 +151,19 @@ class BasicMeasureTape extends GamePiece {
     createLineShape() {
         this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPointNode.x, this.endPointNode.y);
 
-
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
         this.distance = Phaser.Geom.Line.Length(this.line);
+
+        var x = this.container.x;
+        var y = this.container.y;
+        this.container.removeAll(true);
+        this.container.destroy();
+        this.container = null;
+        this.container = this.scene.add.container(x, y);
         this.container.setSize(this.distance, this.tapeWidth);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
         this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor));
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE);
 
         var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line); // Get the middle point of the line
         this.container.x = middlePoint.x;

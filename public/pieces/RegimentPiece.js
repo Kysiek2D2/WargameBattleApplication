@@ -1,3 +1,4 @@
+import { CONSTANTS } from "../Constants.js";
 import GamePiece from "./GamePiece.js";
 
 class RegimentPiece extends GamePiece {
@@ -7,7 +8,7 @@ class RegimentPiece extends GamePiece {
         super({ scene: scene, gamePieceName: gamePieceName });
         console.log(`GamePiece constructor...`);
         this.container = this.scene.add.container(x, y);
-
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
 
         this.sprite = scene.add.image(0, 0, spriteKey)
             .setOrigin(0.5, 0.5) //origin in the middle?
@@ -16,8 +17,8 @@ class RegimentPiece extends GamePiece {
 
         this.container.add(this.sprite);
 
-        //Red rectangle for testing to mark container boundaries
-        this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
+        //!!! Red rectangle for testing to mark container boundaries
+        // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
 
         this.container.setSize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels);
         this.spriteKey = spriteKey;
@@ -59,6 +60,7 @@ class RegimentPiece extends GamePiece {
         cornerNode.setInteractive();
         cornerNode.setVisible(false);
         cornerNode.setSize(radius * 2, radius * 2);
+        cornerNode.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
         this.scene.input.setDraggable(cornerNode);
         cornerNode.on('dragstart', (pointer) => {
             console.log('Drag started');

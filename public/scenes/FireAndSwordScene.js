@@ -13,6 +13,7 @@ class FireAndSwordScene extends WargameScene {
         this.load.image({ key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png' });
         this.load.image({ key: 'basicCavalerySizeM', url: 'assets/units/basic-cavalery-size-M.jpg' });
         this.load.image({ key: 'basicCavalerySizeS', url: 'assets/units/basic-cavalery-size-S.jpg' });
+        this.load.image({ key: 'denseForestShadowed', url: 'assets/terrains/denseForestShadowed.png' });
     }
 
     create() {
@@ -61,6 +62,17 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Jazda \nChorwacka',
             gamePieceStrength: 10,
         });
+        var testTerrain1 = new RegimentPiece({
+            scene: this,
+            x: 1250,
+            y: 310,
+            displayWidth: CONSTANTS.FIRE_AND_SWORD_TERRAIN_SIZES_IN_INCHES.SIZE_M.width,
+            displayHeight: CONSTANTS.FIRE_AND_SWORD_TERRAIN_SIZES_IN_INCHES.SIZE_M.height,
+            spriteKey: 'denseForestShadowed',
+            gamePieceName: 'Dense \nForest',
+            gamePieceStrength: 10,
+        });
+        testTerrain1.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.TERRAIN_PIECE);
     }
 
     update() {
