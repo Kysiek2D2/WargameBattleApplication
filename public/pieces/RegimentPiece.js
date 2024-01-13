@@ -4,23 +4,23 @@ import GamePiece from "./GamePiece.js";
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, displayWidth, displayHeight, spriteKey, gamePieceStrength = 15 }) {
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15 }) {
         super({ scene: scene, gamePieceName: gamePieceName });
         console.log(`GamePiece constructor...`);
         this.container = this.scene.add.container(x, y);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
 
         this.sprite = scene.add.image(0, 0, spriteKey)
-            .setOrigin(0.5, 0.5) //origin in the middle?
-            //.setInteractive({ draggable: true })
-            .setDisplaySize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels)
 
         this.container.add(this.sprite);
 
         //!!! Red rectangle for testing to mark container boundaries
         // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
+        //this.showContainerBounds();
 
-        this.container.setSize(displayWidth * scene.sceneDistanceUnitPixels, displayHeight * scene.sceneDistanceUnitPixels);
+        this.container.setSize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels);
         this.spriteKey = spriteKey;
 
         //Usable properties
@@ -42,9 +42,17 @@ class RegimentPiece extends GamePiece {
         RegimentPiece.activeGamePiece = null; //++
     }
 
+    showContainerBounds() {
+        var containerBoundsColor = CONSTANTS.BASIC_COLOR_CODES.CLASSIC_RED;
+        //get this.container width and height
+        var containerWidth = this.container.width;
+        var containerHeight = this.container.height;
+        this.container.add(this.scene.add.rectangle(0, 0, containerWidth * this.scene.sceneDistanceUnitPixels, containerHeight * this.scene.sceneDistanceUnitPixels, 0xff0000));
+    }
+
     setCornerNodes() {
         //note: corner nodes are not part of container, they are outside of it
-        var cornerNodeColor = 0x914148;
+        var cornerNodeColor = CONSTANTS.BASIC_COLOR_CODES.ACID_GREEN;
         var corners = this.getCornersPositions();
         this.cornerNodes = {
             cornerNodeTopLeft: this.createSingleCornerNode(corners.topLeft.x, corners.topLeft.y, 7, cornerNodeColor),
@@ -54,7 +62,6 @@ class RegimentPiece extends GamePiece {
 
     createSingleCornerNode(x, y, radius, color) {
         var cornerNode = this.scene.add.circle(x, y, radius, color);
-        //this.container.add(cornerNode);
 
         cornerNode.setOrigin(0.5, 0.5);
         cornerNode.setInteractive();

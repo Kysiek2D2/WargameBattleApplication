@@ -33,6 +33,11 @@ export const CONSTANTS = {
             height: 15,
         },
     },
+    BASIC_COLOR_CODES: {
+        CLASSIC_RED: 0xff0000,
+        BURGUNDY: 0x914148,
+        ACID_GREEN: 0x00ff00,
+    },
     WARGAME_DEPTH_CATEGORIES: {
         BACKGROUND: -1,
         MAP: 0,

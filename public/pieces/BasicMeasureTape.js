@@ -5,20 +5,17 @@ class BasicMeasureTape extends GamePiece {
 
     static measureRequestOn = false;
     static instances = [];
-    static initialDistanceInDistanceUnits = 12;
 
-    constructor({ scene, gamePieceName, tapeWidth = scene.sceneDistanceUnitPixels, x, y }) {
+    constructor({ scene, gamePieceName, widthInDistanceUnits = 1, heightInDistanceUnits, x, y }) {
         super({ scene: scene, gamePieceName: gamePieceName });
-        this.x = x;
-        this.y = y;
-        //this.scene = scene;
-        this.tapeWidth = tapeWidth;
+        this.x = x; //++
+        this.y = y; //++
+        this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.tapeColor = 0xfcf403;
         this.distanceMarkerColor = 0x000000;
         this.distanceUnitPixels = scene.sceneDistanceUnitPixels;
 
-        //this.startPoint = null;
-        this.distance = BasicMeasureTape.initialDistanceInDistanceUnits * scene.sceneDistanceUnitPixels;
+        this.distance = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.endPoint = { x: this.x + this.distance, y: this.y };
         this.line = null;
         this.lineShape = null; //needed???
@@ -27,22 +24,24 @@ class BasicMeasureTape extends GamePiece {
         this.distanceMarkerPoints = [];
         this.distanceMarkerWidth = 2;
         this.numDistanceMarkers = null;
-        this.container = null; //++
 
-        this.startPointNode;
-        this.endPointNode;
+        this.sideNodes = { startNode: null, endNode: null };
 
-        this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2);
-        this.addManipulationNodes();
-
+        this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2); //++
+        this.setSideNodes();
         this.createLineShape();
         this.addDistanceMarkers();
         this.addContainerListeners();
 
-        //Uncomment to show container's bounds as red rectangle
-        // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
+        //Uncomment  below:to show container's bounds as red rectangle
+        //this.showContainerBounds();
 
         BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
+    }
+
+    showContainerBounds() {
+        //Shows only half of the container's bounds, to show full bounds remove the division by 2
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.width / 2, 0xff0000));
     }
 
     static popInstance() {
@@ -53,83 +52,105 @@ class BasicMeasureTape extends GamePiece {
     }
 
     updateMeasureTape() {
-        this.destroyPreviousShape();
+        this.destroyPreviousShapes();
 
         this.createLineShape();
 
         this.addContainerListeners();
 
         this.addDistanceMarkers();
+        this.updateSideNodes();
 
-        //this.endPoint = this.configureSideMiddlePoints().rightMiddle;
-
-        //!!! Uncomment below if you want to see container's bounds
-        // this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth / 2, 0xff0000));
+        //Uncomment  below:to show container's bounds as red rectangle
+        //this.showContainerBounds();
     }
 
-    configureSideMiddlePoints() {
+    updateSideNodes() {
+        var middlePoints = this.getSideMiddlePointsPostions();
+        this.sideNodes.startNode.setPosition(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y);
+        this.sideNodes.endNode.setPosition(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y);
+    }
 
-        var leftMiddle = { x: this.container.x - (this.distance / 2), y: this.container.y };
-        var rightMiddle = { x: this.container.x + (this.distance / 2), y: this.container.y };
+    getSideMiddlePointsPostions() {
+        var startMiddlePoint = { x: this.container.x - (this.distance / 2), y: this.container.y };
+        var endMiddlePoint = { x: this.container.x + (this.distance / 2), y: this.container.y };
 
-        // Apply container rotation angle
         var angle = this.container.rotation;
         var cosAngle = Math.cos(angle);
         var sinAngle = Math.sin(angle);
 
-        // Rotate each side middle point around the container's center
-        leftMiddle = {
-            x: this.container.x + (leftMiddle.x - this.container.x) * cosAngle - (leftMiddle.y - this.container.y) * sinAngle,
-            y: this.container.y + (leftMiddle.x - this.container.x) * sinAngle + (leftMiddle.y - this.container.y) * cosAngle
+        var startMiddlePointRotated = {
+            x: this.container.x + (startMiddlePoint.x - this.container.x) * cosAngle - (startMiddlePoint.y - this.container.y) * sinAngle,
+            y: this.container.y + (startMiddlePoint.x - this.container.x) * sinAngle + (startMiddlePoint.y - this.container.y) * cosAngle
         };
-        rightMiddle = {
-            x: this.container.x + (rightMiddle.x - this.container.x) * cosAngle - (rightMiddle.y - this.container.y) * sinAngle,
-            y: this.container.y + (rightMiddle.x - this.container.x) * sinAngle + (rightMiddle.y - this.container.y) * cosAngle
+        var startEndPointRotated = {
+            x: this.container.x + (endMiddlePoint.x - this.container.x) * cosAngle - (endMiddlePoint.y - this.container.y) * sinAngle,
+            y: this.container.y + (endMiddlePoint.x - this.container.x) * sinAngle + (endMiddlePoint.y - this.container.y) * cosAngle
         };
 
-        var sideMiddlePoints = { leftMiddle, rightMiddle };
-
-        this.leftMiddleCircle?.destroy();
-        this.rightMiddleCircle?.destroy();
-        // Mark leftMiddle and rightMiddle as green circles
-        this.leftMiddleCircle = this.scene.add.circle(leftMiddle.x, leftMiddle.y, 5, 0x00ff00);
-        this.rightMiddleCircle = this.scene.add.circle(rightMiddle.x, rightMiddle.y, 5, 0x00ff00);
-
+        var sideMiddlePoints = { startMiddlePointRotated: startMiddlePointRotated, startEndPointRotated: startEndPointRotated };
         return sideMiddlePoints;
     }
 
-    addManipulationNodes() {
-        var nodeColor = 0xff0000;//0x914148;
-        var nodeWidth = this.tapeWidth / 4;
-        var nodeHeight = this.tapeWidth;
-        // var containerWorldPoint = this.scene.camera.getWorldPoint(this.container.x, this.container.y);
 
-        this.startPointNode = this.scene.add.rectangle(this.container.x - (this.distance / 2), this.container.y, nodeWidth, nodeHeight, nodeColor);
-        this.startPointNode.setOrigin(0.5, 0.5);
-        //this.container.add(this.startPointNode);
+    setSideNodes() {
+        var middlePoints = this.getSideMiddlePointsPostions();
+        this.sideNodes = {
+            startNode: this.createSingleSideNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y),
+            endNode: this.createSingleSideNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y),
+        };
+    }
 
-        this.endPointNode = this.scene.add.rectangle(0 + (this.distance / 2), 0, nodeWidth, nodeHeight, nodeColor);
-        this.endPointNode.setOrigin(1.0, 0.5);
-        //this.container.add(this.endPointNode);
-
-        this.startPointNode.setInteractive();
-        this.scene.input.setDraggable(this.startPointNode);
-        this.startPointNode.on('drag', (pointer) => {
-            console.log('dragging start point node')
+    createSingleSideNode(x, y) {
+        var sideNodeColor = CONSTANTS.BASIC_COLOR_CODES.BURGUNDY;
+        var node = this.scene.add.circle(x, y, 5, sideNodeColor);
+        node.setInteractive();
+        this.scene.input.setDraggable(node);
+        node.on('drag', (pointer) => {
+            console.log('dragging left middle point node')
             var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-            this.startPointNode.x = worldPoint.x;
-            this.startPointNode.y = worldPoint.y;
-            //this.setEndPoint();
+            node.x = worldPoint.x;
+            node.y = worldPoint.y;
             this.updateMeasureTape();
         });
+        return node;
     }
 
-    updateExternalComponents() {
-        var sidePoints = this.configureSideMiddlePoints();
-        this.endPointNode.setPosition(sidePoints.rightMiddle?.x, sidePoints.rightMiddle?.y);
-        this.startPointNode.setPosition(sidePoints.leftMiddle?.x, sidePoints.leftMiddle?.y);
-        //this.startPointNode.setPosition(this.container.x - (this.distance / 2), this.container.y);
-    }
+    // renderSideMiddlePointsGraphics() {
+    //     this.startPointCircle?.destroy();
+    //     this.endPointCircle?.destroy();
+    //     var { startNode: startPoint, endNode: endPoint } = this.sideNodes;
+    //     this.startPointCircle = this.scene.add.circle(startPoint.x, startPoint.y, 5, 0x00ff00);
+    //     this.endPointCircle = this.scene.add.circle(endPoint.x, endPoint.y, 5, 0x00ff00);
+    // }
+
+    // addSideMiddlePointsListeners() {
+    //     this.startPointCircle.setInteractive();
+    //     this.scene.input.setDraggable(this.startPointCircle);
+    //     this.startPointCircle.on('drag', (pointer) => {
+    //         console.log('dragging left middle point node')
+    //         var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+    //         this.startPointCircle.x = worldPoint.x;
+    //         this.startPointCircle.y = worldPoint.y;
+    //         this.updateMeasureTape();
+    //     });
+
+    //     this.endPointCircle.setInteractive();
+    //     this.scene.input.setDraggable(this.endPointCircle);
+    //     this.endPointCircle.on('drag', (pointer) => {
+    //         console.log('dragging right middle point node')
+    //         var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+    //         this.endPointCircle.x = worldPoint.x;
+    //         this.endPointCircle.y = worldPoint.y;
+    //         this.updateMeasureTape();
+    //     });
+    // }
+
+    // updateExternalComponents() {
+    //     var sidePoints = this.setSideNodes();
+    //     // this.endPointNode.setPosition(sidePoints.rightMiddle?.x, sidePoints.rightMiddle?.y);
+    //     // this.startPointNode.setPosition(sidePoints.leftMiddle?.x, sidePoints.leftMiddle?.y);
+    // }
 
     addContainerListeners() {
         this.container.setInteractive();
@@ -140,16 +161,16 @@ class BasicMeasureTape extends GamePiece {
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-            this.updateExternalComponents();
+            this.updateSideNodes();
         });
     }
 
-    destroyPreviousShape() {
+    destroyPreviousShapes() {
         this.container.removeAll(true);
     }
 
     createLineShape() {
-        this.line = new Phaser.Geom.Line(this.startPointNode.x, this.startPointNode.y, this.endPointNode.x, this.endPointNode.y);
+        this.line = new Phaser.Geom.Line(this.sideNodes.startNode.x, this.sideNodes.startNode.y, this.sideNodes.endNode.x, this.sideNodes.endNode.y);
 
         this.lineAngle = Phaser.Geom.Line.Angle(this.line);
         this.distance = Phaser.Geom.Line.Length(this.line);
@@ -160,23 +181,14 @@ class BasicMeasureTape extends GamePiece {
         this.container.destroy();
         this.container = null;
         this.container = this.scene.add.container(x, y);
-        this.container.setSize(this.distance, this.tapeWidth);
+        this.container.setSize(this.distance, this.width);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.tapeWidth, this.tapeColor));
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.width, this.tapeColor));
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE);
 
-        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line); // Get the middle point of the line
+        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line);
         this.container.x = middlePoint.x;
         this.container.y = middlePoint.y;
-
-        // Add green circle to mark endpoint
-        //this.endPointCircle?.destroy();
-        //this.endPointCircle = this.scene.add.circle(this.endPointNode.x, this.endPointNode.y, this.tapeWidth / 2, 0x00FF00);
-        //this.container.add(endPointCircle);
-
-        var sidePoints = this.configureSideMiddlePoints();
-
-        // Use the middle point as needed
     }
 
     addDistanceMarkers() {
@@ -185,9 +197,9 @@ class BasicMeasureTape extends GamePiece {
         for (var i = 1; i < this.numDistanceMarkers; i++) {
             var point = { x: (i * this.distanceUnitPixels) - this.distance / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
 
-            var distanceMarker = this.scene.add.rectangle(point.x, point.y, this.distanceMarkerWidth, this.tapeWidth, this.distanceMarkerColor);
+            var distanceMarker = this.scene.add.rectangle(point.x, point.y, this.distanceMarkerWidth, this.width, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
-            var circle = this.scene.add.circle(point.x, point.y, this.tapeWidth / 3, this.tapeColor);
+            var circle = this.scene.add.circle(point.x, point.y, this.width / 3, this.tapeColor);
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
@@ -196,39 +208,6 @@ class BasicMeasureTape extends GamePiece {
             this.container.add(distanceText);
             this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceCircle: circle, distanceText: distanceText }]; // Updated code to include the circle
         }
-    }
-
-    // static isMeasurePending() {
-    //     var lastInstance = BasicMeasureTape.popInstance();
-    //     if (lastInstance === null) return false;
-    //     return lastInstance.getStartPoint() === null && lastInstance.getEndPoint() === null;
-    // }
-
-    // static isMeasureCompleted() {
-    //     var lastInstance = BasicMeasureTape.popInstance();
-    //     if (lastInstance === null) return true;
-    //     return lastInstance.getStartPoint() !== null
-    //         && lastInstance.getEndPoint() !== null
-    //         && lastInstance.isCompleted;
-    // }
-
-    setStartPoint(x, y) {
-        var worldPoint = this.scene.camera.getWorldPoint(x, y);
-        this.x = worldPoint.x;
-        this.y = worldPoint.y;
-    }
-
-    // getStartPoint() {
-    //     return this.startPoint;
-    // }
-
-    setEndPoint(x, y) {
-        var worldPoint = this.scene.camera.getWorldPoint(x, y);
-        this.endPoint = { x: worldPoint.x, y: worldPoint.y };
-    }
-
-    getEndPoint() {
-        return this.endPoint;
     }
 }
 
