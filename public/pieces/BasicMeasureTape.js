@@ -5,7 +5,7 @@ class BasicMeasureTape extends GamePiece {
 
     static distanceMarkerWidthInPixels = 2;
 
-    constructor({ scene, gamePieceName, widthInDistanceUnits, heightInDistanceUnits = 1, x, y, color }) {
+    constructor({ scene, gamePieceName, widthInDistanceUnits, heightInDistanceUnits = 1, x, y, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -16,10 +16,7 @@ class BasicMeasureTape extends GamePiece {
             widthInDistanceUnits: widthInDistanceUnits
         });
 
-
-        this.color = 0xfcf403;
-
-        this.distanceMarkerColor = 0x000000;
+        this.distanceMarkerColor = CONSTANTS.BASIC_COLORS.BLACK;
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
@@ -87,7 +84,7 @@ class BasicMeasureTape extends GamePiece {
     }
 
     createSingleNode(x, y) {
-        var nodeColor = CONSTANTS.BASIC_COLOR_CODES.BURGUNDY;
+        var nodeColor = CONSTANTS.BASIC_COLORS.BURGUNDY;
         var node = this.scene.add.circle(x, y, 5, nodeColor);
         node.setInteractive();
         this.scene.input.setDraggable(node);

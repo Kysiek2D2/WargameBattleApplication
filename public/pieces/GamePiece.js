@@ -2,7 +2,7 @@ class GamePiece {
     static instances = [];
     static idCounter = 0;
 
-    constructor({ scene, gamePieceName, x, y, heightInDistanceUnits, widthInDistanceUnits }) {
+    constructor({ scene, gamePieceName, x, y, heightInDistanceUnits, widthInDistanceUnits, color = null }) {
         this.scene = scene;
         this.gamePieceName = gamePieceName;
         this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
@@ -12,6 +12,7 @@ class GamePiece {
         this.isSelected = false;
         this.isBlocked = false;
         GamePiece.activeGamePiece = null;
+        this.color = color;
 
         GamePiece.instances = [...GamePiece.instances, this];
     }

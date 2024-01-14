@@ -16,8 +16,6 @@ class RegimentPiece extends GamePiece {
         });
 
         this.setActivateListener();
-        this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
-        this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
 
         this.updateContainer();
         this.sprite = scene.add.image(0, 0, spriteKey)
@@ -44,7 +42,7 @@ class RegimentPiece extends GamePiece {
     }
 
     showContainerBounds() {
-        var containerBoundsColor = CONSTANTS.BASIC_COLOR_CODES.CLASSIC_RED;
+        var containerBoundsColor = CONSTANTS.BASIC_COLORS.CLASSIC_RED;
         var containerWidth = this.container.width;
         var containerHeight = this.container.height;
         this.container.add(this.scene.add.rectangle(0, 0, containerWidth * this.scene.sceneDistanceUnitPixels, containerHeight * this.scene.sceneDistanceUnitPixels, 0xff0000));
@@ -52,7 +50,7 @@ class RegimentPiece extends GamePiece {
 
     setNodes() {
         //note: corner nodes are not part of container, they are outside of it
-        var nodeColor = CONSTANTS.BASIC_COLOR_CODES.ACID_GREEN;
+        var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
         var corners = this.getCornersPositions();
         this.nodes = {
             nodeTopLeft: this.createSingleNode(corners.topLeft.x, corners.topLeft.y, 7, nodeColor),
