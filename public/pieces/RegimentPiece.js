@@ -15,8 +15,6 @@ class RegimentPiece extends GamePiece {
             widthInDistanceUnits: widthInDistanceUnits
         });
 
-        this.setActivateListener();
-
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
 
@@ -74,7 +72,7 @@ class RegimentPiece extends GamePiece {
         });
         node.on('drag', (pointer) => {
             console.log(`createSingleCornerNode pointer:`)
-            RegimentPiece.hideActiveGamePieceNodes();
+            GamePiece.hideActiveGamePieceNodes();
             var pointerWorldPoint = {
                 x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
@@ -101,24 +99,16 @@ class RegimentPiece extends GamePiece {
         });
         node.on('dragend', (pointer) => {
             console.log('Drag ended');
-            RegimentPiece.showActiveGamePieceNodes();
+            GamePiece.showActiveGamePieceNodes();
         });
 
         node.on('pointerdown', () => {
-            if (RegimentPiece.activeGamePiece !== null) {
-                RegimentPiece.deactivateGamePiece();
+            if (GamePiece.activeGamePiece !== null) {
+                GamePiece.deactivateGamePiece();
             }
             this.activateGamePiece();
         });
         return node;
-    }
-
-    static hideActiveGamePieceNodes() {
-        Object.values(RegimentPiece.activeGamePiece.nodes).forEach(node => node.setVisible(false));
-    }
-
-    static showActiveGamePieceNodes() {
-        Object.values(RegimentPiece.activeGamePiece.nodes).forEach(node => node.setVisible(true));
     }
 
     getOppositeNode(cornerNode) {
@@ -173,10 +163,10 @@ class RegimentPiece extends GamePiece {
     }
 
     static isMouseClickOnActiveGamePieceCornerNode(pointer) {
-        if (RegimentPiece.activeGamePiece === null) return false;
-        var worldX = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        var isMouseOnCornerNode = Object.values(RegimentPiece.activeGamePiece.cornerNodes).some(node => node.getBounds().contains(worldX, worldY));
+        if (GamePiece.activeGamePiece === null) return false;
+        var worldX = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
+        var worldY = GamePiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
+        var isMouseOnCornerNode = Object.values(RegimentPiece.activeGamePiece.nodes).some(node => node.getBounds().contains(worldX, worldY));
         console.log(`Is mouse click on corner ion node: ${isMouseOnCornerNode}`);
         return isMouseOnCornerNode;
     }
@@ -192,52 +182,6 @@ class RegimentPiece extends GamePiece {
             this.updateNodes();
         })
     }
-
-    setActivateListener() { //++
-        this.container.setInteractive();
-        this.container.on('pointerdown', () => {
-            console.log('GamePiece clicked:', this.gamePieceName);
-            console.log(`GamePieceStrength: ${this.gamePieceStrength}`);
-
-            if (RegimentPiece.activeGamePiece !== null) {
-                RegimentPiece.deactivateGamePiece(); //deactivate previous activeGamePiece
-            }
-
-            this.activateGamePiece();
-
-            console.log(`Active unit is: ${RegimentPiece.activeGamePiece.gamePieceName}`);
-        });
-    }
-
-    activateGamePiece() { //++
-        RegimentPiece.activeGamePiece = this;
-        RegimentPiece.activeGamePiece.sprite.setTint(185273);
-        RegimentPiece.showActiveGamePieceNodes();
-        this.scene.getGamePieceDetailsScene().updateGamePieceDetailsScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
-        this.scene.getGamePieceDetailsScene().setVisible(true);
-    }
-
-    static deactivateGamePiece() { //++
-        if (RegimentPiece.activeGamePiece === null) return;
-        RegimentPiece.activeGamePiece.updateNodes()
-        RegimentPiece.hideActiveGamePieceNodes();
-        RegimentPiece.activeGamePiece?.sprite.clearTint();
-        RegimentPiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
-        RegimentPiece.activeGamePiece = null;
-    }
-
-    static isMouseClickOnGamePiece(pointer, scene) { //++
-        var worldX = scene.camera.getWorldPoint(pointer.x, pointer.y).x;
-        var worldY = scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        var gamePiecesUnderClick = RegimentPiece.instances.filter(i => i.sprite.getBounds().contains(worldX, worldY));
-        var isMouseOnGamePiece = gamePiecesUnderClick.length > 0;
-        return isMouseOnGamePiece;
-    }
-
-    static getActiveGamePiece() { //++
-        return RegimentPiece.activeGamePiece;
-    }
 }
-
 
 export default RegimentPiece;
