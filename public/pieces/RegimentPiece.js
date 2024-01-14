@@ -5,14 +5,16 @@ class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programming design pattern
 
     constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null }) {
-        super({ scene: scene, gamePieceName: gamePieceName, x, y, color });
+        super({
+            scene: scene,
+            gamePieceName: gamePieceName,
+            x: x,
+            y: y,
+            color: color,
+            heightInDistanceUnits: heightInDistanceUnits,
+            widthInDistanceUnits: widthInDistanceUnits
+        });
 
-        this.container = this.scene.add.container(x, y);
-        this.id = RegimentPiece.idCounter++; //++
-        this.isSelected = false; //++
-        this.isBlocked = false; //++
-        RegimentPiece.activeGamePiece = null; //++
-        RegimentPiece.instances = [...RegimentPiece.instances, this]; //++
         this.setActivateListener();
         this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;

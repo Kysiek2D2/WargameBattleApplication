@@ -48,7 +48,7 @@ class ToolsScene extends SidePanelScene {
             setTimeout(() => {
                 measureTapeIcon.clearTint();
             }, this.elementsTintTimeoutInMs);
-            var measureTape = new BasicMeasureTape({ scene: this.mainScene, gamePieceName: 'tape', widthInDistanceUnits: 1, heightInDistanceUnits: 12, x: 100, y: 100 });
+            var measureTape = new BasicMeasureTape({ scene: this.mainScene, gamePieceName: 'tape', widthInDistanceUnits: 12, heightInDistanceUnits: 1, x: 100, y: 100 });
         });
         return measureTapeIcon;
     }
