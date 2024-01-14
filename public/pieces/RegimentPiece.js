@@ -2,91 +2,86 @@ import { CONSTANTS } from "../Constants.js";
 import GamePiece from "./GamePiece.js";
 
 class RegimentPiece extends GamePiece {
-    // Entity-Component-System (ECS) programmind design pattern
+    // Entity-Component-System (ECS) programming design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15 }) {
-        super({ scene: scene, gamePieceName: gamePieceName, x, y });
-        console.log(`GamePiece constructor...`);
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null }) {
+        super({ scene: scene, gamePieceName: gamePieceName, x, y, color });
+
         this.container = this.scene.add.container(x, y);
-        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
+        this.id = RegimentPiece.idCounter++; //++
+        this.isSelected = false; //++
+        this.isBlocked = false; //++
+        RegimentPiece.activeGamePiece = null; //++
+        RegimentPiece.instances = [...RegimentPiece.instances, this]; //++
+        this.setActivateListener();
+        this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
+        this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
 
+        this.updateContainer();
         this.sprite = scene.add.image(0, 0, spriteKey)
             .setOrigin(0.5, 0.5)
             .setDisplaySize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels)
-
         this.container.add(this.sprite);
+        this.gamePieceStrength = gamePieceStrength;
+        this.nodes = {
+            nodeTopLeft: null,
+            nodeTopRight: null,
+        }
+        this.setNodes();
+
 
         //!!! Red rectangle for testing to mark container boundaries
         // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
         //this.showContainerBounds();
+    }
 
-        this.container.setSize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels);
-        this.spriteKey = spriteKey;
-
-        //Usable properties
-        this.id = RegimentPiece.idCounter++; //++
-        this.isSelected = false; //++
-        this.isBlocked = false; //++
-        this.gamePieceStrength = gamePieceStrength;
-
-        this.cornerNodes = {
-            cornerNodeTopLeft: null,
-            cornerNodeTopRight: null,
-        }
-
-        //Additional configuration
-        this.setCornerNodes();
+    updateContainer() {
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
+        this.container.setSize(this.width, this.height);
         this.setOnDragListener();
-        this.setActivateListener();
-        RegimentPiece.instances = [...RegimentPiece.instances, this]; //++
-        RegimentPiece.activeGamePiece = null; //++
     }
 
     showContainerBounds() {
         var containerBoundsColor = CONSTANTS.BASIC_COLOR_CODES.CLASSIC_RED;
-        //get this.container width and height
         var containerWidth = this.container.width;
         var containerHeight = this.container.height;
         this.container.add(this.scene.add.rectangle(0, 0, containerWidth * this.scene.sceneDistanceUnitPixels, containerHeight * this.scene.sceneDistanceUnitPixels, 0xff0000));
     }
 
-    setCornerNodes() {
+    setNodes() {
         //note: corner nodes are not part of container, they are outside of it
-        var cornerNodeColor = CONSTANTS.BASIC_COLOR_CODES.ACID_GREEN;
+        var nodeColor = CONSTANTS.BASIC_COLOR_CODES.ACID_GREEN;
         var corners = this.getCornersPositions();
-        this.cornerNodes = {
-            cornerNodeTopLeft: this.createSingleCornerNode(corners.topLeft.x, corners.topLeft.y, 7, cornerNodeColor),
-            cornerNodeTopRight: this.createSingleCornerNode(corners.topRight.x, corners.topRight.y, 7, cornerNodeColor),
+        this.nodes = {
+            nodeTopLeft: this.createSingleNode(corners.topLeft.x, corners.topLeft.y, 7, nodeColor),
+            nodeTopRight: this.createSingleNode(corners.topRight.x, corners.topRight.y, 7, nodeColor),
         }
     }
 
-    createSingleCornerNode(x, y, radius, color) {
-        var cornerNode = this.scene.add.circle(x, y, radius, color);
+    createSingleNode(x, y, radius, color) {
+        var node = this.scene.add.circle(x, y, radius, color);
 
-        cornerNode.setOrigin(0.5, 0.5);
-        cornerNode.setInteractive();
-        cornerNode.setVisible(false);
-        cornerNode.setSize(radius * 2, radius * 2);
-        cornerNode.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
-        this.scene.input.setDraggable(cornerNode);
-        cornerNode.on('dragstart', (pointer) => {
+        node.setOrigin(0.5, 0.5);
+        node.setInteractive();
+        node.setVisible(false);
+        node.setSize(radius * 2, radius * 2);
+        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
+        this.scene.input.setDraggable(node);
+        node.on('dragstart', (pointer) => {
             console.log('Drag started');
         });
-        cornerNode.on('drag', (pointer) => {
+        node.on('drag', (pointer) => {
             console.log(`createSingleCornerNode pointer:`)
             RegimentPiece.hideActiveGamePieceNodes();
-            //set cornerNode size to 
             var pointerWorldPoint = {
                 x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
                 y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
             };
 
             console.log(`pointerWorldPoint: ${JSON.stringify(pointerWorldPoint)}`)
-            var angle = this.getRotationAngleFromCornernNode(cornerNode, pointerWorldPoint);
-            //rotate container
+            var angle = this.getRotationAngleFromNode(node, pointerWorldPoint);
             this.container.setRotation(angle);
-            //this.container.rotation = angle;
-            this.updateCornerNodes();
+            this.updateNodes();
 
             /* //Comment-out to show rotation line
             // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
@@ -98,54 +93,49 @@ class RegimentPiece extends GamePiece {
             //Comment-out to show rotation line
             // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
             // var thisNode = cornerNode;
-            var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
+            var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
             var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
             graphics.strokeLineShape(line);
         });
-        cornerNode.on('dragend', (pointer) => {
+        node.on('dragend', (pointer) => {
             console.log('Drag ended');
             RegimentPiece.showActiveGamePieceNodes();
-            // Perform your action here
         });
 
-        cornerNode.on('pointerdown', () => {
+        node.on('pointerdown', () => {
             if (RegimentPiece.activeGamePiece !== null) {
-                RegimentPiece.deactivateGamePiece(); //deactivate previous activeGamePiece
+                RegimentPiece.deactivateGamePiece();
             }
             this.activateGamePiece();
         });
-        return cornerNode;
+        return node;
     }
 
     static hideActiveGamePieceNodes() {
-        Object.values(RegimentPiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(false));
-        //TODO: add more, for arrows etc as well
+        Object.values(RegimentPiece.activeGamePiece.nodes).forEach(node => node.setVisible(false));
     }
 
     static showActiveGamePieceNodes() {
-        Object.values(RegimentPiece.activeGamePiece.cornerNodes).forEach(node => node.setVisible(true));
+        Object.values(RegimentPiece.activeGamePiece.nodes).forEach(node => node.setVisible(true));
     }
 
-    getOppositeCornerNode(cornerNode) {
-        if (cornerNode === this.cornerNodes.cornerNodeTopLeft) {
-            //console.log(`Opposite corner node is: cornerTopRight`);
-            return this.cornerNodes.cornerNodeTopRight;
-        } else if (cornerNode === this.cornerNodes.cornerNodeTopRight) {
-            //console.log(`Opposite corner node is: cornerTopLeft`);
-            return this.cornerNodes.cornerNodeTopLeft;
+    getOppositeNode(cornerNode) {
+        if (cornerNode === this.nodes.nodeTopLeft) {
+            return this.nodes.nodeTopRight;
+        } else if (cornerNode === this.nodes.nodeTopRight) {
+            return this.nodes.nodeTopLeft;
         } else {
             return null;
         }
     }
 
-    updateCornerNodes() {
+    updateNodes() {
         var corners = this.getCornersPositions();
-        this.cornerNodes.cornerNodeTopLeft.setPosition(corners.topLeft.x, corners.topLeft.y);
-        this.cornerNodes.cornerNodeTopRight.setPosition(corners.topRight.x, corners.topRight.y);
+        this.nodes.nodeTopLeft.setPosition(corners.topLeft.x, corners.topLeft.y);
+        this.nodes.nodeTopRight.setPosition(corners.topRight.x, corners.topRight.y);
     }
 
     getCornersPositions() {
-        //get this.container corners positions
         var containerCorners = {
             topLeft: { x: this.container.x - this.container.width / 2, y: this.container.y - this.container.height / 2 },
             topRight: { x: this.container.x + this.container.width / 2, y: this.container.y - this.container.height / 2 },
@@ -153,7 +143,6 @@ class RegimentPiece extends GamePiece {
             bottomRight: { x: this.container.x + this.container.width / 2, y: this.container.y + this.container.height / 2 },
         }
 
-        // Apply container rotation angle
         var angle = this.container.rotation;
         var cosAngle = Math.cos(angle);
         var sinAngle = Math.sin(angle);
@@ -169,20 +158,19 @@ class RegimentPiece extends GamePiece {
         return containerCorners;
     }
 
-    getRotationAngleFromCornernNode(cornerNode, pointerWorldPoint) {
+    getRotationAngleFromNode(cornerNode, pointerWorldPoint) {
         var angle = null;
-        var opposideCornerNode = this.getOppositeCornerNode(cornerNode);
-        if (cornerNode == this.cornerNodes.cornerNodeTopRight) {
+        var opposideCornerNode = this.getOppositeNode(cornerNode);
+        if (cornerNode == this.nodes.nodeTopRight) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint);
         }
-        else if (cornerNode == this.cornerNodes.cornerNodeTopLeft) {
+        else if (cornerNode == this.nodes.nodeTopLeft) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint) - Math.PI;
         }
         return angle;
     }
 
     static isMouseClickOnActiveGamePieceCornerNode(pointer) {
-        // Convert screen coordinates to world coordinates
         if (RegimentPiece.activeGamePiece === null) return false;
         var worldX = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).x;
         var worldY = RegimentPiece.activeGamePiece?.scene.camera.getWorldPoint(pointer.x, pointer.y).y;
@@ -191,16 +179,15 @@ class RegimentPiece extends GamePiece {
         return isMouseOnCornerNode;
     }
 
-    setOnDragListener() { //WORKS
+    setOnDragListener() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer, dragX, dragY) => {
-            console.log('!!!!!!dragging container')
             const dx = dragX - this.container.x;
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-            this.updateCornerNodes();
+            this.updateNodes();
         })
     }
 
@@ -230,7 +217,7 @@ class RegimentPiece extends GamePiece {
 
     static deactivateGamePiece() { //++
         if (RegimentPiece.activeGamePiece === null) return;
-        RegimentPiece.activeGamePiece.updateCornerNodes()
+        RegimentPiece.activeGamePiece.updateNodes()
         RegimentPiece.hideActiveGamePieceNodes();
         RegimentPiece.activeGamePiece?.sprite.clearTint();
         RegimentPiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
@@ -238,13 +225,10 @@ class RegimentPiece extends GamePiece {
     }
 
     static isMouseClickOnGamePiece(pointer, scene) { //++
-        // Convert screen coordinates to world coordinates  
         var worldX = scene.camera.getWorldPoint(pointer.x, pointer.y).x;
         var worldY = scene.camera.getWorldPoint(pointer.x, pointer.y).y;
-        // Check if the converted coordinates are within the bounds of the 'unit'
         var gamePiecesUnderClick = RegimentPiece.instances.filter(i => i.sprite.getBounds().contains(worldX, worldY));
         var isMouseOnGamePiece = gamePiecesUnderClick.length > 0;
-        //console.log(`Is mouse click on unit: ${isMouseOnGamePiece}`);
         return isMouseOnGamePiece;
     }
 

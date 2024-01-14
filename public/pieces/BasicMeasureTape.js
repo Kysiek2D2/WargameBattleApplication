@@ -12,16 +12,16 @@ class BasicMeasureTape extends GamePiece {
         this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.container = this.scene.add.container(x, y);
         this.color = 0xfcf403;
+        BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
 
         this.distanceMarkerColor = 0x000000;
         this.distance = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
-        this.sideNodes = { startNode: null, endNode: null };
-        this.setSideNodes();
+        this.nodes = { startNode: null, endNode: null };
+        this.setNodes();
         this.updateMeasureTape();
-        BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
     }
 
     showContainerBounds(show = false) {
@@ -42,15 +42,15 @@ class BasicMeasureTape extends GamePiece {
         this.createLineShape();
         this.updateContainer();
         this.addContainerListeners();
-        this.updateSideNodes();
+        this.updateNodes();
         this.addDistanceMarkers();
         this.showContainerBounds(false); //change to true to show container bounds
     }
 
-    updateSideNodes() {
+    updateNodes() {
         var middlePoints = this.getSideMiddlePointsPostions();
-        this.sideNodes.startNode.setPosition(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y);
-        this.sideNodes.endNode.setPosition(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y);
+        this.nodes.startNode.setPosition(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y);
+        this.nodes.endNode.setPosition(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y);
     }
 
     getSideMiddlePointsPostions() {
@@ -74,17 +74,17 @@ class BasicMeasureTape extends GamePiece {
         return sideMiddlePoints;
     }
 
-    setSideNodes() {
+    setNodes() {
         var middlePoints = this.getSideMiddlePointsPostions();
-        this.sideNodes = {
-            startNode: this.createSingleSideNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y),
-            endNode: this.createSingleSideNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y),
+        this.nodes = {
+            startNode: this.createSingleNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y),
+            endNode: this.createSingleNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y),
         };
     }
 
-    createSingleSideNode(x, y) {
-        var sideNodeColor = CONSTANTS.BASIC_COLOR_CODES.BURGUNDY;
-        var node = this.scene.add.circle(x, y, 5, sideNodeColor);
+    createSingleNode(x, y) {
+        var nodeColor = CONSTANTS.BASIC_COLOR_CODES.BURGUNDY;
+        var node = this.scene.add.circle(x, y, 5, nodeColor);
         node.setInteractive();
         this.scene.input.setDraggable(node);
         node.on('drag', (pointer) => {
@@ -106,7 +106,7 @@ class BasicMeasureTape extends GamePiece {
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-            this.updateSideNodes();
+            this.updateNodes();
         });
     }
 
@@ -124,7 +124,7 @@ class BasicMeasureTape extends GamePiece {
     }
 
     createLineShape() {
-        var line = new Phaser.Geom.Line(this.sideNodes.startNode.x, this.sideNodes.startNode.y, this.sideNodes.endNode.x, this.sideNodes.endNode.y);
+        var line = new Phaser.Geom.Line(this.nodes.startNode.x, this.nodes.startNode.y, this.nodes.endNode.x, this.nodes.endNode.y);
         this.lineAngle = Phaser.Geom.Line.Angle(line);
         this.distance = Phaser.Geom.Line.Length(line);
         var middlePoint = Phaser.Geom.Line.GetMidPoint(line);
