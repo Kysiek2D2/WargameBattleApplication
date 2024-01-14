@@ -20,9 +20,20 @@ class BasicMeasureTape extends GamePiece {
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
+
         this.nodes = { startNode: null, endNode: null };
         this.setNodes();
-        this.updateMeasureTape();
+        this.configureGamePiece();
+    }
+
+    configureGamePiece() {
+        /**
+         * After each interaction container and it's elements are rendered 
+         * again from scratch (except for drag), so configureGamePiece and updateGamePiece
+         * are the same.
+         * This function containing function is only to be consistent with other game pieces.
+         */
+        this.updateGamePiece();
     }
 
     showContainerBounds(show = false) {
@@ -38,7 +49,7 @@ class BasicMeasureTape extends GamePiece {
             return BasicMeasureTape.instances[BasicMeasureTape.instances.length - 1];
     }
 
-    updateMeasureTape() {
+    updateGamePiece() {
         this.container.removeAll(true);
         this.createLineShape();
         this.updateContainer();
@@ -93,7 +104,7 @@ class BasicMeasureTape extends GamePiece {
             var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
             node.x = worldPoint.x;
             node.y = worldPoint.y;
-            this.updateMeasureTape();
+            this.updateGamePiece();
         });
         return node;
     }

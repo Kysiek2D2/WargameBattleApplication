@@ -17,25 +17,30 @@ class RegimentPiece extends GamePiece {
 
         this.setActivateListener();
 
+        this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
+
         this.nodes = { nodeTopLeft: null, nodeTopRight: null, }
         this.setNodes();
-
-        this.updateContainer();
-        this.sprite = scene.add.image(0, 0, spriteKey)
-            .setOrigin(0.5, 0.5)
-            .setDisplaySize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels)
-        this.container.add(this.sprite);
+        this.configureGamePiece();
 
         //!!! Red rectangle for testing to mark container boundaries
         // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
         //this.showContainerBounds();
     }
 
-    updateContainer() {
+    configureGamePiece() {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
+        this.sprite = this.scene.add.image(0, 0, this.spriteKey)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(this.width, this.height)
+        this.container.add(this.sprite);
+    }
+
+    updateGamePiece() {
+        //empty for now, placeholder
     }
 
     showContainerBounds() {
