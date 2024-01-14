@@ -17,18 +17,15 @@ class RegimentPiece extends GamePiece {
 
         this.setActivateListener();
 
+        this.gamePieceStrength = gamePieceStrength;
+        this.nodes = { nodeTopLeft: null, nodeTopRight: null, }
+        this.setNodes();
+
         this.updateContainer();
         this.sprite = scene.add.image(0, 0, spriteKey)
             .setOrigin(0.5, 0.5)
             .setDisplaySize(widthInDistanceUnits * this.scene.sceneDistanceUnitPixels, heightInDistanceUnits * this.scene.sceneDistanceUnitPixels)
         this.container.add(this.sprite);
-        this.gamePieceStrength = gamePieceStrength;
-        this.nodes = {
-            nodeTopLeft: null,
-            nodeTopRight: null,
-        }
-        this.setNodes();
-
 
         //!!! Red rectangle for testing to mark container boundaries
         // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
@@ -137,10 +134,10 @@ class RegimentPiece extends GamePiece {
 
     getCornersPositions() {
         var containerCorners = {
-            topLeft: { x: this.container.x - this.container.width / 2, y: this.container.y - this.container.height / 2 },
-            topRight: { x: this.container.x + this.container.width / 2, y: this.container.y - this.container.height / 2 },
-            bottomLeft: { x: this.container.x - this.container.width / 2, y: this.container.y + this.container.height / 2 },
-            bottomRight: { x: this.container.x + this.container.width / 2, y: this.container.y + this.container.height / 2 },
+            topLeft: { x: this.container.x - this.width / 2, y: this.container.y - this.height / 2 },
+            topRight: { x: this.container.x + this.width / 2, y: this.container.y - this.height / 2 },
+            bottomLeft: { x: this.container.x - this.width / 2, y: this.container.y + this.height / 2 },
+            bottomRight: { x: this.container.x + this.width / 2, y: this.container.y + this.height / 2 },
         }
 
         var angle = this.container.rotation;
