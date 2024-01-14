@@ -5,7 +5,7 @@ class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programmind design pattern
 
     constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15 }) {
-        super({ scene: scene, gamePieceName: gamePieceName });
+        super({ scene: scene, gamePieceName: gamePieceName, x, y });
         console.log(`GamePiece constructor...`);
         this.container = this.scene.add.container(x, y);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);

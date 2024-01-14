@@ -3,43 +3,29 @@ import GamePiece from "./GamePiece.js";
 
 class BasicMeasureTape extends GamePiece {
 
-    static measureRequestOn = false;
+    static distanceMarkerWidthInPixels = 2;
     static instances = [];
 
-    constructor({ scene, gamePieceName, widthInDistanceUnits = 1, heightInDistanceUnits, x, y }) {
-        super({ scene: scene, gamePieceName: gamePieceName });
-        this.x = x; //++
-        this.y = y; //++
+    constructor({ scene, gamePieceName, widthInDistanceUnits = 1, heightInDistanceUnits, x, y, color }) {
+        super({ scene: scene, gamePieceName: gamePieceName, x, y, color });
+
         this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
-        this.tapeColor = 0xfcf403;
+        this.container = this.scene.add.container(x, y);
+        this.color = 0xfcf403;
+
         this.distanceMarkerColor = 0x000000;
-        this.distanceUnitPixels = scene.sceneDistanceUnitPixels;
-
         this.distance = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
-        this.endPoint = { x: this.x + this.distance, y: this.y };
-        this.line = null;
-        this.lineShape = null; //needed???
         this.lineAngle = null;
-
         this.distanceMarkerPoints = [];
-        this.distanceMarkerWidth = 2;
         this.numDistanceMarkers = null;
-
         this.sideNodes = { startNode: null, endNode: null };
-
-        this.container = this.scene.add.container((this.x + this.endPoint.x) / 2, (this.y + this.endPoint.y) / 2); //++
         this.setSideNodes();
-        this.createLineShape();
-        this.addDistanceMarkers();
-        this.addContainerListeners();
-
-        //Uncomment  below:to show container's bounds as red rectangle
-        //this.showContainerBounds();
-
+        this.updateMeasureTape();
         BasicMeasureTape.instances = [...BasicMeasureTape.instances, this];
     }
 
-    showContainerBounds() {
+    showContainerBounds(show = false) {
+        if (!show) return;
         //Shows only half of the container's bounds, to show full bounds remove the division by 2
         this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.width / 2, 0xff0000));
     }
@@ -52,17 +38,13 @@ class BasicMeasureTape extends GamePiece {
     }
 
     updateMeasureTape() {
-        this.destroyPreviousShapes();
-
+        this.container.removeAll(true);
         this.createLineShape();
-
+        this.updateContainer();
         this.addContainerListeners();
-
-        this.addDistanceMarkers();
         this.updateSideNodes();
-
-        //Uncomment  below:to show container's bounds as red rectangle
-        //this.showContainerBounds();
+        this.addDistanceMarkers();
+        this.showContainerBounds(false); //change to true to show container bounds
     }
 
     updateSideNodes() {
@@ -92,7 +74,6 @@ class BasicMeasureTape extends GamePiece {
         return sideMiddlePoints;
     }
 
-
     setSideNodes() {
         var middlePoints = this.getSideMiddlePointsPostions();
         this.sideNodes = {
@@ -116,42 +97,6 @@ class BasicMeasureTape extends GamePiece {
         return node;
     }
 
-    // renderSideMiddlePointsGraphics() {
-    //     this.startPointCircle?.destroy();
-    //     this.endPointCircle?.destroy();
-    //     var { startNode: startPoint, endNode: endPoint } = this.sideNodes;
-    //     this.startPointCircle = this.scene.add.circle(startPoint.x, startPoint.y, 5, 0x00ff00);
-    //     this.endPointCircle = this.scene.add.circle(endPoint.x, endPoint.y, 5, 0x00ff00);
-    // }
-
-    // addSideMiddlePointsListeners() {
-    //     this.startPointCircle.setInteractive();
-    //     this.scene.input.setDraggable(this.startPointCircle);
-    //     this.startPointCircle.on('drag', (pointer) => {
-    //         console.log('dragging left middle point node')
-    //         var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-    //         this.startPointCircle.x = worldPoint.x;
-    //         this.startPointCircle.y = worldPoint.y;
-    //         this.updateMeasureTape();
-    //     });
-
-    //     this.endPointCircle.setInteractive();
-    //     this.scene.input.setDraggable(this.endPointCircle);
-    //     this.endPointCircle.on('drag', (pointer) => {
-    //         console.log('dragging right middle point node')
-    //         var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-    //         this.endPointCircle.x = worldPoint.x;
-    //         this.endPointCircle.y = worldPoint.y;
-    //         this.updateMeasureTape();
-    //     });
-    // }
-
-    // updateExternalComponents() {
-    //     var sidePoints = this.setSideNodes();
-    //     // this.endPointNode.setPosition(sidePoints.rightMiddle?.x, sidePoints.rightMiddle?.y);
-    //     // this.startPointNode.setPosition(sidePoints.leftMiddle?.x, sidePoints.leftMiddle?.y);
-    // }
-
     addContainerListeners() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
@@ -165,16 +110,7 @@ class BasicMeasureTape extends GamePiece {
         });
     }
 
-    destroyPreviousShapes() {
-        this.container.removeAll(true);
-    }
-
-    createLineShape() {
-        this.line = new Phaser.Geom.Line(this.sideNodes.startNode.x, this.sideNodes.startNode.y, this.sideNodes.endNode.x, this.sideNodes.endNode.y);
-
-        this.lineAngle = Phaser.Geom.Line.Angle(this.line);
-        this.distance = Phaser.Geom.Line.Length(this.line);
-
+    updateContainer() {
         var x = this.container.x;
         var y = this.container.y;
         this.container.removeAll(true);
@@ -183,23 +119,28 @@ class BasicMeasureTape extends GamePiece {
         this.container = this.scene.add.container(x, y);
         this.container.setSize(this.distance, this.width);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.width, this.tapeColor));
+        this.container.add(this.scene.add.rectangle(0, 0, this.distance, this.width, this.color));
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE);
+    }
 
-        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line);
+    createLineShape() {
+        var line = new Phaser.Geom.Line(this.sideNodes.startNode.x, this.sideNodes.startNode.y, this.sideNodes.endNode.x, this.sideNodes.endNode.y);
+        this.lineAngle = Phaser.Geom.Line.Angle(line);
+        this.distance = Phaser.Geom.Line.Length(line);
+        var middlePoint = Phaser.Geom.Line.GetMidPoint(line);
         this.container.x = middlePoint.x;
         this.container.y = middlePoint.y;
     }
 
     addDistanceMarkers() {
-        this.numDistanceMarkers = Math.floor(this.distance / this.distanceUnitPixels);
+        this.numDistanceMarkers = Math.floor(this.distance / this.scene.sceneDistanceUnitPixels);
 
         for (var i = 1; i < this.numDistanceMarkers; i++) {
-            var point = { x: (i * this.distanceUnitPixels) - this.distance / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
+            var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.distance / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
 
-            var distanceMarker = this.scene.add.rectangle(point.x, point.y, this.distanceMarkerWidth, this.width, this.distanceMarkerColor);
+            var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTape.distanceMarkerWidthInPixels, this.width, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
-            var circle = this.scene.add.circle(point.x, point.y, this.width / 3, this.tapeColor);
+            var circle = this.scene.add.circle(point.x, point.y, this.width / 3, this.color);
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
