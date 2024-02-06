@@ -45,8 +45,8 @@ export const CONSTANTS = {
         MAP: 0,
         TERRAIN_PIECE: 1,
         GAME_PIECE_NODES: 2,
-        REGIMENT_PIECE: 3,
-        MEASURE_TAPE_PIECE: 4,
+        REGIMENT_PIECE_CONTAINER: 3,
+        MEASURE_TAPE_PIECE_CONTAINER: 4,
     },
     CONTROL_MODE: {
         CAMERA_MODE: 'cameraMode',

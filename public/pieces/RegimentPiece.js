@@ -18,7 +18,6 @@ class RegimentPiece extends GamePiece {
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
 
-        this.nodes = { nodeTopLeft: null, nodeTopRight: null, }
         this.setNodes();
         this.configureGamePiece();
 
@@ -28,24 +27,18 @@ class RegimentPiece extends GamePiece {
     }
 
     configureGamePiece() {
-        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE);
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
         this.sprite = this.scene.add.image(0, 0, this.spriteKey)
             .setOrigin(0.5, 0.5)
             .setDisplaySize(this.width, this.height)
         this.container.add(this.sprite);
+        this.showContainerBounds(false);
     }
 
     updateGamePiece() {
         //empty for now, placeholder
-    }
-
-    showContainerBounds() {
-        var containerBoundsColor = CONSTANTS.BASIC_COLORS.CLASSIC_RED;
-        var containerWidth = this.container.width;
-        var containerHeight = this.container.height;
-        this.container.add(this.scene.add.rectangle(0, 0, containerWidth * this.scene.sceneDistanceUnitPixels, containerHeight * this.scene.sceneDistanceUnitPixels, 0xff0000));
     }
 
     setNodes() {
@@ -53,8 +46,8 @@ class RegimentPiece extends GamePiece {
         var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
         var corners = this.getCornersPositions();
         this.nodes = {
-            nodeTopLeft: this.createSingleNode(corners.topLeft.x, corners.topLeft.y, 7, nodeColor),
-            nodeTopRight: this.createSingleNode(corners.topRight.x, corners.topRight.y, 7, nodeColor),
+            startNode: this.createSingleNode(corners.topLeft.x, corners.topLeft.y, 7, nodeColor),
+            endNode: this.createSingleNode(corners.topRight.x, corners.topRight.y, 7, nodeColor),
         }
     }
 
@@ -83,19 +76,7 @@ class RegimentPiece extends GamePiece {
             this.container.setRotation(angle);
             this.updateNodes();
 
-            /* //Comment-out to show rotation line
-            // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
-            // var thisNode = cornerNode;
-            var line = new Phaser.Geom.Line(this.getOppositeCornerNode(cornerNode).x, this.getOppositeCornerNode(cornerNode).y, pointerWorldPoint.x, pointerWorldPoint.y);
-            var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
-            graphics.strokeLineShape(line); */
-
-            //Comment-out to show rotation line
-            // var oppositeCornerNode = this.getOppositeCornerNode(cornerNode);
-            // var thisNode = cornerNode;
-            var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
-            var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
-            graphics.strokeLineShape(line);
+            this.showRotationLine(node, pointerWorldPoint, false);
         });
         node.on('dragend', (pointer) => {
             console.log('Drag ended');
@@ -111,11 +92,18 @@ class RegimentPiece extends GamePiece {
         return node;
     }
 
+    showRotationLine(node, pointerWorldPoint, show = false) {
+        if (!show) return;
+        var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
+        var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
+        graphics.strokeLineShape(line);
+    }
+
     getOppositeNode(cornerNode) {
-        if (cornerNode === this.nodes.nodeTopLeft) {
-            return this.nodes.nodeTopRight;
-        } else if (cornerNode === this.nodes.nodeTopRight) {
-            return this.nodes.nodeTopLeft;
+        if (cornerNode === this.nodes.startNode) {
+            return this.nodes.endNode;
+        } else if (cornerNode === this.nodes.endNode) {
+            return this.nodes.startNode;
         } else {
             return null;
         }
@@ -123,8 +111,8 @@ class RegimentPiece extends GamePiece {
 
     updateNodes() {
         var corners = this.getCornersPositions();
-        this.nodes.nodeTopLeft.setPosition(corners.topLeft.x, corners.topLeft.y);
-        this.nodes.nodeTopRight.setPosition(corners.topRight.x, corners.topRight.y);
+        this.nodes.startNode.setPosition(corners.topLeft.x, corners.topLeft.y);
+        this.nodes.endNode.setPosition(corners.topRight.x, corners.topRight.y);
     }
 
     getCornersPositions() {
@@ -153,10 +141,10 @@ class RegimentPiece extends GamePiece {
     getRotationAngleFromNode(cornerNode, pointerWorldPoint) {
         var angle = null;
         var opposideCornerNode = this.getOppositeNode(cornerNode);
-        if (cornerNode == this.nodes.nodeTopRight) {
+        if (cornerNode == this.nodes.endNode) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint);
         }
-        else if (cornerNode == this.nodes.nodeTopLeft) {
+        else if (cornerNode == this.nodes.startNode) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint) - Math.PI;
         }
         return angle;

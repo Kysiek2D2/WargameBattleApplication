@@ -21,7 +21,6 @@ class BasicMeasureTape extends GamePiece {
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
 
-        this.nodes = { startNode: null, endNode: null };
         this.setNodes();
         this.configureGamePiece();
     }
@@ -34,12 +33,6 @@ class BasicMeasureTape extends GamePiece {
          * This function containing function is only to be consistent with other game pieces.
          */
         this.updateGamePiece();
-    }
-
-    showContainerBounds(show = false) {
-        if (!show) return;
-        //Shows only half of the container's bounds, to show full bounds remove the division by 2
-        this.container.add(this.scene.add.rectangle(0, 0, this.width, this.height / 2, 0xff0000));
     }
 
     static popInstance() {
@@ -56,7 +49,8 @@ class BasicMeasureTape extends GamePiece {
         this.addContainerListeners();
         this.updateNodes();
         this.addDistanceMarkers();
-        this.showContainerBounds(false); //change to true to show container bounds
+        this.setActivateListener();
+        this.showContainerBounds(false); //change to true to show container bounds, should be called after all other elements render
     }
 
     updateNodes() {
@@ -95,8 +89,8 @@ class BasicMeasureTape extends GamePiece {
     }
 
     createSingleNode(x, y) {
-        var nodeColor = CONSTANTS.BASIC_COLORS.BURGUNDY;
-        var node = this.scene.add.circle(x, y, 5, nodeColor);
+        var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
+        var node = this.scene.add.circle(x, y, this.height / 2, nodeColor);
         node.setInteractive();
         this.scene.input.setDraggable(node);
         node.on('drag', (pointer) => {
@@ -131,8 +125,9 @@ class BasicMeasureTape extends GamePiece {
         this.container = this.scene.add.container(x, y);
         this.container.setSize(this.width, this.height);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        this.container.add(this.scene.add.rectangle(0, 0, this.width, this.height, this.color));
-        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE);
+        var measureTapeLine = this.scene.add.rectangle(0, 0, this.width, this.height, this.color);
+        this.container.add(measureTapeLine);
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
 
     createLineShape() {

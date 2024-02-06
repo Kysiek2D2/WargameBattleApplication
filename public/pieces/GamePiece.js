@@ -1,3 +1,4 @@
+import { CONSTANTS } from "../Constants.js";
 class GamePiece {
     static instances = [];
     static idCounter = 0;
@@ -13,11 +14,15 @@ class GamePiece {
         this.isBlocked = false;
         GamePiece.activeGamePiece = null;
         this.color = color;
-        this.nodes = {};
+        this.nodes = { startNode: null, endNode: null };
 
         this.setActivateListener();
 
         GamePiece.instances = [...GamePiece.instances, this];
+    }
+
+    configureGamePiece() {
+        throw new Error('You must implement the configureGamePiece method');
     }
 
     setActivateListener() {
@@ -37,7 +42,7 @@ class GamePiece {
 
     activateGamePiece() {
         GamePiece.activeGamePiece = this;
-        GamePiece.activeGamePiece.sprite.setTint(185273);
+        //GamePiece.activeGamePiece.sprite.setTint(185273);
         GamePiece.showActiveGamePieceNodes();
         this.scene.getGamePieceDetailsScene().updateGamePieceDetailsScene({ gamePiece: this, headerText: this.gamePieceName, gamePieceStrengthValue: this.gamePieceStrength });
         this.scene.getGamePieceDetailsScene().setVisible(true);
@@ -47,7 +52,7 @@ class GamePiece {
         if (GamePiece.activeGamePiece === null) return;
         GamePiece.activeGamePiece.updateNodes()
         GamePiece.hideActiveGamePieceNodes();
-        GamePiece.activeGamePiece?.sprite.clearTint();
+        //GamePiece.activeGamePiece?.sprite.clearTint();
         GamePiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
         GamePiece.activeGamePiece = null;
     }
@@ -70,6 +75,15 @@ class GamePiece {
 
     static showActiveGamePieceNodes() {
         Object.values(GamePiece.activeGamePiece.nodes).forEach(node => node.setVisible(true));
+    }
+
+    showContainerBounds(show = false) {
+        if (!show) return;
+        //Shows only half of the container's bounds, to show full bounds remove the division by 2
+        //Should be called after all other elements render
+        var containerBoundsColor = CONSTANTS.BASIC_COLORS.CLASSIC_RED;
+        var boundsRectangle = this.scene.add.rectangle(0, 0, this.width, this.height / 2, containerBoundsColor);
+        this.container.add(boundsRectangle);
     }
 }
 
