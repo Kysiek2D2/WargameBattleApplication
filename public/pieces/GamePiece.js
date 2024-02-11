@@ -3,12 +3,13 @@ class GamePiece {
     static instances = [];
     static idCounter = 0;
 
-    constructor({ scene, gamePieceName, x, y, heightInDistanceUnits, widthInDistanceUnits, color = null }) {
+    constructor({ scene, gamePieceName, x, y, rotationAngle, heightInDistanceUnits, widthInDistanceUnits, color = null }) {
         this.scene = scene;
         this.gamePieceName = gamePieceName;
         this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.width = widthInDistanceUnits * this.scene.sceneDistanceUnitPixels;
         this.container = this.scene.add.container(x, y);
+        this.container.setRotation(rotationAngle);
         this.id = GamePiece.idCounter++;
         this.isSelected = false;
         this.isBlocked = false;
@@ -77,7 +78,7 @@ class GamePiece {
         Object.values(GamePiece.activeGamePiece.nodes).forEach(node => node.setVisible(true));
     }
 
-    showContainerBounds(show = false) {
+    showContainerHelpBounds(show = false) {
         if (!show) return;
         //Shows only half of the container's bounds, to show full bounds remove the division by 2
         //Should be called after all other elements render

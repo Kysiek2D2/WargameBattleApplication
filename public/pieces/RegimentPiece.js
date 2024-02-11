@@ -4,12 +4,13 @@ import GamePiece from "./GamePiece.js";
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programming design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null }) {
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
             x: x,
             y: y,
+            rotationAngle: rotationAngle,
             color: color,
             heightInDistanceUnits: heightInDistanceUnits,
             widthInDistanceUnits: widthInDistanceUnits
@@ -20,10 +21,6 @@ class RegimentPiece extends GamePiece {
 
         this.setNodes();
         this.configureGamePiece();
-
-        //!!! Red rectangle for testing to mark container boundaries
-        // this.container.add(this.scene.add.rectangle(0, 0, displayWidth * scene.sceneDistanceUnitPixels * 0.9, displayHeight * scene.sceneDistanceUnitPixels * 0.9, 0xff0000));
-        //this.showContainerBounds();
     }
 
     configureGamePiece() {
@@ -34,11 +31,11 @@ class RegimentPiece extends GamePiece {
             .setOrigin(0.5, 0.5)
             .setDisplaySize(this.width, this.height)
         this.container.add(this.sprite);
-        this.showContainerBounds(false);
+        this.showContainerHelpBounds(false);
     }
 
     updateGamePiece() {
-        //empty for now, placeholder
+        throw new Error('You must implement the updateGamePiece method');
     }
 
     setNodes() {
@@ -76,7 +73,7 @@ class RegimentPiece extends GamePiece {
             this.container.setRotation(angle);
             this.updateNodes();
 
-            this.showRotationLine(node, pointerWorldPoint, false);
+            this.showRotationHelpLine(node, pointerWorldPoint, false);
         });
         node.on('dragend', (pointer) => {
             console.log('Drag ended');
@@ -92,7 +89,7 @@ class RegimentPiece extends GamePiece {
         return node;
     }
 
-    showRotationLine(node, pointerWorldPoint, show = false) {
+    showRotationHelpLine(node, pointerWorldPoint, show = false) {
         if (!show) return;
         var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
         var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
@@ -134,7 +131,7 @@ class RegimentPiece extends GamePiece {
             corner.y = rotatedY;
         });
 
-        console.log(`containerCorners: ${JSON.stringify(containerCorners)}`)
+        //console.log(`containerCorners: ${JSON.stringify(containerCorners)}`)
         return containerCorners;
     }
 
@@ -168,6 +165,11 @@ class RegimentPiece extends GamePiece {
             this.container.x += dx;
             this.container.y += dy;
             this.updateNodes();
+
+            console.log(`RegimentPiece ${this.gamePieceName} position:
+            \n    X: ${this.container.x} 
+            \n    Y: ${this.container.y}
+            \n    rotation angle: ${this.container.rotation}`);
         })
     }
 }

@@ -102,6 +102,7 @@ class WargameScene extends Phaser.Scene {
         console.log(`Canvas/GameConfig size: \n width: ${this.gameConfig.width}, \n height: ${this.gameConfig.height}`);
         console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
         this.map.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MAP);
+        this.helpGrid(true); // Add this line to show the grid
     }
 
     setGamePieceDetailsScene() {
@@ -142,6 +143,16 @@ class WargameScene extends Phaser.Scene {
             // Decrease the cooldown on each update
             this.zoomCooldown -= this.time.deltaMS;
         }
+    }
+
+    helpGrid(show = false) {
+        if (!show) return;
+        var grid = this.add.grid(this.map.getCenter().x, this.map.getCenter().y, this.map.displayWidth, this.map.displayHeight, this.sceneDistanceUnitPixels, this.sceneDistanceUnitPixels, 0x000000, 0.0, 0x000000, 0.5);
+        grid.setOrigin(0.5, 0.5);
+    }
+
+    update() {
+        this.handleZooming();
     }
 }
 

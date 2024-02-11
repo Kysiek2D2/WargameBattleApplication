@@ -50,7 +50,7 @@ class BasicMeasureTape extends GamePiece {
         this.updateNodes();
         this.addDistanceMarkers();
         this.setActivateListener();
-        this.showContainerBounds(false); //change to true to show container bounds, should be called after all other elements render
+        this.showContainerHelpBounds(false); //change to true to show container bounds, should be called after all other elements render
     }
 
     updateNodes() {
