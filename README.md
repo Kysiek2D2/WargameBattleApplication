@@ -7,7 +7,7 @@
 - In terminal run command: npm install. node_modules folder will be crated on local. This will install all node.js dependencies and external packages. node_modules folder in repo is empty, and 'npm install' will install all dependencies and external packages into local project using package.json and package-lock.json files.
 
 * How to start server on local?
-- Open terminal in server.js location and execute 'npm start'. It's script determined in package.json file.
+- Open terminal in server.js location and execute 'npm start'. It's script determined in package.json file. Another way to run app in VS Code is to go to 'Run and debug' tab and click 'Launch via NPM'. It will have similiar effect. 
 - Then enter site like http://localhost:3000
 - To stop server, in terminal do 'ctr+C' shortcut.
 - Any changes in application will be immadiatelly visible on page from server due to nodemon library.
