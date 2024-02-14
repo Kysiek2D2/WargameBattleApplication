@@ -1,7 +1,7 @@
 import { CONSTANTS } from "../Constants.js";
 import GamePiece from "./GamePiece.js";
 
-class BasicMeasureTape extends GamePiece {
+class BasicMeasureTapePiece extends GamePiece {
 
     static distanceMarkerWidthInPixels = 2;
 
@@ -21,7 +21,6 @@ class BasicMeasureTape extends GamePiece {
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
 
-        this.setNodes();
         this.configureGamePiece();
     }
 
@@ -32,14 +31,15 @@ class BasicMeasureTape extends GamePiece {
          * are the same.
          * This function containing function is only to be consistent with other game pieces.
          */
+        this.setNodes();
         this.updateGamePiece();
     }
 
     static popInstance() {
-        if (BasicMeasureTape.instances.length === 0) {
+        if (BasicMeasureTapePiece.instances.length === 0) {
             return null;
         } else
-            return BasicMeasureTape.instances[BasicMeasureTape.instances.length - 1];
+            return BasicMeasureTapePiece.instances[BasicMeasureTapePiece.instances.length - 1];
     }
 
     updateGamePiece() {
@@ -145,7 +145,7 @@ class BasicMeasureTape extends GamePiece {
         for (var i = 1; i < this.numDistanceMarkers; i++) {
             var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.width / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
 
-            var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTape.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
+            var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTapePiece.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
             var circle = this.scene.add.circle(point.x, point.y, this.height / 3, this.color);
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
@@ -159,4 +159,4 @@ class BasicMeasureTape extends GamePiece {
     }
 }
 
-export default BasicMeasureTape;
+export default BasicMeasureTapePiece;

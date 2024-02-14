@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../Constants.js";
 import RegimentPiece from "../pieces/RegimentPiece.js";
-import BasicMeasureTape from "../pieces/BasicMeasureTape.js";
+import BasicMeasureTapePiece from "../pieces/BasicMeasureTapePiece.js";
 
 class GameController {
     constructor(scene) {

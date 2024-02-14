@@ -1,6 +1,6 @@
 import WargameScene from "./WargameScene.js";
 import RegimentPiece from "../pieces/RegimentPiece.js";
-import BasicMeasureTape from "../pieces/BasicMeasureTape.js";
+import BasicMeasureTapePiece from "../pieces/BasicMeasureTapePiece.js";
 import { CONSTANTS } from "../Constants.js";
 
 class FireAndSwordScene extends WargameScene {
@@ -78,7 +78,7 @@ class FireAndSwordScene extends WargameScene {
             gamePieceStrength: 10,
             spriteKey: 'denseForestShadowed',
         });
-        var measureTape = new BasicMeasureTape({
+        var measureTape = new BasicMeasureTapePiece({
             scene: this,
             x: 100,
             y: 100,

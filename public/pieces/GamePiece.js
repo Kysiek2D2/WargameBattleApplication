@@ -26,6 +26,10 @@ class GamePiece {
         throw new Error('You must implement the configureGamePiece method');
     }
 
+    setNodes() {
+        throw new Error('You must implement the setNodes method');
+    }
+
     setActivateListener() {
         this.container.setInteractive();
         this.container.on('pointerdown', () => {

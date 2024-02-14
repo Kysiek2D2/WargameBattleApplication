@@ -19,11 +19,11 @@ class RegimentPiece extends GamePiece {
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
 
-        this.setNodes();
         this.configureGamePiece();
     }
 
     configureGamePiece() {
+        this.setNodes();
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
