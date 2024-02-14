@@ -35,22 +35,32 @@ class BasicMeasureTapePiece extends GamePiece {
         this.updateGamePiece();
     }
 
-    static popInstance() {
-        if (BasicMeasureTapePiece.instances.length === 0) {
-            return null;
-        } else
-            return BasicMeasureTapePiece.instances[BasicMeasureTapePiece.instances.length - 1];
+
+    setNodes() {
+        //note: corner nodes are not part of container, they are outside of it
+        var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
+        var middlePoints = this.getSideMiddlePointsPostions();
+        this.nodes = {
+            startNode: this.createSingleNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y, this.height / 2, nodeColor),
+            endNode: this.createSingleNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y, this.height / 2, nodeColor),
+        };
     }
 
-    updateGamePiece() {
-        this.container.removeAll(true);
-        this.createLineShape();
-        this.updateContainer();
-        this.addContainerListeners();
-        this.updateNodes();
-        this.addDistanceMarkers();
-        this.setActivateListener();
-        this.showContainerHelpBounds(false); //change to true to show container bounds, should be called after all other elements render
+    createSingleNode(x, y, radius, color) {
+
+        var node = this.scene.add.circle(x, y, radius, color);
+        node.setInteractive();
+        this.scene.input.setDraggable(node);
+        node.setVisible(false);
+        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
+
+        node.on('drag', (pointer) => {
+            var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+            node.x = worldPoint.x;
+            node.y = worldPoint.y;
+            this.updateGamePiece();
+        });
+        return node;
     }
 
     updateNodes() {
@@ -80,27 +90,22 @@ class BasicMeasureTapePiece extends GamePiece {
         return sideMiddlePoints;
     }
 
-    setNodes() {
-        var middlePoints = this.getSideMiddlePointsPostions();
-        this.nodes = {
-            startNode: this.createSingleNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y),
-            endNode: this.createSingleNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y),
-        };
+    static popInstance() {
+        if (BasicMeasureTapePiece.instances.length === 0) {
+            return null;
+        } else
+            return BasicMeasureTapePiece.instances[BasicMeasureTapePiece.instances.length - 1];
     }
 
-    createSingleNode(x, y) {
-        var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
-        var node = this.scene.add.circle(x, y, this.height / 2, nodeColor);
-        node.setInteractive();
-        this.scene.input.setDraggable(node);
-        node.on('drag', (pointer) => {
-            console.log('dragging left middle point node')
-            var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-            node.x = worldPoint.x;
-            node.y = worldPoint.y;
-            this.updateGamePiece();
-        });
-        return node;
+    updateGamePiece() {
+        this.container.removeAll(true);
+        this.createLineShape();
+        this.updateContainer();
+        this.addContainerListeners();
+        this.updateNodes();
+        this.addDistanceMarkers();
+        this.setActivateListener();
+        this.showContainerHelpBounds(false); //change to true to show container bounds, should be called after all other elements render
     }
 
     addContainerListeners() {

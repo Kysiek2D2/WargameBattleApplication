@@ -15,7 +15,7 @@ class GamePiece {
         this.isBlocked = false;
         GamePiece.activeGamePiece = null;
         this.color = color;
-        this.nodes = { startNode: null, endNode: null };
+        this.nodes = [];
 
         this.setActivateListener();
 

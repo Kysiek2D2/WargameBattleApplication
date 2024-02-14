@@ -34,97 +34,55 @@ class RegimentPiece extends GamePiece {
         this.showContainerHelpBounds(false);
     }
 
-    updateGamePiece() {
-        throw new Error('You must implement the updateGamePiece method');
-    }
-
     setNodes() {
         //note: corner nodes are not part of container, they are outside of it
         var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
-        var corners = this.getCornersPositions();
-        this.nodes = {
-            startNode: this.createSingleNode(corners.topLeft.x, corners.topLeft.y, 7, nodeColor),
-            endNode: this.createSingleNode(corners.topRight.x, corners.topRight.y, 7, nodeColor),
-        }
+        var nodeRadius = 7;
+        var manipulationNodesPositions = this.getManipulationNodesPositionsForRegimentPiece();
+        manipulationNodesPositions.forEach(position => {
+            var node = this.createSingleNode(position.x, position.y, nodeRadius, nodeColor);
+            this.nodes.push(node);
+        });
     }
 
     createSingleNode(x, y, radius, color) {
+
         var node = this.scene.add.circle(x, y, radius, color);
-
-        node.setOrigin(0.5, 0.5);
         node.setInteractive();
-        node.setVisible(false);
-        node.setSize(radius * 2, radius * 2);
-        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
         this.scene.input.setDraggable(node);
-        node.on('dragstart', (pointer) => {
-            console.log('Drag started');
-        });
+        node.setVisible(false);
+        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
+
         node.on('drag', (pointer) => {
-            console.log(`createSingleCornerNode pointer:`)
-            GamePiece.hideActiveGamePieceNodes();
-            var pointerWorldPoint = {
-                x: this.scene.camera.getWorldPoint(pointer.x, pointer.y).x,
-                y: this.scene.camera.getWorldPoint(pointer.x, pointer.y).y
-            };
-
-            console.log(`pointerWorldPoint: ${JSON.stringify(pointerWorldPoint)}`)
-            var angle = this.getRotationAngleFromNode(node, pointerWorldPoint);
-            this.container.setRotation(angle);
-            this.updateNodes();
-
-            this.showRotationHelpLine(node, pointerWorldPoint, false);
-        });
-        node.on('dragend', (pointer) => {
-            console.log('Drag ended');
-            GamePiece.showActiveGamePieceNodes();
+            var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+            this.updateGamePiece(node, { x: worldPoint.x, y: worldPoint.y });
         });
 
-        node.on('pointerdown', () => {
-            if (GamePiece.activeGamePiece !== null) {
-                GamePiece.deactivateGamePiece();
-            }
-            this.activateGamePiece();
-        });
         return node;
     }
 
-    showRotationHelpLine(node, pointerWorldPoint, show = false) {
-        if (!show) return;
-        var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
-        var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
-        graphics.strokeLineShape(line);
-    }
-
-    getOppositeNode(cornerNode) {
-        if (cornerNode === this.nodes.startNode) {
-            return this.nodes.endNode;
-        } else if (cornerNode === this.nodes.endNode) {
-            return this.nodes.startNode;
-        } else {
-            return null;
-        }
-    }
-
     updateNodes() {
-        var corners = this.getCornersPositions();
-        this.nodes.startNode.setPosition(corners.topLeft.x, corners.topLeft.y);
-        this.nodes.endNode.setPosition(corners.topRight.x, corners.topRight.y);
+        //max 2 for Regiment PIECE!!! Otherwise we won't know which is the opposite ode
+        var manipulationNodesPositions = this.getManipulationNodesPositionsForRegimentPiece();
+        this.nodes.forEach((node, index) => {
+            node.setPosition(
+                manipulationNodesPositions[index].x,
+                manipulationNodesPositions[index].y
+            );
+        });
     }
 
-    getCornersPositions() {
-        var containerCorners = {
-            topLeft: { x: this.container.x - this.width / 2, y: this.container.y - this.height / 2 },
-            topRight: { x: this.container.x + this.width / 2, y: this.container.y - this.height / 2 },
-            bottomLeft: { x: this.container.x - this.width / 2, y: this.container.y + this.height / 2 },
-            bottomRight: { x: this.container.x + this.width / 2, y: this.container.y + this.height / 2 },
-        }
+    getManipulationNodesPositionsForRegimentPiece() {
+        var containerCorners = [
+            { x: this.container.x - this.width / 2, y: this.container.y - this.height / 2 }, //topLeft
+            { x: this.container.x + this.width / 2, y: this.container.y - this.height / 2 }, //topRight
+        ]
 
         var angle = this.container.rotation;
         var cosAngle = Math.cos(angle);
         var sinAngle = Math.sin(angle);
 
-        Object.values(containerCorners).forEach(corner => {
+        containerCorners.forEach(corner => {
             var rotatedX = (corner.x - this.container.x) * cosAngle - (corner.y - this.container.y) * sinAngle + this.container.x;
             var rotatedY = (corner.x - this.container.x) * sinAngle + (corner.y - this.container.y) * cosAngle + this.container.y;
             corner.x = rotatedX;
@@ -135,16 +93,40 @@ class RegimentPiece extends GamePiece {
         return containerCorners;
     }
 
+    getOppositeNode(cornerNode) {
+        if (cornerNode === this.nodes[0]) {
+            return this.nodes[1];
+        } else if (cornerNode === this[1]) {
+            return this.nodes[0];
+        } else {
+            return null;
+        }
+    }
+
     getRotationAngleFromNode(cornerNode, pointerWorldPoint) {
         var angle = null;
         var opposideCornerNode = this.getOppositeNode(cornerNode);
-        if (cornerNode == this.nodes.endNode) {
+        if (cornerNode == this.nodes[1]) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint);
         }
-        else if (cornerNode == this.nodes.startNode) {
+        else if (cornerNode == this.nodes[0]) {
             var angle = Phaser.Math.Angle.BetweenPoints(opposideCornerNode, pointerWorldPoint) - Math.PI;
         }
         return angle;
+    }
+
+    showRotationHelpLine(node, pointerWorldPoint, show = false) {
+        if (!show) return;
+        var line = new Phaser.Geom.Line(this.getOppositeNode(node).x, this.getOppositeNode(node).y, pointerWorldPoint.x, pointerWorldPoint.y);
+        var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
+        graphics.strokeLineShape(line);
+    }
+
+    updateGamePiece(node, pointerWorldPoint) {
+        this.updateNodes();
+        var angle = this.getRotationAngleFromNode(node, pointerWorldPoint);
+        this.container.setRotation(angle);
+        this.showRotationHelpLine(node, pointerWorldPoint, false);
     }
 
     static isMouseClickOnActiveGamePieceCornerNode(pointer) {
