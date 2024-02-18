@@ -1,5 +1,6 @@
 import { CONSTANTS } from "../Constants.js";
 import GamePiece from "./GamePiece.js";
+import BasicMeasureTapeNodeComposition from "../nodes/BasicMeasureTapeNodeComposition.js";
 
 class BasicMeasureTapePiece extends GamePiece {
 
@@ -31,63 +32,10 @@ class BasicMeasureTapePiece extends GamePiece {
          * are the same.
          * This function containing function is only to be consistent with other game pieces.
          */
-        this.setNodes();
+
+        //Note: corner nodes are not part of container, they are outside of it
+        this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
         this.updateGamePiece();
-    }
-
-
-    setNodes() {
-        //note: corner nodes are not part of container, they are outside of it
-        var nodeColor = CONSTANTS.BASIC_COLORS.ACID_GREEN;
-        var middlePoints = this.getSideMiddlePointsPostions();
-        this.nodes = {
-            startNode: this.createSingleNode(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y, this.height / 2, nodeColor),
-            endNode: this.createSingleNode(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y, this.height / 2, nodeColor),
-        };
-    }
-
-    createSingleNode(x, y, radius, color) {
-
-        var node = this.scene.add.circle(x, y, radius, color);
-        node.setInteractive();
-        this.scene.input.setDraggable(node);
-        node.setVisible(false);
-        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
-
-        node.on('drag', (pointer) => {
-            var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-            node.x = worldPoint.x;
-            node.y = worldPoint.y;
-            this.updateGamePiece();
-        });
-        return node;
-    }
-
-    updateNodes() {
-        var middlePoints = this.getSideMiddlePointsPostions();
-        this.nodes.startNode.setPosition(middlePoints.startMiddlePointRotated.x, middlePoints.startMiddlePointRotated.y);
-        this.nodes.endNode.setPosition(middlePoints.startEndPointRotated.x, middlePoints.startEndPointRotated.y);
-    }
-
-    getSideMiddlePointsPostions() {
-        var startMiddlePoint = { x: this.container.x - (this.width / 2), y: this.container.y };
-        var endMiddlePoint = { x: this.container.x + (this.width / 2), y: this.container.y };
-
-        var angle = this.container.rotation;
-        var cosAngle = Math.cos(angle);
-        var sinAngle = Math.sin(angle);
-
-        var startMiddlePointRotated = {
-            x: this.container.x + (startMiddlePoint.x - this.container.x) * cosAngle - (startMiddlePoint.y - this.container.y) * sinAngle,
-            y: this.container.y + (startMiddlePoint.x - this.container.x) * sinAngle + (startMiddlePoint.y - this.container.y) * cosAngle
-        };
-        var startEndPointRotated = {
-            x: this.container.x + (endMiddlePoint.x - this.container.x) * cosAngle - (endMiddlePoint.y - this.container.y) * sinAngle,
-            y: this.container.y + (endMiddlePoint.x - this.container.x) * sinAngle + (endMiddlePoint.y - this.container.y) * cosAngle
-        };
-
-        var sideMiddlePoints = { startMiddlePointRotated: startMiddlePointRotated, startEndPointRotated: startEndPointRotated };
-        return sideMiddlePoints;
     }
 
     static popInstance() {
@@ -102,7 +50,7 @@ class BasicMeasureTapePiece extends GamePiece {
         this.createLineShape();
         this.updateContainer();
         this.addContainerListeners();
-        this.updateNodes();
+        this.nodesComposition.updateNodesPosition();
         this.addDistanceMarkers();
         this.setActivateListener();
         this.showContainerHelpBounds(false); //change to true to show container bounds, should be called after all other elements render
@@ -117,7 +65,7 @@ class BasicMeasureTapePiece extends GamePiece {
             const dy = dragY - this.container.y;
             this.container.x += dx;
             this.container.y += dy;
-            this.updateNodes();
+            this.nodesComposition.updateNodesPosition();
         });
     }
 
@@ -136,7 +84,13 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     createLineShape() {
-        var line = new Phaser.Geom.Line(this.nodes.startNode.x, this.nodes.startNode.y, this.nodes.endNode.x, this.nodes.endNode.y);
+        if (this.nodesComposition.getNodes().length != 2) {
+            throw new Error('BasicMeasureTapePiece must have exactly 2 nodes');
+        }
+
+        var startNode = this.nodesComposition.getNodes()[0];
+        var endNode = this.nodesComposition.getNodes()[1];
+        var line = new Phaser.Geom.Line(startNode.x, startNode.y, endNode.x, endNode.y);
         this.lineAngle = Phaser.Geom.Line.Angle(line);
         this.width = Phaser.Geom.Line.Length(line);
         var middlePoint = Phaser.Geom.Line.GetMidPoint(line);

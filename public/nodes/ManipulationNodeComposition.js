@@ -30,10 +30,6 @@ class ManipulationNodeComposition {
     }
 
     updateNodesPosition() {
-        throw new Error('You must implement the updateNodesPosition method');
-    }
-
-    updateNodesPosition() {
         var manipulationNodesPositions = this.calulateNodesPositions();
         this.nodes.forEach((node, index) => {
             node.setPosition(
@@ -50,6 +46,8 @@ class ManipulationNodeComposition {
 
         node.on('drag', (pointer) => {
             var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
+            node.x = worldPoint.x;
+            node.y = worldPoint.y;
             this.updateGamePiece(node, { x: worldPoint.x, y: worldPoint.y });
         });
     }

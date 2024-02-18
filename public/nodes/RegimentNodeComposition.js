@@ -39,7 +39,7 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
         var gamePieceWidth = this.gamePiece.width;
         var gamePieceHeight = this.gamePiece.height;
 
-        //max 2 for Regiment PIECE!!! Otherwise we won't know which is the opposite node
+        //Note: max 2 nodes for RegimentPiece!!! Otherwise we won't know which is the opposite node!
         var containerCorners = [
             { x: gamePieceContainer.x - gamePieceWidth / 2, y: gamePieceContainer.y - gamePieceHeight / 2 }, //topLeft
             { x: gamePieceContainer.x + gamePieceWidth / 2, y: gamePieceContainer.y - gamePieceHeight / 2 }, //topRight
@@ -79,6 +79,10 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
     }
 
     getRotationAngleFromNode(cornerNode, pointerWorldPoint) {
+        if (this.getNodes().length != 2) {
+            throw new Error('RegimentNodeComposition must have exactly 2 nodes');
+        }
+
         var angle = null;
         var oppositeCornerNode = this.getOppositeNode(cornerNode);
         if (cornerNode == this.nodes[1]) {
@@ -91,6 +95,10 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
     }
 
     getOppositeNode(node) {
+        if (this.getNodes().length != 2) {
+            throw new Error('RegimentNodeComposition must have exactly 2 nodes');
+        }
+
         if (node === this.nodes[0]) {
             return this.nodes[1];
         } else if (node === this.nodes[1]) {
