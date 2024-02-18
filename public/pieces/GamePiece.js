@@ -15,7 +15,7 @@ class GamePiece {
         this.isBlocked = false;
         GamePiece.activeGamePiece = null;
         this.color = color;
-        this.nodes = [];
+        this.nodesComposition = {};
 
         this.setActivateListener();
 
@@ -54,11 +54,11 @@ class GamePiece {
     }
 
     static deactivateGamePiece() {
-        if (GamePiece.activeGamePiece === null) return;
-        GamePiece.activeGamePiece.updateNodes()
+        if (GamePiece.getActiveGamePiece() === null) return;
+        GamePiece.getActiveGamePiece().nodesComposition.updateNodesPosition();
         GamePiece.hideActiveGamePieceNodes();
         //GamePiece.activeGamePiece?.sprite.clearTint();
-        GamePiece.activeGamePiece?.scene.getGamePieceDetailsScene().setVisible(false);
+        GamePiece.getActiveGamePiece()?.scene.getGamePieceDetailsScene().setVisible(false);
         GamePiece.activeGamePiece = null;
     }
 
@@ -75,11 +75,11 @@ class GamePiece {
     // }
 
     static hideActiveGamePieceNodes() {
-        Object.values(GamePiece.activeGamePiece.nodes).forEach(node => node.setVisible(false));
+        GamePiece.activeGamePiece.nodesComposition.getNodes().forEach(node => node.setVisible(false));
     }
 
     static showActiveGamePieceNodes() {
-        Object.values(GamePiece.activeGamePiece.nodes).forEach(node => node.setVisible(true));
+        GamePiece.activeGamePiece.nodesComposition.getNodes().forEach(node => node.setVisible(true));
     }
 
     showContainerHelpBounds(show = false) {
