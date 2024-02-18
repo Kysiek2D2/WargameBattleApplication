@@ -32,7 +32,7 @@ class BasicMeasureTapeNodeComposition extends ManipulationNodeComposition {
     }
 
     updateGamePiece() {
-        this.gamePiece.updateGamePiece();
+        this.gamePiece.dropAndCreateBasicMeasureTape();
     }
 }
 

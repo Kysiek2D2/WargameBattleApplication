@@ -34,8 +34,12 @@ class BasicMeasureTapePiece extends GamePiece {
          */
 
         //Note: corner nodes are not part of container, they are outside of it
+        this.setNodes();
+        this.dropAndCreateBasicMeasureTape();
+    }
+
+    setNodes() {
         this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
-        this.updateGamePiece();
     }
 
     static popInstance() {
@@ -45,7 +49,7 @@ class BasicMeasureTapePiece extends GamePiece {
             return BasicMeasureTapePiece.instances[BasicMeasureTapePiece.instances.length - 1];
     }
 
-    updateGamePiece() {
+    dropAndCreateBasicMeasureTape() {
         this.container.removeAll(true);
         this.createLineShape();
         this.updateContainer();
