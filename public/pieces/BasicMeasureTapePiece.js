@@ -110,7 +110,7 @@ class BasicMeasureTapePiece extends GamePiece {
 
             var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTapePiece.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
-            var circle = this.scene.add.circle(point.x, point.y, this.height / 3, this.color);
+            var circle = this.scene.add.circle(point.x, point.y, this.scene.sceneDistanceUnitPixels / 4, this.color);
             var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
