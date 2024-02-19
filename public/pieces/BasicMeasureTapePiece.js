@@ -103,22 +103,44 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     addDistanceMarkers() {
-        this.numDistanceMarkers = Math.floor(this.width / this.scene.sceneDistanceUnitPixels);
+        this.numDistanceMarkers = Math.ceil(this.width / this.scene.sceneDistanceUnitPixels);
 
         for (var i = 1; i < this.numDistanceMarkers; i++) {
             var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.width / 2, y: 0 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
 
             var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTapePiece.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
-            var circle = this.scene.add.circle(point.x, point.y, this.scene.sceneDistanceUnitPixels / 4, this.color);
-            var distanceText = this.scene.add.text(point.x, point.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
+
+            var circleAndTextPoint = { x: point.x - (this.scene.sceneDistanceUnitPixels / 4), y: point.y };
+            var distanceText = this.scene.add.text(circleAndTextPoint.x, circleAndTextPoint.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
-            distanceText.setAngle((this.lineAngle * 180 / Math.PI) + 90);
+            distanceText.setAngle(90);
+
             this.container.add(distanceMarker);
-            this.container.add(circle);
             this.container.add(distanceText);
-            this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceCircle: circle, distanceText: distanceText }]; // Updated code to include the circle
+            this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceText: distanceText }]; // Updated code to include the circle
         }
+
+        this.addCiupaga(true);
+    }
+
+    addCiupaga(show = true) {
+        if (!show) {
+            return;
+        }
+
+        var lastDistanceMarkerPoint = this.distanceMarkerPoints[this.distanceMarkerPoints.length - 1];
+        var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: lastDistanceMarkerPoint.distanceMarker.y - this.height / 2 };
+
+        var triangle = this.scene.add.triangle(
+            triangleStartPoint.x, triangleStartPoint.y,
+            0, 0,
+            0, -this.height,
+            this.height, 0,
+            this.color
+        );
+        triangle.setOrigin(1, 0);
+        this.container.add(triangle);
     }
 }
 
