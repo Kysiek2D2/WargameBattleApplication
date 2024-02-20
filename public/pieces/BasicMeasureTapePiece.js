@@ -18,6 +18,7 @@ class BasicMeasureTapePiece extends GamePiece {
         });
 
         this.distanceMarkerColor = CONSTANTS.BASIC_COLORS.BLACK;
+        this.line = null;
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
@@ -50,8 +51,12 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     dropAndCreateBasicMeasureTape() {
+        this.prepareLineShapeAndProperties();
+        this.renderBasicMeasureTape();
+    }
+
+    renderBasicMeasureTape() {
         this.container.removeAll(true);
-        this.createLineShape();
         this.updateContainer();
         this.addContainerListeners();
         this.nodesComposition.updateNodesPosition();
@@ -87,20 +92,45 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
 
-    createLineShape() {
+    prepareLineShapeAndProperties() {
         if (this.nodesComposition.getNodes().length != 2) {
             throw new Error('BasicMeasureTapePiece must have exactly 2 nodes');
         }
 
         var startNode = this.nodesComposition.getNodes()[0];
         var endNode = this.nodesComposition.getNodes()[1];
-        var line = new Phaser.Geom.Line(startNode.x, startNode.y, endNode.x, endNode.y);
-        this.lineAngle = Phaser.Geom.Line.Angle(line);
-        this.width = Phaser.Geom.Line.Length(line);
-        var middlePoint = Phaser.Geom.Line.GetMidPoint(line);
+
+        this.line = new Phaser.Geom.Line(startNode.x, startNode.y, endNode.x, endNode.y);
+        this.lineAngle = Phaser.Geom.Line.Angle(this.line);
+        this.width = Phaser.Geom.Line.Length(this.line); //Note: set to constant value if you want to rotate tape but retain it's length
+        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line);
         this.container.x = middlePoint.x;
         this.container.y = middlePoint.y;
     }
+
+    reduceLineShapeToFullDistanceUnits() {
+        if (this.nodesComposition.getNodes().length != 2) {
+            throw new Error('BasicMeasureTapePiece must have exactly 2 nodes');
+        }
+
+        var initialLineDistanceUnits = this.width / this.scene.sceneDistanceUnitPixels;
+        var lineFullDistanceUnits = Math.round(initialLineDistanceUnits);
+        var multiplierToShowDistanceMarkersAtTheEnd = 1.0;
+        if (lineFullDistanceUnits - initialLineDistanceUnits > 0) {
+            multiplierToShowDistanceMarkersAtTheEnd = 1.1;
+        } else {
+            multiplierToShowDistanceMarkersAtTheEnd = 0.9;
+        }
+
+        var reduceLineByPixels = (this.width - lineFullDistanceUnits * this.scene.sceneDistanceUnitPixels) * multiplierToShowDistanceMarkersAtTheEnd;
+
+        this.line = Phaser.Geom.Line.Extend(this.line, 0, -reduceLineByPixels);
+        this.width = Phaser.Geom.Line.Length(this.line); //Note: set to constant value if you want to rotate tape but retain it's length
+        var middlePoint = Phaser.Geom.Line.GetMidPoint(this.line);
+        this.container.x = middlePoint.x;
+        this.container.y = middlePoint.y;
+    }
+
 
     addDistanceMarkers() {
         this.numDistanceMarkers = Math.ceil(this.width / this.scene.sceneDistanceUnitPixels);

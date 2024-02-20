@@ -8,7 +8,7 @@
         "es"
     ],
     "extends": [
-        "eslint:recommended",
+        "eslint:recommended"
     ],
     "parserOptions": {
         "ecmaVersion": 2021,
