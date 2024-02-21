@@ -87,7 +87,20 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container = this.scene.add.container(x, y);
         this.container.setSize(this.width, this.height);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        var measureTapeLine = this.scene.add.rectangle(0, 0, this.width, this.height, this.color);
+        this.addTapeRectangle();
+    }
+
+    addTapeRectangle() {
+        // Define the points for the trapezoid
+        var points = [
+            { x: 0, y: 0 },
+            { x: this.width, y: 0 },
+            { x: this.width, y: this.height }, //bottom right
+            { x: this.height, y: this.height } //bottom left
+        ];
+
+        // Create a polygon with the defined points
+        var measureTapeLine = this.scene.add.polygon(0, 0, points, this.color);
         this.container.add(measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
