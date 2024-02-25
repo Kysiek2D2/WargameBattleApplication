@@ -6,7 +6,7 @@ class BasicMeasureTapePiece extends GamePiece {
 
     static distanceMarkerWidthInPixels = 2;
 
-    constructor({ scene, gamePieceName, widthInDistanceUnits, heightInDistanceUnits = 1, x, y, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW }) {
+    constructor({ scene, gamePieceName, x, y, widthInDistanceUnits, heightInDistanceUnits = 1, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW, isFlipped = false }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -19,9 +19,11 @@ class BasicMeasureTapePiece extends GamePiece {
 
         this.distanceMarkerColor = CONSTANTS.BASIC_COLORS.BLACK;
         this.line = null;
+        this.triangle = null;
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
+        this.isFlipped = isFlipped;
 
         this.configureGamePiece();
     }
@@ -89,23 +91,9 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container = this.scene.add.container(x, y);
         this.container.setSize(this.width, this.height);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        this.addTapeRectangle();
+        this.addTapeTrapezoid();
     }
 
-    addTapeRectangle() {
-        // Define the points for the trapezoid
-        var points = [
-            { x: 0, y: 0 },
-            { x: this.width, y: 0 },
-            { x: this.width, y: this.height }, //bottom right
-            { x: this.height, y: this.height } //bottom left
-        ];
-
-        // Create a polygon with the defined points
-        var measureTapeLine = this.scene.add.polygon(0, 0, points, this.color);
-        this.container.add(measureTapeLine);
-        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
-    }
 
     prepareLineShapeAndProperties() {
         if (this.nodesComposition.getNodes().length != 2) {
@@ -146,6 +134,30 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container.y = middlePoint.y;
     }
 
+    addTapeTrapezoid() {
+
+        var points;
+        if (this.isFlipped) {
+            points = [
+                { x: 0, y: 0 }, //top left
+                { x: this.width, y: 0 }, //top right
+                { x: this.width, y: this.height }, //bottom right
+                { x: this.height, y: this.height } //bottom left
+            ];
+        } else {
+            points = [
+                { x: this.height, y: 0 }, //top left
+                { x: this.width, y: 0 }, //top right
+                { x: this.width, y: this.height }, //bottom right
+                { x: 0, y: this.height } //bottom left
+            ];
+        }
+
+        // Create a polygon with the defined points
+        var measureTapeLine = this.scene.add.polygon(0, 0, points, this.color);
+        this.container.add(measureTapeLine);
+        this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
+    }
 
     addDistanceMarkers() {
         this.numDistanceMarkers = Math.ceil(this.width / this.scene.sceneDistanceUnitPixels);
@@ -157,7 +169,7 @@ class BasicMeasureTapePiece extends GamePiece {
             distanceMarker.setOrigin(0.5);
 
             var circleAndTextPoint = { x: point.x - (this.scene.sceneDistanceUnitPixels / 4), y: point.y };
-            var distanceText = this.scene.add.text(circleAndTextPoint.x, circleAndTextPoint.y, (i).toString(), { fontSize: '6px', resolution: 10, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
+            var distanceText = this.scene.add.text(circleAndTextPoint.x, circleAndTextPoint.y, (i).toString(), { fontSize: '9px', resolution: 20, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
             distanceText.setOrigin(0.5, 0.5);
             distanceText.setAngle(90);
 
@@ -174,18 +186,26 @@ class BasicMeasureTapePiece extends GamePiece {
             return;
         }
 
-        var lastDistanceMarkerPoint = this.distanceMarkerPoints[this.distanceMarkerPoints.length - 1];
-        var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: lastDistanceMarkerPoint.distanceMarker.y - this.height / 2 };
+        var sign;
+        if (this.isFlipped) {
+            sign = 1;
+        } else {
+            sign = -1;
+        }
 
-        var triangle = this.scene.add.triangle(
+        var lastDistanceMarkerPoint = this.distanceMarkerPoints[this.distanceMarkerPoints.length - 1];
+        var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: sign * this.height / 2 };
+
+        this.triangle = this.scene.add.triangle(
             triangleStartPoint.x, triangleStartPoint.y,
             0, 0,
-            0, -this.height,
+            0, sign * this.height,
             this.height, 0,
             this.color
         );
-        triangle.setOrigin(1, 0);
-        this.container.add(triangle);
+
+        this.triangle.setOrigin(1, 0);
+        this.container.add(this.triangle);
     }
 }
 
