@@ -36,7 +36,9 @@ class BasicMeasureTapePiece extends GamePiece {
 
         //Note: corner nodes are not part of container, they are outside of it
         this.setNodes();
-        this.dropAndCreateBasicMeasureTape();
+        this.prepareLineShapeAndProperties();
+        this.reduceLineShapeToFullDistanceUnits();
+        this.renderBasicMeasureTape();
     }
 
     setNodes() {
