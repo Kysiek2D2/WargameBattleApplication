@@ -1,4 +1,5 @@
 import BasicMeasureTapePiece from "../pieces/BasicMeasureTapePiece.js";
+import PoleAxeMeasureTapePiece from "../pieces/PoleAxeMeasureTapePiece.js";
 import SidePanelScene from "./SidePanelScene.js";
 
 class ToolsScene extends SidePanelScene {
@@ -48,7 +49,7 @@ class ToolsScene extends SidePanelScene {
             setTimeout(() => {
                 measureTapeIcon.clearTint();
             }, this.elementsTintTimeoutInMs);
-            var measureTape = new BasicMeasureTapePiece({ scene: this.mainScene, gamePieceName: 'tape', widthInDistanceUnits: 12, heightInDistanceUnits: 1, x: 100, y: 100 });
+            var measureTape = new PoleAxeMeasureTapePiece({ scene: this.mainScene, gamePieceName: 'tape', widthInDistanceUnits: 12, heightInDistanceUnits: 1, x: 100, y: 100 });
         });
         return measureTapeIcon;
     }

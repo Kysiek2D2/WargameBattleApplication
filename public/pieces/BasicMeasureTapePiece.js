@@ -6,7 +6,7 @@ class BasicMeasureTapePiece extends GamePiece {
 
     static distanceMarkerWidthInPixels = 2;
 
-    constructor({ scene, gamePieceName, x, y, widthInDistanceUnits, heightInDistanceUnits = 1, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW, isFlipped = false }) {
+    constructor({ scene, gamePieceName, x, y, widthInDistanceUnits, heightInDistanceUnits = 1, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -23,11 +23,13 @@ class BasicMeasureTapePiece extends GamePiece {
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
-        this.isFlipped = isFlipped;
 
         this.configureGamePiece();
     }
 
+    /**
+    * @override
+    */
     configureGamePiece() {
         /**
          * After each interaction container and it's elements are rendered 
@@ -43,6 +45,9 @@ class BasicMeasureTapePiece extends GamePiece {
         this.renderBasicMeasureTape();
     }
 
+    /**
+    * @override
+    */
     setNodes() {
         this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
     }
@@ -91,9 +96,8 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container = this.scene.add.container(x, y);
         this.container.setSize(this.width, this.height);
         this.container.setAngle(this.lineAngle * 180 / Math.PI);
-        this.addTapeTrapezoid();
+        this.addTapeShape();
     }
-
 
     prepareLineShapeAndProperties() {
         if (this.nodesComposition.getNodes().length != 2) {
@@ -134,27 +138,8 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container.y = middlePoint.y;
     }
 
-    addTapeTrapezoid() {
-
-        var points;
-        if (this.isFlipped) {
-            points = [
-                { x: 0, y: 0 }, //top left
-                { x: this.width, y: 0 }, //top right
-                { x: this.width, y: this.height }, //bottom right
-                { x: this.height, y: this.height } //bottom left
-            ];
-        } else {
-            points = [
-                { x: this.height, y: 0 }, //top left
-                { x: this.width, y: 0 }, //top right
-                { x: this.width, y: this.height }, //bottom right
-                { x: 0, y: this.height } //bottom left
-            ];
-        }
-
-        // Create a polygon with the defined points
-        var measureTapeLine = this.scene.add.polygon(0, 0, points, this.color);
+    addTapeShape() {
+        var measureTapeLine = this.scene.add.rectangle(0, 0, this.width, this.height, this.color);
         this.container.add(measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
@@ -177,35 +162,6 @@ class BasicMeasureTapePiece extends GamePiece {
             this.container.add(distanceText);
             this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceText: distanceText }]; // Updated code to include the circle
         }
-
-        this.addCiupaga(true);
-    }
-
-    addCiupaga(show = true) {
-        if (!show) {
-            return;
-        }
-
-        var sign;
-        if (this.isFlipped) {
-            sign = 1;
-        } else {
-            sign = -1;
-        }
-
-        var lastDistanceMarkerPoint = this.distanceMarkerPoints[this.distanceMarkerPoints.length - 1];
-        var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: sign * this.height / 2 };
-
-        this.triangle = this.scene.add.triangle(
-            triangleStartPoint.x, triangleStartPoint.y,
-            0, 0,
-            0, sign * this.height,
-            this.height, 0,
-            this.color
-        );
-
-        this.triangle.setOrigin(1, 0);
-        this.container.add(this.triangle);
     }
 }
 

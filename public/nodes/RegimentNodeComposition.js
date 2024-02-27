@@ -7,33 +7,6 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
         super(scene, gamePiece, radius, color);
     }
 
-    // createSingleNode(x, y, radius, color) {
-    //     var node = this.scene.add.circle(x, y, radius, color);
-    //     node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
-    //     node.setVisible(false);
-    //     return node;
-    // }
-
-    // createNodes() {
-    //     var manipulationNodesPositions = this.calulateNodesPositions();
-    //     manipulationNodesPositions.forEach(position => {
-    //         var node = this.createSingleNode(position.x, position.y, this.nodeRadius, this.nodeColor);
-    //         this.setNodeListener(node);
-    //         this.nodes.push(node);
-    //     });
-    // }
-
-    // updateNodesPosition() {
-    //     //max 2 for Regiment PIECE!!! Otherwise we won't know which is the opposite node
-    //     var manipulationNodesPositions = this.calulateNodesPositions();
-    //     this.nodes.forEach((node, index) => {
-    //         node.setPosition(
-    //             manipulationNodesPositions[index].x,
-    //             manipulationNodesPositions[index].y
-    //         );
-    //     });
-    // }
-
     calulateNodesPositions() {
         var gamePieceContainer = this.gamePiece.container;
         var gamePieceWidth = this.gamePiece.width;
@@ -59,17 +32,6 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
         //console.log(`containerCorners: ${JSON.stringify(containerCorners)}`)
         return containerCorners;
     }
-
-    // setNodeListener(node) {
-    //     node.setInteractive();
-    //     var scene = this.scene;
-    //     scene.input.setDraggable(node);
-
-    //     node.on('drag', (pointer) => {
-    //         var worldPoint = this.scene.camera.getWorldPoint(pointer.x, pointer.y);
-    //         this.updateGamePiece(node, { x: worldPoint.x, y: worldPoint.y });
-    //     });
-    // }
 
     updateGamePiece(node, worldPoint) {
         this.updateNodesPosition();
@@ -114,10 +76,6 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
         var graphics = this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00 } });
         graphics.strokeLineShape(line);
     }
-
-    // getNodes() {
-    //     return this.nodes;
-    // }
 
     // static isMouseClickOnActiveGamePieceCornerNode(pointer) {
     //     if (GamePiece.activeGamePiece === null) return false;

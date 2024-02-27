@@ -23,6 +23,9 @@ class RegimentPiece extends GamePiece {
         this.configureGamePiece();
     }
 
+    /**
+    * @override
+    */
     configureGamePiece() {
         this.setNodes();
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
@@ -35,10 +38,16 @@ class RegimentPiece extends GamePiece {
         this.showContainerHelpBounds(false);
     }
 
+    /**
+    * @override
+    */
     setNodes() {
         this.nodesComposition = new RegimentNodeComposition(this.scene, this, 7, CONSTANTS.BASIC_COLORS.ACID_GREEN);
     }
 
+    /**
+    * @override
+    */
     setOnDragListener() {
         this.container.setInteractive();
         this.scene.input.setDraggable(this.container);
