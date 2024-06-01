@@ -35,6 +35,7 @@ class BasicMeasureTapeNodeComposition extends ManipulationNodeComposition {
         super.setNodeListener(node);
         node.on('dragend', (pointer) => {
             console.log("dragend: " + Math.abs(this.nodes[0].x - this.nodes[1].x));
+            //this.gamePiece.nodesComposition.updateNodesPosition();
             this.gamePiece.reduceLineShapeToFullDistanceUnits();
             this.gamePiece.renderBasicMeasureTape();
         });

@@ -1,6 +1,5 @@
 import BasicMeasureTapePiece from './BasicMeasureTapePiece.js';
 import { CONSTANTS } from '../Constants.js';
-import PoleAxeMeasureTapeNodeComposition from '../nodes/PoleAxeMeasureTapeNodeComposition.js';
 import BasicMeasureTapeNodeComposition from '../nodes/BasicMeasureTapeNodeComposition.js';
 
 class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
@@ -11,19 +10,18 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
     }
 
     /**
-    * @override
-    */
-    setNodes() {
-        this.nodesComposition = new PoleAxeMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
-        //this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
+     * @override
+     */
+    renderBasicMeasureTape() {
+        super.renderBasicMeasureTape();
+        this.addPoleAxeShape();
     }
 
     /**
     * @override
     */
-    addDistanceMarkers() {
-        super.addDistanceMarkers();
-        this.addPoleAxeShape();
+    setNodes() {
+        this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
     }
 
     /**
@@ -49,9 +47,32 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         }
 
         // Create a polygon with the defined points
-        var measureTapeLine = this.scene.add.polygon(0, 0, points, this.color);
+        var measureTapeLine = this.scene.add.polygon(0, -this.container.height / 2, points, this.color);
         this.container.add(measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
+    }
+
+    /**
+    * @override
+    */
+    addDistanceMarkers() {
+        this.numDistanceMarkers = Math.ceil(this.width / this.scene.sceneDistanceUnitPixels);
+
+        for (var i = 1; i < this.numDistanceMarkers; i++) {
+            var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.width / 2, y: -this.container.height / 2 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
+
+            var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTapePiece.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
+            distanceMarker.setOrigin(0.5);
+
+            var circleAndTextPoint = { x: point.x - (this.scene.sceneDistanceUnitPixels / 4), y: point.y };
+            var distanceText = this.scene.add.text(circleAndTextPoint.x, circleAndTextPoint.y, (i).toString(), { fontSize: '9px', resolution: 20, fill: '#000000', fontFamily: 'Arial', fontWeight: 'bold' });
+            distanceText.setOrigin(0.5, 0.5);
+            distanceText.setAngle(90);
+
+            this.container.add(distanceMarker);
+            this.container.add(distanceText);
+            this.distanceMarkerPoints = [...this.distanceMarkerPoints, { distanceMarker: distanceMarker, distanceText: distanceText }]; // Updated code to include the circle
+        }
     }
 
     addPoleAxeShape() {
@@ -67,7 +88,7 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: sign * this.height / 2 };
 
         this.triangle = this.scene.add.triangle(
-            triangleStartPoint.x, triangleStartPoint.y,
+            triangleStartPoint.x, triangleStartPoint.y - this.container.height / 2,
             0, 0,
             0, sign * this.height,
             this.height, 0,

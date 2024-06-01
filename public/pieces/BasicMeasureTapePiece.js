@@ -68,7 +68,6 @@ class BasicMeasureTapePiece extends GamePiece {
         this.container.removeAll(true);
         this.updateContainer();
         this.addContainerListeners();
-        this.nodesComposition.updateNodesPosition();
         this.addDistanceMarkers();
         this.setActivateListener();
         this.showContainerHelpBounds(false); //change to true to show container bounds, should be called after all other elements render
@@ -103,7 +102,6 @@ class BasicMeasureTapePiece extends GamePiece {
         if (this.nodesComposition.getNodes().length != 2) {
             throw new Error('BasicMeasureTapePiece must have exactly 2 nodes');
         }
-
         var startNode = this.nodesComposition.getNodes()[0];
         var endNode = this.nodesComposition.getNodes()[1];
 
@@ -116,9 +114,6 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     reduceLineShapeToFullDistanceUnits() {
-        if (this.nodesComposition.getNodes().length != 2) {
-            throw new Error('BasicMeasureTapePiece must have exactly 2 nodes');
-        }
 
         var initialLineDistanceUnits = this.width / this.scene.sceneDistanceUnitPixels;
         var lineFullDistanceUnits = Math.round(initialLineDistanceUnits);

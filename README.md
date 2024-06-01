@@ -11,6 +11,7 @@
 - Then enter site like http://localhost:3000
 - To stop server, in terminal do 'ctr+C' shortcut.
 - Any changes in application will be immadiatelly visible on page from server due to nodemon library.
+- Alternative: Click 'Run and debug' in VS Code, and run app. Then enter localhost url. This is possible due to launch.json file, that sets up a script.
 
 * Usefull tools:
 - Visual Studio Code and it's extensions: GitHub Copilot, GitHub Copilot Chat, GitLens, ES Lint, HTML CSS Support, HTML Format, JavaScript (ES6) code snippets, Phaser JS (optional).
