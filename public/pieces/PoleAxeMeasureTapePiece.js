@@ -47,7 +47,7 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         }
 
         // Create a polygon with the defined points
-        var measureTapeLine = this.scene.add.polygon(0, -this.container.height / 2, points, this.color);
+        var measureTapeLine = this.scene.add.polygon(0, (this.isFlipped ? 1 : -1) * this.container.height / 2, points, this.color);
         this.container.add(measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
@@ -59,7 +59,7 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         this.numDistanceMarkers = Math.ceil(this.width / this.scene.sceneDistanceUnitPixels);
 
         for (var i = 1; i < this.numDistanceMarkers; i++) {
-            var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.width / 2, y: -this.container.height / 2 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
+            var point = { x: (i * this.scene.sceneDistanceUnitPixels) - this.width / 2, y: (this.isFlipped ? 1 : -1) * this.container.height / 2 }; //crazy coordinates becasuse it's part of container. And all childs of container is centered in the container...
 
             var distanceMarker = this.scene.add.rectangle(point.x, point.y, BasicMeasureTapePiece.distanceMarkerWidthInPixels, this.height, this.distanceMarkerColor);
             distanceMarker.setOrigin(0.5);
@@ -88,7 +88,7 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         var triangleStartPoint = { x: lastDistanceMarkerPoint.distanceMarker.x, y: sign * this.height / 2 };
 
         this.triangle = this.scene.add.triangle(
-            triangleStartPoint.x, triangleStartPoint.y - this.container.height / 2,
+            triangleStartPoint.x, triangleStartPoint.y + (this.isFlipped ? 1 : -1) * this.container.height / 2,
             0, 0,
             0, sign * this.height,
             this.height, 0,
