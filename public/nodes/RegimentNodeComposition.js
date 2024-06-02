@@ -10,12 +10,11 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
     calulateNodesPositions() {
         var gamePieceContainer = this.gamePiece.container;
         var gamePieceWidth = this.gamePiece.width;
-        var gamePieceHeight = this.gamePiece.height;
 
         //Note: max 2 nodes for RegimentPiece!!! Otherwise we won't know which is the opposite node!
         var containerCorners = [
-            { x: gamePieceContainer.x - gamePieceWidth / 2, y: gamePieceContainer.y - gamePieceHeight / 2 }, //topLeft
-            { x: gamePieceContainer.x + gamePieceWidth / 2, y: gamePieceContainer.y - gamePieceHeight / 2 }, //topRight
+            { x: gamePieceContainer.x - gamePieceWidth / 2, y: gamePieceContainer.y }, //topLeft
+            { x: gamePieceContainer.x + gamePieceWidth / 2, y: gamePieceContainer.y }, //topRight
         ]
 
         var angle = gamePieceContainer.rotation;

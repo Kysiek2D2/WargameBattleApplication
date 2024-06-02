@@ -31,7 +31,7 @@ class RegimentPiece extends GamePiece {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
-        this.sprite = this.scene.add.image(0, 0, this.spriteKey)
+        this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
             .setOrigin(0.5, 0.5)
             .setDisplaySize(this.width, this.height)
         this.container.add(this.sprite);
