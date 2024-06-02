@@ -47,8 +47,8 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         }
 
         // Create a polygon with the defined points
-        var measureTapeLine = this.scene.add.polygon(0, (this.isFlipped ? 1 : -1) * this.container.height / 2, points, this.color);
-        this.container.add(measureTapeLine);
+        this.measureTapeLine = this.scene.add.polygon(0, (this.isFlipped ? 1 : -1) * this.container.height / 2, points, this.color);
+        this.container.add(this.measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
 
@@ -98,7 +98,6 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
         this.triangle.setOrigin(1, 0);
         this.container.add(this.triangle);
     }
-
 }
 
 export default PoleAxeMeasureTapePiece;

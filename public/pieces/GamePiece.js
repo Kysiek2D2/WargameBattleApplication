@@ -87,7 +87,7 @@ class GamePiece {
         //Shows only half of the container's bounds, to show full bounds remove the division by 2
         //Should be called after all other elements render
         var containerBoundsColor = CONSTANTS.BASIC_COLORS.CLASSIC_RED;
-        var boundsRectangle = this.scene.add.rectangle(0, 0, this.width, this.height / 2, containerBoundsColor);
+        var boundsRectangle = this.scene.add.rectangle(0, 0, this.width, this.height, containerBoundsColor);
         this.container.add(boundsRectangle);
     }
 }

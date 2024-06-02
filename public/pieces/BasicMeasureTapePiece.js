@@ -23,6 +23,7 @@ class BasicMeasureTapePiece extends GamePiece {
         this.lineAngle = null;
         this.distanceMarkerPoints = [];
         this.numDistanceMarkers = null;
+        this.measureTapeLine = null;
 
         this.configureGamePiece();
     }
@@ -74,7 +75,7 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     addContainerListeners() {
-        this.container.setInteractive();
+        this.container.setInteractive(this.measureTapeLine, Phaser.Geom.Rectangle.Contains);
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer, dragX, dragY) => {
             console.log('dragging container')
@@ -134,8 +135,8 @@ class BasicMeasureTapePiece extends GamePiece {
     }
 
     addTapeShape() {
-        var measureTapeLine = this.scene.add.rectangle(0, 0, this.width, this.height, this.color);
-        this.container.add(measureTapeLine);
+        this.measureTapeLine = this.scene.add.rectangle(0, 0, this.width, this.height, this.color);
+        this.container.add(this.measureTapeLine);
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MEASURE_TAPE_PIECE_CONTAINER);
     }
 
