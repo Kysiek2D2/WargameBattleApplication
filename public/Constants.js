@@ -38,6 +38,7 @@ export const CONSTANTS = {
         TAPE_YELLOW: 0xfcf403,
         BURGUNDY: 0x914148,
         ACID_GREEN: 0x00ff00,
+        BLUE: 0x0000ff,
         BLACK: 0x000000,
     },
     WARGAME_DEPTH_CATEGORIES: {

@@ -1,11 +1,12 @@
 import { CONSTANTS } from "../Constants.js";
+import RegimentTray from "../extras/RegimentTray.js";
 import RegimentNodeComposition from "../nodes/RegimentNodeComposition.js";
 import GamePiece from "./GamePiece.js";
 
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programming design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null }) {
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null, isTrayVisible = false }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -19,6 +20,10 @@ class RegimentPiece extends GamePiece {
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
         this.hitArea = null;
+
+        this.tray = null;
+        this.isTrayVisible = isTrayVisible;
+
         this.configureGamePiece();
     }
 
@@ -30,10 +35,23 @@ class RegimentPiece extends GamePiece {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
+        this.tray = new RegimentTray({
+            scene: this.scene,
+            container: this.container,
+            x: 0,
+            y: this.container.height / 2,
+            width: this.width * 1.1,
+            height: this.height * 1.1,
+            color: this.color,
+            isVisible: this.isTrayVisible,
+            transparentParameter: 0.5
+        });
         this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
             .setOrigin(0.5, 0.5)
-            .setDisplaySize(this.width, this.height)
+            .setDisplaySize(this.width, this.height);
         this.container.add(this.sprite);
+
+
         this.showContainerHelpBounds(false);
     }
 
@@ -41,7 +59,7 @@ class RegimentPiece extends GamePiece {
     * @override
     */
     setNodes() {
-        this.nodesComposition = new RegimentNodeComposition(this.scene, this, 7, CONSTANTS.BASIC_COLORS.ACID_GREEN);
+        this.nodesComposition = new RegimentNodeComposition(this.scene, this, 7, this.color);
     }
 
     /**

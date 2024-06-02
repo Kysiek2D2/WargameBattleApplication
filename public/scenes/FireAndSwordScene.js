@@ -55,6 +55,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Strzelcy \nGrodowi',
             gamePieceStrength: 10,
             spriteKey: 'basicInfantryUnitSizeL',
+            color: CONSTANTS.BASIC_COLORS.BLUE,
+            isTrayVisible: true,
         });
         var testUnit4 = new RegimentPiece({
             scene: this,
@@ -66,6 +68,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Jazda \nChorwacka',
             gamePieceStrength: 10,
             spriteKey: 'basicCavalerySizeS',
+            color: CONSTANTS.BASIC_COLORS.CLASSIC_RED,
+            isTrayVisible: true,
         });
         var testTerrain1 = new RegimentPiece({
             scene: this,

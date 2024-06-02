@@ -102,7 +102,7 @@ class WargameScene extends Phaser.Scene {
         console.log(`Canvas/GameConfig size: \n width: ${this.gameConfig.width}, \n height: ${this.gameConfig.height}`);
         console.log(`Map size: \n width: ${this.map.width} px, \n height: ${this.map.height} px.`);
         this.map.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.MAP);
-        this.helpGrid(true); // Add this line to show the grid
+        this.helpGrid(false); // Add this line to show the grid
     }
 
     setGamePieceDetailsScene() {
