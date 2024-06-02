@@ -16,10 +16,9 @@ class RegimentPiece extends GamePiece {
             heightInDistanceUnits: heightInDistanceUnits,
             widthInDistanceUnits: widthInDistanceUnits
         });
-
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
-
+        this.hitArea = null;
         this.configureGamePiece();
     }
 
@@ -49,7 +48,11 @@ class RegimentPiece extends GamePiece {
     * @override
     */
     setOnDragListener() {
-        this.container.setInteractive();
+        this.hitArea = this.scene.add.rectangle(0, this.container.height / 2, this.width, this.height, 0x000000, 0);
+        this.hitArea.setVisible(false);
+        this.container.add(this.hitArea);
+
+        this.container.setInteractive(this.hitArea, Phaser.Geom.Rectangle.Contains);
         this.scene.input.setDraggable(this.container);
         this.container.on('drag', (pointer, dragX, dragY) => {
             const dx = dragX - this.container.x;
