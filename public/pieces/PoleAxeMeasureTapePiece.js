@@ -7,13 +7,14 @@ class PoleAxeMeasureTapePiece extends BasicMeasureTapePiece {
     constructor({ scene, gamePieceName, x, y, widthInDistanceUnits, heightInDistanceUnits = 1, color = CONSTANTS.BASIC_COLORS.TAPE_YELLOW, isFlipped = false }) {
         super({ scene: scene, gamePieceName: gamePieceName, x: x, y: y, widthInDistanceUnits: widthInDistanceUnits, heightInDistanceUnits: heightInDistanceUnits, color: color, isFlipped: isFlipped });
         this.isFlipped = isFlipped;
+        this.renderMeasureTape(); //second call after parent class in order to flip is needed on creation
     }
 
     /**
      * @override
      */
-    renderBasicMeasureTape() {
-        super.renderBasicMeasureTape();
+    renderMeasureTape() {
+        super.renderMeasureTape();
         this.addPoleAxeShape();
     }
 

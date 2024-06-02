@@ -43,7 +43,7 @@ class BasicMeasureTapePiece extends GamePiece {
         this.setNodes();
         this.prepareLineShapeAndProperties();
         this.reduceLineShapeToFullDistanceUnits();
-        this.renderBasicMeasureTape();
+        this.renderMeasureTape();
     }
 
     /**
@@ -62,10 +62,10 @@ class BasicMeasureTapePiece extends GamePiece {
 
     dropAndCreateBasicMeasureTape() {
         this.prepareLineShapeAndProperties();
-        this.renderBasicMeasureTape();
+        this.renderMeasureTape();
     }
 
-    renderBasicMeasureTape() {
+    renderMeasureTape() {
         this.container.removeAll(true);
         this.updateContainer();
         this.addContainerListeners();
