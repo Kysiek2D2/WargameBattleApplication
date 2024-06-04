@@ -35,6 +35,12 @@ class RegimentPiece extends GamePiece {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
+
+
+        this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(this.width, this.height);
+        this.container.add(this.sprite);
         this.tray = new RegimentTray({
             scene: this.scene,
             container: this.container,
@@ -46,11 +52,6 @@ class RegimentPiece extends GamePiece {
             isVisible: this.isTrayVisible,
             transparentParameter: 0.5
         });
-        this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
-            .setOrigin(0.5, 0.5)
-            .setDisplaySize(this.width, this.height);
-        this.container.add(this.sprite);
-
 
         this.showContainerHelpBounds(false);
     }

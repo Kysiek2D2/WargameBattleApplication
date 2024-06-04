@@ -38,6 +38,8 @@ export const CONSTANTS = {
         TAPE_YELLOW: 0xfcf403,
         BURGUNDY: 0x914148,
         ACID_GREEN: 0x00ff00,
+        SNOW_WHITE: 0xfffafa,
+        BROWN: 0x8b4513,
         BLUE: 0x0000ff,
         BLACK: 0x000000,
     },

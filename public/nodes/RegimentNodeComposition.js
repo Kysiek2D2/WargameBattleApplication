@@ -1,4 +1,3 @@
-import { CONSTANTS } from '../Constants.js';
 import ManipulationNodeComposition from './ManipulationNodeComposition.js';
 
 class RegimentNodeComposition extends ManipulationNodeComposition {
