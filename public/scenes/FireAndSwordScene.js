@@ -31,6 +31,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Szwedzka \nPiechota \nKrajowa',
             gamePieceStrength: 16,
             spriteKey: 'basicInfantryUnitSizeL',
+            color: CONSTANTS.BASIC_COLORS.YELLOW,
+            isTrayVisible: true,
         });
         console.log(`TestUnit1 depth: ${testUnit1.sprite.depth}`)
         var testUnit2 = new RegimentPiece({
@@ -43,6 +45,8 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Kirasjerzy',
             gamePieceStrength: 13,
             spriteKey: 'basicCavalerySizeM',
+            color: CONSTANTS.BASIC_COLORS.GREEN,
+            isTrayVisible: true,
         });
         console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
         var testUnit3 = new RegimentPiece({

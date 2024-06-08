@@ -42,6 +42,9 @@ export const CONSTANTS = {
         BROWN: 0x8b4513,
         BLUE: 0x0000ff,
         BLACK: 0x000000,
+        GREY: 0x808080,
+        GREEN: 0x008000,
+        YELLOW: 0xffff00,
     },
     WARGAME_DEPTH_CATEGORIES: {
         BACKGROUND: -1,
