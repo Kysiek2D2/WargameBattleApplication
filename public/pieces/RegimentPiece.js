@@ -37,7 +37,8 @@ class RegimentPiece extends GamePiece {
         this.setOnDragListener();
         this.tray = new RegimentTray({
             regiment: this,
-            proportion: 1.1,
+            width: this.width,
+            height: this.height,
             x: 0,
             y: this.container.height / 2,
             isVisible: this.isTrayVisible,
@@ -46,7 +47,7 @@ class RegimentPiece extends GamePiece {
 
         this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
             .setOrigin(0.5, 0.5)
-            .setDisplaySize(this.width, this.height);
+            .setDisplaySize(this.width * 0.9, this.height * 0.9);
         this.container.add(this.sprite);
 
 
