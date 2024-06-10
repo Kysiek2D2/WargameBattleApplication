@@ -42,14 +42,14 @@ class RegimentTray {
     }
 
     createTriangleFront() {
-        this.triangleFront = this.scene.add.triangle(this.x, (this.y - this.height / 2), 0, 2, 2, 2, 1, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
+        this.triangleFront = this.scene.add.triangle(this.x, (this.y - this.height / 2) + 1, 0, 2, 2, 2, 1, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
         this.triangleFront.setStrokeStyle(0.35, CONSTANTS.BASIC_COLORS.BLACK);
         this.triangleFront.setScale(2, 1);
         this.container.add(this.triangleFront);
     }
 
     createTriangleBack() {
-        this.triangleBack = this.scene.add.triangle(this.x, (this.y + this.height / 2), 0, 2, 2, 2, 1, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
+        this.triangleBack = this.scene.add.triangle(this.x, (this.y + this.height / 2) - 1, 0, 2, 2, 2, 1, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
         this.triangleBack.setStrokeStyle(0.35, CONSTANTS.BASIC_COLORS.BLACK);
         this.triangleBack.setScale(2, 1);
         this.triangleBack.setRotation(Math.PI);
@@ -57,7 +57,7 @@ class RegimentTray {
     }
 
     createTriangleLeft() {
-        this.triangleLeft = this.scene.add.triangle((this.x - this.width / 2), this.y, 2, 1, 0, 2, 0, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
+        this.triangleLeft = this.scene.add.triangle((this.x - this.width / 2) + 1, this.y, 2, 1, 0, 2, 0, 0, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
         this.triangleLeft.setScale(1, 2);
         this.triangleLeft.setRotation(Math.PI);
         this.triangleLeft.setStrokeStyle(0.35, CONSTANTS.BASIC_COLORS.BLACK);
@@ -65,7 +65,7 @@ class RegimentTray {
     }
 
     createTriangleRight() {
-        this.triangleRight = this.scene.add.triangle((this.x + this.width / 2), this.y, 0, 0, 0, 2, 2, 1, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
+        this.triangleRight = this.scene.add.triangle((this.x + this.width / 2) - 1, this.y, 0, 0, 0, 2, 2, 1, CONSTANTS.BASIC_COLORS.SNOW_WHITE);
         this.triangleRight.setScale(1, 2);
         this.triangleRight.setStrokeStyle(0.35, CONSTANTS.BASIC_COLORS.BLACK);
         this.container.add(this.triangleRight);
