@@ -50,8 +50,8 @@ export const CONSTANTS = {
         BACKGROUND: -1,
         MAP: 0,
         TERRAIN_PIECE: 1,
-        GAME_PIECE_NODES: 2,
-        REGIMENT_PIECE_CONTAINER: 3,
+        REGIMENT_PIECE_CONTAINER: 2,
+        GAME_PIECE_NODES: 3,
         MEASURE_TAPE_PIECE_CONTAINER: 4,
     },
     CONTROL_MODE: {

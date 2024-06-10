@@ -20,11 +20,13 @@ class BasicMeasureTapeNodeComposition extends ManipulationNodeComposition {
 
         var startMiddlePointRotated = {
             x: gamePieceContainer.x + (startMiddlePoint.x - gamePieceContainer.x) * cosAngle - (startMiddlePoint.y - gamePieceContainer.y) * sinAngle,
-            y: gamePieceContainer.y + (startMiddlePoint.x - gamePieceContainer.x) * sinAngle + (startMiddlePoint.y - gamePieceContainer.y) * cosAngle
+            y: gamePieceContainer.y + (startMiddlePoint.x - gamePieceContainer.x) * sinAngle + (startMiddlePoint.y - gamePieceContainer.y) * cosAngle,
+            isVisible: true
         };
         var startEndPointRotated = {
             x: gamePieceContainer.x + (endMiddlePoint.x - gamePieceContainer.x) * cosAngle - (endMiddlePoint.y - gamePieceContainer.y) * sinAngle,
-            y: gamePieceContainer.y + (endMiddlePoint.x - gamePieceContainer.x) * sinAngle + (endMiddlePoint.y - gamePieceContainer.y) * cosAngle
+            y: gamePieceContainer.y + (endMiddlePoint.x - gamePieceContainer.x) * sinAngle + (endMiddlePoint.y - gamePieceContainer.y) * cosAngle,
+            isVisible: true
         };
 
         var sideMiddlePoints = [startMiddlePointRotated, startEndPointRotated];

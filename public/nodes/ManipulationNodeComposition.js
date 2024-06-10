@@ -2,12 +2,14 @@ import { CONSTANTS } from '../Constants.js';
 
 class ManipulationNodeComposition {
 
-    constructor(scene, gamePiece, radius, color) {
+    constructor(scene, gamePiece, radius, color, spriteKey = null) {
         this.scene = scene;
         this.gamePiece = gamePiece;
 
         this.nodeRadius = radius;
         this.nodeColor = color;
+
+        this.spriteKey = spriteKey;
 
         this.nodes = [];
         this.createNodes();
@@ -21,8 +23,9 @@ class ManipulationNodeComposition {
         return this.nodes;
     }
 
-    createSingleNode(x, y, radius, color) {
+    createSingleNode(x, y, radius, color, isVisible) {
         var node = this.scene.add.circle(x, y, radius, color);
+        node.isVisible = isVisible;
         node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
         node.setVisible(false);
         this.setNodeListener(node);
@@ -32,9 +35,10 @@ class ManipulationNodeComposition {
 
     createNodes() {
         var manipulationNodesPositions = this.calulateNodesPositions();
-        manipulationNodesPositions.forEach(position => {
-            var node = this.createSingleNode(position.x, position.y, this.nodeRadius, this.nodeColor);
-        });
+        manipulationNodesPositions
+            .forEach(position => {
+                var node = this.createSingleNode(position.x, position.y, this.nodeRadius, this.nodeColor, position.isVisible);
+            });
     }
 
     updateNodesPosition() {

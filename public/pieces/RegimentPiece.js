@@ -58,7 +58,7 @@ class RegimentPiece extends GamePiece {
     * @override
     */
     setNodes() {
-        this.nodesComposition = new RegimentNodeComposition(this.scene, this, 7, this.color);
+        this.nodesComposition = new RegimentNodeComposition(this.scene, this, 7, this.color, 'turnArrowNode');
     }
 
     /**

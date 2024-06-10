@@ -79,7 +79,9 @@ class GamePiece {
     }
 
     static showActiveGamePieceNodes() {
-        GamePiece.activeGamePiece.nodesComposition.getNodes().forEach(node => node.setVisible(true));
+        GamePiece.activeGamePiece.nodesComposition.getNodes()
+            .filter(node => node.isVisible)
+            .forEach(node => node.setVisible(true));
     }
 
     showContainerHelpBounds(show = false) {
