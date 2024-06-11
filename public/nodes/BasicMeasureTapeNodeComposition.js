@@ -1,9 +1,10 @@
 import ManipulationNodeComposition from "./ManipulationNodeComposition.js";
+import { CONSTANTS } from "../Constants.js";
 
 class BasicMeasureTapeNodeComposition extends ManipulationNodeComposition {
 
-    constructor(scene, gamePiece, radius, color) {
-        super(scene, gamePiece, radius, color);
+    constructor(scene, gamePiece, radius, color, spriteKey) {
+        super(scene, gamePiece, radius, color, spriteKey);
     }
 
     calulateNodesPositions() {
@@ -31,6 +32,21 @@ class BasicMeasureTapeNodeComposition extends ManipulationNodeComposition {
 
         var sideMiddlePoints = [startMiddlePointRotated, startEndPointRotated];
         return sideMiddlePoints;
+    }
+
+    /**
+    * @override
+    */
+    createSingleNode(x, y, radius, color, isVisible) {
+        var node = this.scene.add.image(x, y, this.spriteKey)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(radius * 2, radius * 2)
+        node.isVisible = isVisible;
+        node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
+        node.setVisible(false);
+        this.setNodeListener(node);
+        this.nodes.push(node);
+        return node;
     }
 
     setNodeListener(node) {

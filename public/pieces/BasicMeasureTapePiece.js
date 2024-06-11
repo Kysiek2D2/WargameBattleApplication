@@ -50,7 +50,7 @@ class BasicMeasureTapePiece extends GamePiece {
     * @override
     */
     setNodes() {
-        this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, CONSTANTS.BASIC_COLORS.ACID_GREEN);
+        this.nodesComposition = new BasicMeasureTapeNodeComposition(this.scene, this, this.height / 2, null, 'turnArrowNode');
     }
 
     static popInstance() {

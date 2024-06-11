@@ -16,7 +16,7 @@ class FireAndSwordScene extends WargameScene {
         this.load.image({ key: 'basicCavalerySizeS', url: 'assets/units/basic-cavalery-size-S.jpg' });
         this.load.image({ key: 'denseForestShadowed', url: 'assets/terrains/denseForestShadowed.png' });
         this.load.image({ key: 'turnArrowNode', url: 'assets/icons/arrowTurnWhite_ver1.png' });
-
+        this.load.image({ key: '4arrowsPointingDifferentDirections', url: 'assets/icons/4arrowsWhitePointingDifferentDirections_ver1.png' });
     }
 
     create() {

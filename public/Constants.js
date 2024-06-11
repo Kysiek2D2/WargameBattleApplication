@@ -51,8 +51,8 @@ export const CONSTANTS = {
         MAP: 0,
         TERRAIN_PIECE: 1,
         REGIMENT_PIECE_CONTAINER: 2,
-        GAME_PIECE_NODES: 3,
-        MEASURE_TAPE_PIECE_CONTAINER: 4,
+        MEASURE_TAPE_PIECE_CONTAINER: 3,
+        GAME_PIECE_NODES: 4, //GAME_PIECE_NODES needs to be higher in hierarchy than elements that can have nodes
     },
     CONTROL_MODE: {
         CAMERA_MODE: 'cameraMode',

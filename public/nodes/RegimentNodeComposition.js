@@ -81,7 +81,6 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
     * @override
     */
     createSingleNode(x, y, radius, color, isVisible) {
-        //add spirit
         var node = this.scene.add.image(x, y, this.spriteKey)
             .setOrigin(0.5, 0.5)
             .setDisplaySize(radius * 2, radius * 2);
