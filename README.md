@@ -1,7 +1,7 @@
 # WargameBattleApplication
 
 * How to set up environment?
-- You need to have Git, node.js and some IDE like Visual Studio Code installed on your PC.
+- You need to have Git, node.js, npm (when you install node.js it has npm inside) and some IDE like Visual Studio Code installed on your PC.
 - Clone repo.
 - Switch to correct branch (main or other).
 - In terminal run command: npm install. node_modules folder will be crated on local. This will install all node.js dependencies and external packages. node_modules folder in repo is empty, and 'npm install' will install all dependencies and external packages into local project using package.json and package-lock.json files.
@@ -14,8 +14,8 @@
 - Alternative: Click 'Run and debug' in VS Code, and run app. Then enter localhost url. This is possible due to launch.json file, that sets up a script.
 
 * Usefull tools:
-- Visual Studio Code and it's extensions: GitHub Copilot, GitHub Copilot Chat, GitLens, ES Lint, HTML CSS Support, HTML Format, JavaScript (ES6) code snippets, Phaser JS (optional).
-- Git and node.js.
+- Visual Studio Code and it's extensions: GitHub Copilot, GitLens, ES Lint, HTML CSS Support, HTML Format, JavaScript (ES6) code snippets, Phaser JS (optional).
+- Git and node.js (node.js will contain npm - node package manager).
 
 * Important node.js packages used:
 - express middleware -> helps to control request-response calls in our app. Checkout server.js file.
