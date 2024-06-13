@@ -17,6 +17,15 @@ class FireAndSwordScene extends WargameScene {
         this.load.image({ key: 'denseForestShadowed', url: 'assets/terrains/denseForestShadowed.png' });
         this.load.image({ key: 'turnArrowNode', url: 'assets/icons/arrowTurnWhite_ver1.png' });
         this.load.image({ key: '4arrowsPointingDifferentDirections', url: 'assets/icons/4arrowsWhitePointingDifferentDirections_ver1.png' });
+
+        //read file names from assets url
+        fetch('http://localhost:3000/read-assets')
+            .then(response => response.json())
+            .then(files => {
+                console.log('Directory contents:', files);
+                // Process files here
+            })
+            .catch(error => console.error('Error fetching directory contents:', error));
     }
 
     create() {

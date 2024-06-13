@@ -83,7 +83,7 @@ class RegimentNodeComposition extends ManipulationNodeComposition {
     createSingleNode(x, y, radius, color, isVisible) {
         var node = this.scene.add.image(x, y, this.spriteKey)
             .setOrigin(0.5, 0.5)
-            .setDisplaySize(radius * 2, radius * 2);
+            .setDisplaySize(radius * 3, radius * 3);
         node.isVisible = isVisible;
         node.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.GAME_PIECE_NODES);
         node.setVisible(false);
