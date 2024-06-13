@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const fs = require('fs');
+const glob = require('glob');
 const app = express()
 const port = 3000
 
@@ -15,22 +15,23 @@ app.get('/', (req, res) => {
 //Start the servernpm 
 app.listen(port, () => { console.log(`Server is running at http://localhost:${port}`) })
 
-//Read the contents of the 'assets' directory
+//Read the contents of the 'assets' directory, including subdirectories
 app.get('/read-assets', (req, res) => {
-    const directoryPath = path.join(__dirname, 'public/assets');
+    const pattern = path.join(__dirname, 'public/assets/**/*.{png,jpg}');
 
-    fs.readdir(directoryPath, { withFileTypes: true }, (err, items) => {
+    glob(pattern, (err, files) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading directory');
         }
 
-        const files = items.map(item => ({
-            name: item.name,
-            isDirectory: item.isDirectory(),
+        const fileDetails = files.map(file => ({
+            name: path.basename(file),
+            path: file.split('public/')[1]
         }));
 
-        res.json(files);
+        res.json(fileDetails);
     });
 });
+
 
