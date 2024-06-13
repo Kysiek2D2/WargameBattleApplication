@@ -11,21 +11,6 @@ class FireAndSwordScene extends WargameScene {
 
     preload() {
         super.preload();
-        this.load.image({ key: 'basicInfantryUnitSizeL', url: 'assets/units/basic-infantry-size-L.png' });
-        this.load.image({ key: 'basicCavalerySizeM', url: 'assets/units/basic-cavalery-size-M.jpg' });
-        this.load.image({ key: 'basicCavalerySizeS', url: 'assets/units/basic-cavalery-size-S.jpg' });
-        this.load.image({ key: 'denseForestShadowed', url: 'assets/terrains/denseForestShadowed.png' });
-        this.load.image({ key: 'turnArrowNode', url: 'assets/icons/arrowTurnWhite_ver1.png' });
-        this.load.image({ key: '4arrowsPointingDifferentDirections', url: 'assets/icons/4arrowsWhitePointingDifferentDirections_ver1.png' });
-
-        //read file names from assets url
-        fetch('http://localhost:3000/read-assets')
-            .then(response => response.json())
-            .then(files => {
-                console.log('Directory contents:', files);
-                // Process files here
-            })
-            .catch(error => console.error('Error fetching directory contents:', error));
     }
 
     create() {
@@ -41,7 +26,7 @@ class FireAndSwordScene extends WargameScene {
             heightInDistanceUnits: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_L.height,
             gamePieceName: 'Szwedzka \nPiechota \nKrajowa',
             gamePieceStrength: 16,
-            spriteKey: 'basicInfantryUnitSizeL',
+            spriteKey: 'basic-infantry-size-L.png',
             color: CONSTANTS.BASIC_COLORS.YELLOW,
             isTrayVisible: true,
         });
@@ -55,7 +40,7 @@ class FireAndSwordScene extends WargameScene {
             heightInDistanceUnits: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_M.height,
             gamePieceName: 'Kirasjerzy',
             gamePieceStrength: 13,
-            spriteKey: 'basicCavalerySizeM',
+            spriteKey: 'basic-cavalery-size-M.jpg',
             color: CONSTANTS.BASIC_COLORS.GREEN,
             isTrayVisible: true,
         });
@@ -69,7 +54,7 @@ class FireAndSwordScene extends WargameScene {
             heightInDistanceUnits: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_L.height,
             gamePieceName: 'Strzelcy \nGrodowi',
             gamePieceStrength: 10,
-            spriteKey: 'basicInfantryUnitSizeL',
+            spriteKey: 'basic-infantry-size-L.png',
             color: CONSTANTS.BASIC_COLORS.BLUE,
             isTrayVisible: true,
         });
@@ -82,7 +67,7 @@ class FireAndSwordScene extends WargameScene {
             heightInDistanceUnits: CONSTANTS.FIRE_AND_SWORD_REGIMENT_SIZES_IN_INCHES.SIZE_S.height,
             gamePieceName: 'Jazda \nChorwacka',
             gamePieceStrength: 10,
-            spriteKey: 'basicCavalerySizeS',
+            spriteKey: 'basic-cavalery-size-S.jpg',
             color: CONSTANTS.BASIC_COLORS.CLASSIC_RED,
             isTrayVisible: true,
         });
@@ -95,7 +80,7 @@ class FireAndSwordScene extends WargameScene {
             heightInDistanceUnits: CONSTANTS.FIRE_AND_SWORD_TERRAIN_SIZES_IN_INCHES.SIZE_M.height,
             gamePieceName: 'Dense \nForest',
             gamePieceStrength: 10,
-            spriteKey: 'denseForestShadowed',
+            spriteKey: 'denseForestShadowed.png',
         });
         var measureTape = new BasicMeasureTapePiece({
             scene: this,

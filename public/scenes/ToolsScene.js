@@ -12,7 +12,6 @@ class ToolsScene extends SidePanelScene {
 
     preload() {
         super.preload({ backgroundUrl: 'assets/scenery/verticalRedBanner.png' });
-        this.load.image({ key: 'measureTapeIcon', url: 'assets/icons/measureTape1.png' })
     }
 
     init() {
@@ -37,7 +36,7 @@ class ToolsScene extends SidePanelScene {
     }
 
     addMeasureTapeIcon() {
-        const measureTapeIcon = this.add.image(0, 0, 'measureTapeIcon');
+        const measureTapeIcon = this.add.image(0, 0, 'measureTape1.png');
         measureTapeIcon.setOrigin(0.5, 0);
         measureTapeIcon.setScale(0.03);
         measureTapeIcon.x = this.sceneWidth / 2;

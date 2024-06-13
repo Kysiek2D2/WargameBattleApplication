@@ -11,8 +11,6 @@ class GamePieceDetailsScene extends SidePanelScene {
 
     preload() {
         super.preload({ backgroundUrl: 'assets/scenery/oldScroll2.png' });
-        this.load.image({ key: 'plusButton', url: 'assets/icons/plusButtonGrey_ver1.png' })
-        this.load.image({ key: 'minusButton', url: 'assets/icons/minusButtonGrey_ver1.png' })
     }
 
     init() {
@@ -50,7 +48,7 @@ class GamePieceDetailsScene extends SidePanelScene {
         const elementWidth = 50;
         const elementHeight = 50;
 
-        const minusButton = this.add.image(0, 0, 'minusButton')
+        const minusButton = this.add.image(0, 0, 'minusButtonGrey_ver1.png')
             .setOrigin(0, 0)
             .setDisplaySize(elementWidth, elementHeight)
             .setInteractive()
@@ -71,7 +69,7 @@ class GamePieceDetailsScene extends SidePanelScene {
         gamePieceStrengthText.height = elementHeight;
         container.add(gamePieceStrengthText);
 
-        const plusButton = this.add.image(0, 0, 'plusButton')
+        const plusButton = this.add.image(0, 0, 'plusButtonGrey_ver1.png')
             .setOrigin(1, 0)
             .setDisplaySize(elementWidth, elementHeight)
             .setInteractive()

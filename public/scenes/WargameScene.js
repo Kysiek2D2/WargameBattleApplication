@@ -31,9 +31,27 @@ class WargameScene extends Phaser.Scene {
     }
 
     preload() {
+        this.fetchAssets();
+    }
+
+    fetchAssets() {
+        /*at least one line of this.load.image is necessary to trigger Phaser3 loading sequence. 
+        Otherwise fetchAssets won't work.*/
         this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/landOfWonders.jpg' });
-        this.load.image({ key: 'universalGrassBattleground2', url: 'assets/maps/maps72x48/respring.jpg' });
-        this.load.image({ key: 'wood', url: 'assets/scenery/wood.jpg' })
+
+        const scene = this;
+        fetch('http://localhost:3000/read-assets')
+            .then(response => response.json())
+            .then(files => {
+                console.log('Directory contents:', files);
+                // Process files here
+                files.forEach(file => {
+                    scene.load.image({
+                        key: file.name, url: file.path
+                    })
+                });
+            })
+            .catch(error => console.error('Error fetching directory contents:', error));
     }
 
     create() {
@@ -41,9 +59,9 @@ class WargameScene extends Phaser.Scene {
         //Order of invoking methods is important!
         this.setGamePieceDetailsScene();
         this.setToolsScene();
-        this.loadBackground('wood');
+        this.loadBackground('wood.jpg');
         this.sceneDistanceUnitPixels = this.calculatesceneDistanceUnitPixels();
-        this.loadMap('universalGrassBattleground2');
+        this.loadMap('respring.jpg');
         this.gameController = new GameController(this);
         this.gameController.setMapPointerMoveListener(this.map);
         this.gameController.setMapPointerDownListener(this.map);
