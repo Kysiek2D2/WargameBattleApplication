@@ -28,33 +28,24 @@ class WargameScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.mapWidthInGameDistanceUnits = data.mapWidthInGameDistanceUnits;
         this.mapHeightInGameDistanceUnits = data.mapHeightInGameDistanceUnits;
+        console.log('WargameScene init...');
     }
 
-    preload() {
-        this.fetchAssets();
-    }
-
-    fetchAssets() {
+    async preload() {
+        console.log('WargameScene preload...');
         /*at least one line of this.load.image is necessary to trigger Phaser3 loading sequence. 
         Otherwise fetchAssets won't work.*/
         this.load.image({ key: 'universalGrassBattleground', url: 'assets/maps/maps72x48/landOfWonders.jpg' });
+        this.assets = await this.fetchAssets();
+        console.log("Assets:" + this.assets);
 
-        const scene = this;
-        fetch('http://localhost:3000/read-assets')
-            .then(response => response.json())
-            .then(files => {
-                console.log('Directory contents:', files);
-                // Process files here
-                files.forEach(file => {
-                    scene.load.image({
-                        key: file.name, url: file.path
-                    })
-                });
-            })
-            .catch(error => console.error('Error fetching directory contents:', error));
+        this.assets.forEach(asset => {
+            this.load.image({ key: asset.name, url: asset.path });
+        });
     }
 
     create() {
+        this.load.start();
         console.log('WargameScene create...');
         //Order of invoking methods is important!
         this.setGamePieceDetailsScene();
@@ -171,6 +162,18 @@ class WargameScene extends Phaser.Scene {
 
     update() {
         this.handleZooming();
+    }
+
+    async fetchAssets() {
+        console.log('Fetching assets...');
+        try {
+            const response = await fetch('http://localhost:3000/read-assets')
+            const assets = await response.json();
+            return assets;
+        } catch (error) {
+            console.error('Error fetching assets:', error);
+            return {};
+        }
     }
 }
 

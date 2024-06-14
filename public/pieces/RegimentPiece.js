@@ -1,4 +1,5 @@
 import { CONSTANTS } from "../Constants.js";
+import RegimentSymbolic from "../extras/RegimentSymbolic.js";
 import RegimentTray from "../extras/RegimentTray.js";
 import RegimentNodeComposition from "../nodes/RegimentNodeComposition.js";
 import GamePiece from "./GamePiece.js";
@@ -6,7 +7,7 @@ import GamePiece from "./GamePiece.js";
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programming design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null, isTrayVisible = false }) {
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null, isTrayVisible = false, gamePieceType }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -24,6 +25,9 @@ class RegimentPiece extends GamePiece {
         this.tray = null;
         this.isTrayVisible = isTrayVisible;
 
+        this.symbolicRepresentation = null;
+        this.gamePieceType = gamePieceType;
+
         this.configureGamePiece();
     }
 
@@ -35,21 +39,10 @@ class RegimentPiece extends GamePiece {
         this.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.REGIMENT_PIECE_CONTAINER);
         this.container.setSize(this.width, this.height);
         this.setOnDragListener();
-        this.tray = new RegimentTray({
-            regiment: this,
-            width: this.width,
-            height: this.height,
-            x: 0,
-            y: this.container.height / 2,
-            isVisible: this.isTrayVisible,
-            transparentParameter: 0.5
-        });
 
-        this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
-            .setOrigin(0.5, 0.5)
-            .setDisplaySize(this.width * 0.9, this.height * 0.9);
-        this.container.add(this.sprite);
-
+        this.setTray();
+        this.setSprite();
+        this.setSymbolicRepresentation();
 
         this.showContainerHelpBounds(false);
     }
@@ -83,6 +76,35 @@ class RegimentPiece extends GamePiece {
             \n    Y: ${this.container.y}
             \n    rotation angle: ${this.container.rotation}`);
         })
+    }
+
+    setTray() {
+        this.tray = new RegimentTray({
+            regiment: this,
+            width: this.width,
+            height: this.height,
+            x: 0,
+            y: this.container.height / 2,
+            isVisible: this.isTrayVisible,
+            transparentParameter: 0.5
+        });
+    }
+
+    setSprite() {
+        this.sprite = this.scene.add.image(0, this.container.height / 2, this.spriteKey)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(this.width * 0.9, this.height * 0.9)
+            .setVisible(true);
+        this.container.add(this.sprite);
+    }
+
+    setSymbolicRepresentation() {
+        this.symbolicRepresentation = RegimentSymbolic.createRegimentSymbolic(this, 0, this.container.height / 2);
+        this.symbolicRepresentation
+            .setDisplaySize(this.sprite.displayWidth, this.sprite.displayHeight);
+
+        this.container.add(this.symbolicRepresentation);
+        this.container.moveAbove(this.symbolicRepresentation, this.sprite);
     }
 }
 

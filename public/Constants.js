@@ -19,6 +19,13 @@ export const CONSTANTS = {
             height: 2.24,
         },
     },
+    GAME_PIECE_TYPES: {
+        INFANTRY: 'infantry',
+        CAVALRY: 'cavalry',
+        ARTILLERY: 'artillery',
+        TERRAIN: 'terrain',
+        TAPE: 'tape',
+    },
     FIRE_AND_SWORD_TERRAIN_SIZES_IN_INCHES: {
         SIZE_S: {
             width: 6,
@@ -51,8 +58,8 @@ export const CONSTANTS = {
         MAP: 0,
         TERRAIN_PIECE: 1,
         REGIMENT_PIECE_CONTAINER: 2,
-        MEASURE_TAPE_PIECE_CONTAINER: 3,
-        GAME_PIECE_NODES: 4, //GAME_PIECE_NODES needs to be higher in hierarchy than elements that can have nodes
+        MEASURE_TAPE_PIECE_CONTAINER: 4,
+        GAME_PIECE_NODES: 5, //GAME_PIECE_NODES needs to be higher in hierarchy than elements that can have nodes
     },
     CONTROL_MODE: {
         CAMERA_MODE: 'cameraMode',
