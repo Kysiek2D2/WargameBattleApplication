@@ -3,7 +3,7 @@ class GamePiece {
     static instances = [];
     static idCounter = 0;
 
-    constructor({ scene, gamePieceName, x, y, rotationAngle, heightInDistanceUnits, widthInDistanceUnits, color = null }) {
+    constructor({ scene, gamePieceName, x, y, rotationAngle, heightInDistanceUnits, widthInDistanceUnits, color = null, gamePieceType }) {
         this.scene = scene;
         this.gamePieceName = gamePieceName;
         this.height = heightInDistanceUnits * this.scene.sceneDistanceUnitPixels;
@@ -16,6 +16,7 @@ class GamePiece {
         GamePiece.activeGamePiece = null;
         this.color = color;
         this.nodesComposition = {};
+        this.gamePieceType = gamePieceType;
 
         this.setActivateListener();
 

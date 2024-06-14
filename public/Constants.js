@@ -20,11 +20,14 @@ export const CONSTANTS = {
         },
     },
     GAME_PIECE_TYPES: {
+        REGIMENT: 'regiment',
+        TAPE: 'tape',
+        TERRAIN: 'terrain',
+    },
+    REGIMENT_TYPES: {
         INFANTRY: 'infantry',
         CAVALRY: 'cavalry',
         ARTILLERY: 'artillery',
-        TERRAIN: 'terrain',
-        TAPE: 'tape',
     },
     FIRE_AND_SWORD_TERRAIN_SIZES_IN_INCHES: {
         SIZE_S: {

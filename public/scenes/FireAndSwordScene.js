@@ -29,7 +29,7 @@ class FireAndSwordScene extends WargameScene {
             spriteKey: 'basic-infantry-size-L.png',
             color: CONSTANTS.BASIC_COLORS.YELLOW,
             isTrayVisible: true,
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.INFANTRY,
+            regimentType: CONSTANTS.REGIMENT_TYPES.INFANTRY,
         });
         console.log(`TestUnit1 depth: ${testUnit1.sprite.depth}`)
         var testUnit2 = new RegimentPiece({
@@ -44,7 +44,7 @@ class FireAndSwordScene extends WargameScene {
             spriteKey: 'basic-cavalery-size-M.jpg',
             color: CONSTANTS.BASIC_COLORS.GREEN,
             isTrayVisible: true,
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.CAVALRY,
+            regimentType: CONSTANTS.REGIMENT_TYPES.CAVALRY,
         });
         console.log(`TestUnit2 depth: ${testUnit2.sprite.depth}`)
         var testUnit3 = new RegimentPiece({
@@ -59,7 +59,7 @@ class FireAndSwordScene extends WargameScene {
             spriteKey: 'basic-infantry-size-L.png',
             color: CONSTANTS.BASIC_COLORS.BLUE,
             isTrayVisible: true,
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.INFANTRY,
+            regimentType: CONSTANTS.REGIMENT_TYPES.INFANTRY,
         });
         var testUnit4 = new RegimentPiece({
             scene: this,
@@ -73,7 +73,7 @@ class FireAndSwordScene extends WargameScene {
             spriteKey: 'basic-cavalery-size-S.jpg',
             color: CONSTANTS.BASIC_COLORS.CLASSIC_RED,
             isTrayVisible: true,
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.CAVALRY
+            regimentType: CONSTANTS.REGIMENT_TYPES.CAVALRY
         });
         var testTerrain1 = new RegimentPiece({
             scene: this,
@@ -85,7 +85,6 @@ class FireAndSwordScene extends WargameScene {
             gamePieceName: 'Dense \nForest',
             gamePieceStrength: 10,
             spriteKey: 'denseForestShadowed.png',
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.TERRAIN,
         });
         var measureTape = new BasicMeasureTapePiece({
             scene: this,
@@ -95,10 +94,11 @@ class FireAndSwordScene extends WargameScene {
             widthInDistanceUnits: 12,
             heightInDistanceUnits: 1,
             gamePieceName: 'tape',
-            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.MEASURE_TAPE,
         });
 
         testTerrain1.container.setDepth(CONSTANTS.WARGAME_DEPTH_CATEGORIES.TERRAIN_PIECE);
+        RegimentPiece.showRegimentSymbolics(true);
+
     }
 
     update() {

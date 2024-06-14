@@ -14,7 +14,8 @@ class BasicMeasureTapePiece extends GamePiece {
             y: y,
             color: color,
             heightInDistanceUnits: heightInDistanceUnits,
-            widthInDistanceUnits: widthInDistanceUnits
+            widthInDistanceUnits: widthInDistanceUnits,
+            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.MEASURE_TAPE
         });
 
         this.distanceMarkerColor = CONSTANTS.BASIC_COLORS.BLACK;

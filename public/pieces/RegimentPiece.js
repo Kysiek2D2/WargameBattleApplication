@@ -7,7 +7,7 @@ import GamePiece from "./GamePiece.js";
 class RegimentPiece extends GamePiece {
     // Entity-Component-System (ECS) programming design pattern
 
-    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null, isTrayVisible = false, gamePieceType }) {
+    constructor({ scene, gamePieceName = 'Game Piece Unnamed', x, y, rotationAngle, widthInDistanceUnits, heightInDistanceUnits, spriteKey, gamePieceStrength = 15, color = null, isTrayVisible = false, regimentType }) {
         super({
             scene: scene,
             gamePieceName: gamePieceName,
@@ -16,7 +16,8 @@ class RegimentPiece extends GamePiece {
             rotationAngle: rotationAngle,
             color: color,
             heightInDistanceUnits: heightInDistanceUnits,
-            widthInDistanceUnits: widthInDistanceUnits
+            widthInDistanceUnits: widthInDistanceUnits,
+            gamePieceType: CONSTANTS.GAME_PIECE_TYPES.REGIMENT
         });
         this.spriteKey = spriteKey;
         this.gamePieceStrength = gamePieceStrength;
@@ -26,7 +27,7 @@ class RegimentPiece extends GamePiece {
         this.isTrayVisible = isTrayVisible;
 
         this.symbolicRepresentation = null;
-        this.gamePieceType = gamePieceType;
+        this.regimentType = regimentType;
 
         this.configureGamePiece();
     }
@@ -105,6 +106,19 @@ class RegimentPiece extends GamePiece {
 
         this.container.add(this.symbolicRepresentation);
         this.container.moveAbove(this.symbolicRepresentation, this.sprite);
+        this.symbolicRepresentation.setVisible(false);
+    }
+
+    setSymbolicVisibility(isVisible) {
+        this.symbolicRepresentation.setVisible(isVisible);
+    }
+
+    static showRegimentSymbolics(show = false) {
+        RegimentPiece.instances
+            .filter(regiment => regiment.gamePieceType === CONSTANTS.GAME_PIECE_TYPES.REGIMENT)
+            .forEach(regiment => {
+                regiment.setSymbolicVisibility(show);
+            });
     }
 }
 
